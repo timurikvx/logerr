@@ -12,6 +12,7 @@
         "laravel/jetstream": "^4.3",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "php-amqplib/php-amqplib": "^2.8",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
