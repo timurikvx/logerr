@@ -19,50 +19,39 @@ class LogerrRabbit
         $msg = new AMQPMessage($message);
         $channel_object->basic_publish($msg, 'errors');
 
-        echo " [x] Sent message: ".$message.";\n";
-
         $channel_object->close();
         $connection->close();
     }
 
-    public static function receive($channel):void
+    public static function receive($name):void
     {
         $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
         $channel = $connection->channel();
 
-        $channel->queue_declare($channel, false, false, false, false);
+        $channel->queue_declare($name, false, false, false, false);
 
         echo " [*] Waiting for messages. To exit press CTRL+C\n";
 
         $callback = function ($msg) {
+            $time = microtime(true) * 1000;
+            file_put_contents('D:\\logs\\'.$time.'.txt', $msg->getBody());
             echo ' [x] Received ', $msg->getBody(), "\n";
         };
 
-        $channel->basic_consume($channel, '', false, true, false, false, $callback);
+        $channel->basic_consume($name, '', false, true, false, false, $callback);
+
+//        while ($channel->is_open()){
+//            $channel->wait();
+//        }
 
         try {
-            $channel->
+            $channel->consume();
         } catch (\Throwable $exception) {
             echo $exception->getMessage();
         }
 
         $channel->close();
         $connection->close();
-
-//        //$channel_object->queue_declare($channel, false, false, false, false);
-//
-//        echo " [*] Waiting for messages. To exit press CTRL+C\n";
-//
-//        $callback = function ($msg) {
-//            echo ' [x] Received ', $msg->body, "\n";
-//        };
-//
-//        $channel_object->basic_consume($channel, '', false, true, false, false, $callback);
-////        try {
-////            $channel_object->consume($channel);
-////        } catch (\Throwable $exception) {
-////            echo $exception->getMessage();
-////        }
 
     }
 }
