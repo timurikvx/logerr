@@ -26,6 +26,6 @@ class receive extends Command
      */
     public function handle()
     {
-        LogerrRabbit::receive('New error');
+        LogerrRabbit::receive('errors');
     }
 }

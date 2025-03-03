@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\CrewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,12 +26,18 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+//Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+//    Route::get('/dashboard', function () {
+//        return Inertia::render('Dashboard');
+//    })->name('dashboard');
+//});
+
+Route::middleware(['auth'])->group(function(){
+
+    Route::get('/dashboard', [Controller::class, 'dashboard'])->name('dashboard');
+    Route::get('/errors', [Controller::class, 'errors'])->name('errors');
+
+    Route::post('/team/create', [CrewController::class, 'create']);
+    Route::post('/team/list', [CrewController::class, 'list']);
+
 });

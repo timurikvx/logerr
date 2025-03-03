@@ -1,11 +1,11 @@
 <script setup>
 import { Head, useForm } from '@inertiajs/vue3';
-import AuthenticationCard from '@/Components/AuthenticationCard.vue';
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import AuthenticationCard from '@/Components2/AuthenticationCard.vue';
+import AuthenticationCardLogo from '@/Components2/AuthenticationCardLogo.vue';
+import InputError from '@/Components2/InputError.vue';
+import InputLabel from '@/Components2/InputLabel.vue';
+import PrimaryButton from '@/Components2/PrimaryButton.vue';
+import TextInput from '@/Components2/TextInput.vue';
 
 const props = defineProps({
     email: String,

@@ -11,14 +11,10 @@ class ErrorController extends Controller
 {
     public function apiAdd(Request $request)
     {
-        //dump($request->all());
-        $name = $request->get('name');
-        if(empty($name)){
-            return response(['message'=>'Поле "name" не может быть пустым'], '400');
+        if(count($request->all()) == 0){
+            return response(['message'=>'Тело запроса должно быть объектом'], '400');
         }
-        if(!is_string($name)){
-            return response(['message'=>'Поле "name" должно быть строкой'], '400');
-        }
+
         $rules = [
             'name' => 'required|string|max:255',
             'text' => 'required',
@@ -60,16 +56,12 @@ class ErrorController extends Controller
 
         $message = json_encode($error);
         LogerrRabbit::publish($message, 'errors');
-
-        return [
-            'result'=>true,
-        ];
+        return ['result'=>true];
 
     }
 
     public function read(Request $request)
     {
-
         LogerrRabbit::receive('errors');
     }
 

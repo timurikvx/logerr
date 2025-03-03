@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->group(function (){
     Route::post('/add/error', [ErrorController::class, 'apiAdd']);
-    Route::post('/read', [ErrorController::class, 'read']);
+    //Route::post('/read', [ErrorController::class, 'read']);
 });
 
 

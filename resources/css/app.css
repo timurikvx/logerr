@@ -5,3 +5,53 @@
 [x-cloak] {
     display: none;
 }
+
+#app{
+    @apply grow flex flex-col overflow-hidden;
+}
+
+.header{
+    border-bottom: 1px solid #aaa;
+}
+
+.header > div{
+    max-width: 1600px;
+    width: 70%;
+    @apply mx-auto;
+}
+
+.sidebar{
+    min-width: 300px;
+    border-right: 1px solid #aaa;
+}
+
+.button{
+    @apply px-4 py-2 uppercase font-bold;
+    border: 1px solid #999;
+    transition: 0.35s;
+    outline: none;
+}
+
+.button:hover{
+    @apply bg-blue-300;
+}
+
+.modal{
+    position: fixed;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    left: 0;
+    margin: auto;
+    border: 1px solid #999;
+    border-radius: 8px;
+}
+
+.modal .head{
+    border-bottom: 1px solid #999;
+}
+
+.create-team{
+    width: 450px;
+    height: 250px;
+}

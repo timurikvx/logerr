@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->index();
             $table->dateTime('date')->index();
+            $table->string('guid')->nullable()->index();
             $table->string('category')->nullable()->index();
             $table->string('sub_category')->nullable()->index();
             $table->string('sender_guid')->nullable()->index();
