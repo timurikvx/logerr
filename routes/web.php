@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/dashboard', [Controller::class, 'dashboard'])->name('dashboard');
     Route::get('/errors', [Controller::class, 'errors'])->name('errors');
+    Route::get('/{team}/errors', [Controller::class, 'errorsTeam']);
 
     Route::post('/team/create', [CrewController::class, 'create']);
     Route::post('/team/list', [CrewController::class, 'list']);

@@ -3,26 +3,29 @@
     import {defineProps} from 'vue'
 
     defineProps({
-        title: String
-    })
+        title: String,
+        visible: Boolean
+    });
 
-    import { modalStore } from '@/Store/Modal.js'
-    const store = modalStore();
+    const emits = defineEmits(['update:visible', 'close']);
 
     function close(){
-        store.visible = false;
+        emits('update:visible', false);
+        emits('close');
     }
 
 </script>
 
 <template>
-    <div class="modal" v-if="store.visible">
-        <div class="flex head p-2">
-            <div class="grow self-center">{{ title }}</div>
-            <button class="close" @click="close">X</button>
-        </div>
-        <div class="content p-2 grow flex flex-col">
-            <slot></slot>
+    <div class="modal" v-if="visible">
+        <div class="flex flex-col">
+            <div class="flex head p-2">
+                <div class="grow self-center">{{ title }}</div>
+                <button class="close" @click="close"></button>
+            </div>
+            <div class="content p-2 grow flex flex-col">
+                <slot></slot>
+            </div>
         </div>
     </div>
 </template>

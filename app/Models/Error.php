@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class Error extends Model
 {
@@ -21,11 +24,17 @@ class Error extends Model
         }catch (\Throwable $e){
             return;
         }
-        self::write($data);
+        $error = $data['error'];
+        $user = $data['user'];
+        self::write($error, $user);
     }
 
-    public static function write($data): void
+    public static function write($data, $user = null): void
     {
+        if(!Auth::check() && $user != null){
+            Auth::login(User::find($user));
+        }
+
         $fields = collect($data);
         $text = $fields->get('text');
         if(is_array($text)){
@@ -38,7 +47,10 @@ class Error extends Model
             $date = (new \DateTime())->format('Y-m-d H:i:s');
         }
 
+        $team = Crew::getByGuid($fields->get('team'));
+
         $error = new Error();
+        $error->team = $team->id;
         $error->name = $fields->get('name');
         $error->date = $date;
         $error->guid = $fields->get('guid', '');
@@ -56,6 +68,17 @@ class Error extends Model
         $error->version = $fields->get('version', '');
         $error->data = $fields->get('data', '');
         $error->save();
+    }
+
+    public static function getErrors($team): Collection
+    {
+        $crew = Crew::getByGuid($team);
+        if(is_null($crew)){
+            return collect([]);
+        }
+        $query = self::query();
+        $query->where('team', $crew->id)->orderByDesc('date')->simplePaginate(30);
+        return $query->get();
     }
 
 }

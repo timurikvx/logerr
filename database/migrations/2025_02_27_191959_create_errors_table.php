@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('errors', function (Blueprint $table) {
             $table->id();
             $table->string('name')->index();
+            $table->unsignedBigInteger('team')->index();
             $table->dateTime('date')->index();
             $table->string('guid')->nullable()->index();
             $table->string('category')->nullable()->index();
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->string('region')->nullable()->index();
             $table->string('version')->nullable()->index();
             $table->longText('data')->nullable();
+            $table->index(['name', 'team', 'date']);
         });
     }
 

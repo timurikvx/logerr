@@ -9,7 +9,6 @@
 <template>
     <Layout>
         <div>errors</div>
-
     </Layout>
 </template>
 

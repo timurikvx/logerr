@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Models\Crew;
+use App\Models\Error;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -23,6 +24,17 @@ class Controller extends BaseController
     public function errors(Request $request): Response
     {
         return Inertia::render('Errors');
+    }
+
+    public function errorsTeam(Request $request, $guid): Response
+    {
+        $crew = Crew::getByGuid($guid);
+        $data = [
+            'guid'=>$guid,
+            'crew'=> (new CrewItemResource($crew))->toArray($request),
+            'errors'=>Error::getErrors($guid)
+        ];
+        return Inertia::render('Errors/ErrorTeam', $data);
     }
 
 }

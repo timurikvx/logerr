@@ -4,18 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Actions\RabbitMQ\LogerrRabbit;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ValidatedInput;
 use Illuminate\Support\Facades\Validator;
 
 class ErrorController extends Controller
 {
-    public function apiAdd(Request $request)
+    public function apiAdd(Request $request): mixed
     {
         if(count($request->all()) == 0){
             return response(['message'=>'Тело запроса должно быть объектом'], '400');
         }
 
         $rules = [
+            'team' => 'required|string',
             'name' => 'required|string|max:255',
             'text' => 'required',
             'date' => 'nullable|date',
@@ -38,6 +40,7 @@ class ErrorController extends Controller
         }
 
         $error = [
+            'team'=>$validator->getValue('team'),
             'name'=>$validator->getValue('name'),
             'text'=>$validator->getValue('text'),
             'date'=> $validator->getValue('date'),
@@ -53,16 +56,10 @@ class ErrorController extends Controller
             'version'=> $validator->getValue('version'),
             'data'=> $validator->getValue('data'),
         ];
-
-        $message = json_encode($error);
+        $message = json_encode(['user'=>Auth::id(), 'error'=>$error]);
         LogerrRabbit::publish($message, 'errors');
         return ['result'=>true];
 
-    }
-
-    public function read(Request $request)
-    {
-        LogerrRabbit::receive('errors');
     }
 
 }

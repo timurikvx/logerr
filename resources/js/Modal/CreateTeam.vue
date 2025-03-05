@@ -2,46 +2,56 @@
 
     import Modal from "@/Components/Modal.vue";
     import {ref} from 'vue'
+    import { modalStore } from '@/Store/Teams.js';
 
-    // let name = ref('');
-    // let url = ref('');
+    const store = modalStore();
 
     let form = ref({
         name: '',
-        url: ''
+        guid: ''
     })
     let errors = ref([]);
 
     function create(){
         axios.post('/team/create', form.value).then(function (response){
-            console.log(response.data);
             if(response.data.errors){
                 errors.value = response.data.errors
             }else{
-
+                store.list = response.data.list;
+                store.createTeam = false;
+                clear();
             }
-        }).catch(function(error){
-            //console.error(error.response.data);
         });
+    }
+
+    function clear(){
+        form.value = {
+            name: '',
+            guid: ''
+        }
+        errors.value = [];
     }
 
 </script>
 
 <template>
-    <Modal title="Создать команду" class="create-team flex flex-col">
-        <div class="grow flex">
+    <Modal title="Создать команду" class="create-team flex flex-col" v-model:visible="store.createTeam" @close="clear">
+        <div class="grow flex mb-1">
             <div class="flex flex-col grow">
-                <div>Имя</div>
-                <input class="" type="text" v-model="form.name">
+                <div class="mb-1">Имя</div>
+                <input class="input" type="text" v-model="form.name">
             </div>
         </div>
-        <div class="grow flex">
+        <div class="grow flex mb-2">
             <div class="flex flex-col grow">
-                <div>URL</div>
-                <input class="" type="text" v-model="form.url">
+                <div class="mb-1">Идентификатор</div>
+                <input class="input" type="text" v-model="form.guid">
             </div>
         </div>
-        <div class="flex">
+        <div v-if="errors.length > 0" class="mb-2 error">
+            <div v-for="error in errors" class="mb-1">{{ error }}</div>
+        </div>
+        <div class="flex mt-2">
             <div class="grow"></div>
             <button class="button" @click="create">Создать</button>
         </div>

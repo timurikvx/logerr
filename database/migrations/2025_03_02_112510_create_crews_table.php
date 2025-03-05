@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('crews', function (Blueprint $table) {
             $table->id();
             $table->string('name')->index();
-            $table->string('url');
+            $table->string('guid')->index();
             $table->unsignedBigInteger('creator');
             $table->timestamps();
+            $table->index(['guid', 'name']);
         });
     }
 

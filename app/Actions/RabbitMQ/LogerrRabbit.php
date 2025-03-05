@@ -39,7 +39,6 @@ class LogerrRabbit
         $callback = function ($msg) {
             $time = microtime(true) * 10000;
             dump('message '.$time);
-            sleep(7);
             file_put_contents('D:\\logs\\'.$time.'.txt', $msg->getBody());
             Error::writeFromText($msg->getBody());
         };

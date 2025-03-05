@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
             $table->string('name')->index();
+            $table->unsignedBigInteger('team')->index();
             $table->dateTime('date')->index();
             $table->string('guid')->nullable()->index();
             $table->string('category')->nullable()->index();

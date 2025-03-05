@@ -2,8 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: "Roboto";
+    src: url("/storage/font_roboto/RobotoCondensed-Light.ttf")
+}
+
 [x-cloak] {
     display: none;
+}
+
+body{
+    background-color: #1b1b1b;
+    color: #eee;
+    font-family: Roboto;
 }
 
 #app{
@@ -27,13 +38,19 @@
 
 .button{
     @apply px-4 py-2 uppercase font-bold;
-    border: 1px solid #999;
+    background-color: #C10087;
+    border: 1px solid #301843;
     transition: 0.35s;
     outline: none;
 }
 
 .button:hover{
-    @apply bg-blue-300;
+    background-color: #ff16b9;
+}
+
+.input{
+    outline: none !important;
+    color: #1a202c;
 }
 
 .modal{
@@ -43,15 +60,34 @@
     right: 0;
     left: 0;
     margin: auto;
-    border: 1px solid #999;
-    border-radius: 8px;
+    transition: 0.25s;
+}
+
+.modal > div{
+    border: 1px solid #4a1f6d;
+    box-shadow: 0px 0px 12px 1px rgba(76, 30, 174, 0.3);
+    background-color: #251037;
+    /*border-radius: 8px;*/
 }
 
 .modal .head{
-    border-bottom: 1px solid #999;
+    background-color: #180725;
+    border-bottom: 1px solid #4a1f6d;
 }
 
 .create-team{
     width: 450px;
-    height: 250px;
+    height: 320px;
+}
+
+.error{
+    color: #a61616;
+}
+
+.close{
+    background-image: url("/storage/close.png");
+    background-position: center;
+    background-size: 80%;
+    width: 30px;
+    height: 30px;
 }
