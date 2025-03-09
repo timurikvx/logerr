@@ -1,6 +1,6 @@
 <template>
-    <div class="sidebar flex flex-col p-2">
-        <button class="button" @click="store.createTeam = true">Создать команду</button>
+    <div class="sidebar flex flex-col p-4">
+        <button class="button mb-2" @click="store.createTeam = true">Создать команду</button>
         <div class="py-2">Ваши команды</div>
         <div class="flex flex-col">
             <div class="p-2 flex" v-for="item in store.list" :class="{'active': crew?.guid === item.guid}">

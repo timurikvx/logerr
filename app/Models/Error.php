@@ -77,7 +77,7 @@ class Error extends Model
             return collect([]);
         }
         $query = self::query();
-        $query->where('team', $crew->id)->orderByDesc('date')->simplePaginate(30);
+        $query->where('team', $crew->id)->orderByDesc('date')->limit(10); //->simplePaginate(10);
         return $query->get();
     }
 

@@ -18,7 +18,7 @@
         <Header></Header>
         <div class="flex grow">
             <Sidebar :crew="crew"></Sidebar>
-            <div class="grow p-2">
+            <div class="grow p-4 flex flex-col">
                 <slot></slot>
             </div>
         </div>

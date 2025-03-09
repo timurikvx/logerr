@@ -36,7 +36,7 @@
 
 <template>
     <Modal title="Создать команду" class="create-team flex flex-col" v-model:visible="store.createTeam" @close="clear">
-        <div class="grow flex mb-1">
+        <div class="grow flex mb-2">
             <div class="flex flex-col grow">
                 <div class="mb-1">Имя</div>
                 <input class="input" type="text" v-model="form.name">
