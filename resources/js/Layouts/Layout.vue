@@ -14,11 +14,11 @@
 </script>
 
 <template>
-    <div class="flex flex-col grow">
+    <div class="flex flex-col grow overflow-hidden">
         <Header></Header>
-        <div class="flex grow">
+        <div class="flex grow overflow-hidden">
             <Sidebar :crew="crew"></Sidebar>
-            <div class="grow p-4 flex flex-col">
+            <div class="grow p-4 flex flex-col overflow-hidden">
                 <slot></slot>
             </div>
         </div>

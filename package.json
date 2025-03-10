@@ -19,6 +19,7 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
-        "pinia": "^3.0.1"
+        "pinia": "^3.0.1",
+        "vue3-perfect-scrollbar": "^2.0.0"
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Crew\CrewItemResource;
+use App\Http\Resources\Errors\ErrorItemResource;
 use App\Models\Crew;
 use App\Models\Error;
 use Illuminate\Http\Request;
@@ -29,10 +30,11 @@ class Controller extends BaseController
     public function errorsTeam(Request $request, $guid): Response
     {
         $crew = Crew::getByGuid($guid);
+        $errors = Error::getErrors($guid);
         $data = [
             'guid'=>$guid,
             'crew'=> (new CrewItemResource($crew))->toArray($request),
-            'errors'=>Error::getErrors($guid)
+            'errors'=>ErrorItemResource::collection($errors)->toArray($request)
         ];
         return Inertia::render('Errors/ErrorTeam', $data);
     }

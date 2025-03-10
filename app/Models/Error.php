@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Ramsey\Uuid\Uuid;
 
 class Error extends Model
 {
@@ -38,8 +39,10 @@ class Error extends Model
         $fields = collect($data);
         $text = $fields->get('text');
         if(is_array($text)){
+            $type = 'json';
             $error_text = json_encode($text);
         }else{
+            $type = 'text';
             $error_text = $text;
         }
         $date = $fields->get('date');
@@ -48,25 +51,29 @@ class Error extends Model
         }
 
         $team = Crew::getByGuid($fields->get('team'));
+        $guid = $fields->get('guid', '');
+        if(empty($guid)){
+            $guid = Uuid::uuid4()->toString();
+        }
 
         $error = new Error();
         $error->team = $team->id;
         $error->name = $fields->get('name');
         $error->date = $date;
-        $error->guid = $fields->get('guid', '');
+        $error->guid = $guid;
         $error->category = $fields->get('category', '');
         $error->sub_category = $fields->get('sub_category', '');
         $error->sender_guid = $fields->get('sender_guid', '');
         $error->sender_name = $fields->get('sender_name', '');
-        $error->text = $error_text;
-        $error->type = $fields->get('type', '');
+        $error->type = $type;
         $error->code = $fields->get('code', 0);
         $error->user = $fields->get('user', '');
         $error->device = $fields->get('device', '');
         $error->city = $fields->get('city', '');
         $error->region = $fields->get('region', '');
         $error->version = $fields->get('version', '');
-        $error->data = $fields->get('data', '');
+        $error->data = $error_text;
+        $error->duration = $fields->get('duration', 0);
         $error->save();
     }
 
@@ -77,7 +84,8 @@ class Error extends Model
             return collect([]);
         }
         $query = self::query();
-        $query->where('team', $crew->id)->orderByDesc('date')->limit(10); //->simplePaginate(10);
+        $query->where('team', $crew->id)->orderByDesc('date')->limit(20); //->simplePaginate(10);
+        $query->where('type', '=', 'json');
         return $query->get();
     }
 

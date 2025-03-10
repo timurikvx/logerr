@@ -2,19 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @font-face {
     font-family: "Roboto";
     src: url("/storage/font_roboto/RobotoCondensed-Light.ttf")
 }
 
+@font-face {
+    font-family: "SourceCode";
+    src: url("/storage/font_roboto/IBMPlexMono-Light.ttf")
+}
+
 :root{
     --main-back: #0e0e0e;
-    --text-main-color: #fff;
+    --text-main-color: #eee;
     --main: #1d1d1f;
     --head-color: #0f0f0f;
     --border: #36383a;
     --purple: #8851fa;
+    --red: #CE45FA;
+    --yellow: #ecff91;
+    --light-blue: #9aa5f7;
     --input-dark: #2d2d2f;
+    --white: #fff;
+    --black: #000;
 }
 
 [x-cloak] {
@@ -25,6 +36,10 @@ body{
     background-color: var(--main-back);
     color: var(--text-main-color);
     font-family: 'Roboto';
+}
+
+.mono{
+    font-family: 'SourceCode';
 }
 
 #app{
@@ -48,9 +63,20 @@ body{
     background-color: var(--main);
 }
 
-.sidebar .active{
-    background-color: #373639;
+.sidebar .team{
+    transition: 0.3s;
     border-radius: 8px;
+    border: 1px solid transparent;
+}
+
+.sidebar .team:hover{
+    border: 1px solid var(--purple);
+}
+
+.sidebar .team.active{
+    background-color: var(--purple);
+    border: 1px solid var(--purple);
+
 }
 
 .button{
@@ -63,7 +89,7 @@ body{
 }
 
 .button:hover{
-    border: 1px solid #dedede;
+    border: 1px solid var(--purple);
 }
 
 .input{
@@ -159,6 +185,14 @@ body{
     background-image: url("/storage/return.png");
 }
 
+.collapse-icon{
+    background-image: url("/storage/collapse.png");
+}
+
+.expand-icon{
+    background-image: url("/storage/expand.png");
+}
+
 /******************** icons *************************/
 
 .button-icon{
@@ -180,33 +214,64 @@ body{
     border: 1px solid var(--border);
 }
 
-.table-field table{
-    width: 100%;
-    border-collapse: collapse;
-
-    transition: 0.3s;
-}
-
-.table-field table thead{
+.table-field .head{
     background-color: var(--head-color);
-}
-
-.table-field table td{
-    @apply p-2;
-}
-
-.table-field table tr{
     border-bottom: 1px solid var(--border);
 }
 
-
-.column1{
-    width: 150px;
-    order: 4;
+.table-field .line{
+    border-bottom: 1px solid var(--border);
 }
 
-.column2{
-    width: 180px;
+.table-field .line > div{
+    word-break: break-word;
+}
+
+.table-field .decoding{
+    background-position: center;
+    background-size: 30px;
+    background-repeat: no-repeat;
+    width: 25px;
+    height: 25px;
+}
+
+.table-field .data{
+    background-color: var(--input-dark);
+}
+
+.json-object{
+
+}
+
+.json-object .indent{
+    margin-left: 28px;
+}
+
+.json-object .property{
+    color: var(--white);
+}
+
+.json-object .icon{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 15px;
+    width: 20px;
+    height: 20px;
+}
+
+.json-object .string{
+    color: var(--yellow);
+    word-break: break-word;
+}
+
+.json-object .number{
+    color: var(--light-blue);
+    word-break: break-word;
+}
+
+.json-object .boolean{
+    color: var(--red);
+    word-break: break-word;
 }
 
 .table-options{
@@ -251,5 +316,9 @@ body{
 
 .table-options .width{
     width: 65px;
+}
+
+.drag .selected{
+    position: absolute;
 }
 
