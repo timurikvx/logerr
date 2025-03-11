@@ -120,6 +120,9 @@
 
     function filtering(filter){
         console.log(filter);
+        axios.post('/errors/filter', filter).then(function (response){
+            console.log(response.data);
+        });
     }
 
 </script>

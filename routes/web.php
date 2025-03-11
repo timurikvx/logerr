@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CrewController;
+use App\Http\Controllers\ErrorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,12 +37,23 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function(){
 
+    //Pages
     Route::get('/dashboard', [Controller::class, 'dashboard'])->name('dashboard');
     Route::get('/errors', [Controller::class, 'errors'])->name('errors');
     Route::get('/{team}/errors', [Controller::class, 'errorsTeam']);
 
+    //Teams
     Route::post('/team/create', [CrewController::class, 'create']);
     Route::post('/team/list', [CrewController::class, 'list']);
+
+    //Common
     Route::post('/filters/get', [Controller::class, 'filters']);
+
+    //Errors
+    Route::post('/errors/filter', [ErrorController::class, 'filter']);
+
+    //Logs
+
+
 
 });
