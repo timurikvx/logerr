@@ -19,7 +19,7 @@
 
 <script setup>
 
-    import DataPrint from "@/Components/DataPrint.vue";
+    import DataPrint from "@/Components/JSON/DataPrint.vue";
     import {computed, defineProps, ref} from 'vue';
 
     const props = defineProps({

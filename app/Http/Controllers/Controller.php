@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Filters;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
 use App\Models\Crew;
@@ -37,6 +38,11 @@ class Controller extends BaseController
             'errors'=>ErrorItemResource::collection($errors)->toArray($request)
         ];
         return Inertia::render('Errors/ErrorTeam', $data);
+    }
+
+    public function filters(Request $request): array
+    {
+        return Filters::equalsByTypes();
     }
 
 }

@@ -18,25 +18,6 @@ return new class extends Migration
 
         Schema::create('logs', function (Blueprint $table) {
             $this->table($table);
-//            $table->id();
-//            $table->string('name')->index();
-//            $table->unsignedBigInteger('team')->index();
-//            $table->dateTime('date')->index();
-//            $table->string('guid')->nullable()->index();
-//            $table->string('category')->nullable()->index();
-//            $table->string('sub_category')->nullable()->index();
-//            $table->string('sender_guid')->nullable()->index();
-//            $table->string('sender_name')->nullable()->index();
-//            $table->longText('text');
-//            $table->string('type')->index();
-//            $table->unsignedBigInteger('code')->nullable()->index();
-//            $table->string('user')->nullable()->index();
-//            $table->string('device')->nullable()->index();
-//            $table->string('city')->nullable()->index();
-//            $table->string('region')->nullable()->index();
-//            $table->string('version')->nullable()->index();
-//            $table->unsignedInteger('duration')->nullable()->index();
-//            $table->longText('data')->nullable();
         });
 
     }
@@ -61,6 +42,7 @@ return new class extends Migration
         $table->string('version')->nullable()->index();
         $table->unsignedInteger('duration')->nullable()->index();
         $table->longText('data')->nullable();
+        $table->unsignedBigInteger('len')->default(0);
         $table->index(['name', 'team', 'date']);
     }
 

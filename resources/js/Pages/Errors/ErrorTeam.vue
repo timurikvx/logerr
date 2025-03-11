@@ -1,10 +1,10 @@
 <template>
     <Layout :crew="crew" class="errors flex flex-col grow">
         <div class="flex mb-4">
-            <div class="p-2 font-bold uppercase">Список ошибок</div>
+            <div class="p-2 font-bold text-xl uppercase">Список ошибок</div>
             <div class="grow"></div>
             <Button icon="options-pic" @click="columns.show = true">Настройка таблицы</Button>
-            <Button icon="filter-pic">Фильтры</Button>
+            <Button icon="filter-pic" @click="filter.show = true">Фильтры</Button>
             <Button icon="sort-pic">Сортировка</Button>
         </div>
         <div class="table-field flex flex-col grow overflow-hidden">
@@ -28,6 +28,7 @@
         </div>
     </Layout>
     <TableOptions :columns="order"></TableOptions>
+    <Filters v-model:filters="filters"></Filters>
 </template>
 
 <script setup>
@@ -36,8 +37,10 @@
     import {defineProps, ref} from 'vue'
     import Button from "@/Components/Button.vue";
     import { columnsStore } from '@/Store/Columns.js';
+    import {filtersStore} from "@/Store/Filters.js";
     import TableOptions from "@/Components/TableOptions.vue";
-    import DataPrint from "@/Components/DataPrint.vue";
+    import DataPrint from "@/Components/JSON/DataPrint.vue";
+    import Filters from "@/Components/Filters.vue";
 
     defineProps({
         guid: String,
@@ -46,6 +49,7 @@
     });
 
     const columns = columnsStore();
+    const filter = filtersStore();
 
     let order = ref([
         {class: 'column1', name: 'Дата', type: 'date', column: 'date', width: 1},
@@ -62,6 +66,19 @@
         {class: 'column12', name: 'Версия', column: 'version', width: 1},
         {class: 'column13', name: 'Длительность', column: 'duration', width: 1},
     ]);
+
+    let filters = ref({
+        date: {'use': false, 'name': 'Дата', 'type': 'datetime-local', 'equal': null, 'value': null, 'value2': null, 'list': null},
+        name: {'use': false, 'name': 'Имя', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+        category: {'use': false, 'name': 'Категория', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+        sub_category: {'use': false, 'name': 'Подкатегория', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+        user: {'use': false, 'name': 'Пользователь', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+        device: {'use': false, 'name': 'Устройство', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+        city: {'use': false, 'name': 'Город', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+        region: {'use': false, 'name': 'Регион', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+        version: {'use': false, 'name': 'Версия', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+        duration: {'name': 'Длительность', 'type': 'number', 'equal': null, 'value': null, 'value2': null, 'list': null},
+    });
 
     function getValue(row, column){
         let value = row[column.column];
