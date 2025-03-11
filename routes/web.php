@@ -32,7 +32,7 @@ Route::get('/', function () {
 //    })->name('dashboard');
 //});
 
-Route::post('/filters', [Controller::class, 'filters']);
+
 
 Route::middleware(['auth'])->group(function(){
 
@@ -42,6 +42,6 @@ Route::middleware(['auth'])->group(function(){
 
     Route::post('/team/create', [CrewController::class, 'create']);
     Route::post('/team/list', [CrewController::class, 'list']);
-
+    Route::post('/filters/get', [Controller::class, 'filters']);
 
 });

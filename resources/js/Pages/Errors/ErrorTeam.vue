@@ -28,7 +28,7 @@
         </div>
     </Layout>
     <TableOptions :columns="order"></TableOptions>
-    <Filters v-model:filters="filters"></Filters>
+    <Filters v-model:filters="filters" @filter="filtering"></Filters>
 </template>
 
 <script setup>
@@ -118,15 +118,9 @@
         return arr;
     }
 
-    // function showData(data){
-    //     if(Array.isArray(data)){
-    //         return '[]';
-    //     }
-    //     if (data instanceof Object) {
-    //         return 'object';
-    //     }
-    //     return data;
-    // }
+    function filtering(filter){
+        console.log(filter);
+    }
 
 </script>
 

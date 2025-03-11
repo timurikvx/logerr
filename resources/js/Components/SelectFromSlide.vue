@@ -17,7 +17,7 @@
 
     const slide = ref(null);
     const parent = ref(null);
-    const id = (new Date()).getTime();
+    const id = Math.random() * 1000000000000000000;
 
     let top = ref(0);
     let width = ref(0);
