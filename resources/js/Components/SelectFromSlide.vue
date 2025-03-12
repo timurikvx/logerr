@@ -93,12 +93,4 @@
         transform: translateY(-40%) scale3d(1, 1, 1);
     }
 
-    .select-from-slide{
-        width: 100%;
-    }
-
-    .select-from-slide .item{
-
-    }
-
 </style>

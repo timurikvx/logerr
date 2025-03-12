@@ -1,9 +1,10 @@
 <template>
     <Modal title="Сортировка" class="sort" v-model:visible="modal.sort">
-        <div class="mb-4">
+        <div class="mb-4 flex">
             <SelectFromSlide :list="getList()" name="sort" @change="addSort">
                 <button class="button" :disabled="sort.length >= 5">Добавить сортировку</button>
             </SelectFromSlide>
+            <div class="grow"></div>
         </div>
         <div class="mb-4" v-if="sort.length > 0">
             <div v-for="(item, index) in sort" class="flex">

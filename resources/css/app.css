@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @font-face {
     font-family: "Roboto";
     src: url("/storage/font_roboto/RobotoCondensed-Light.ttf")
@@ -379,7 +378,7 @@ body{
 .sort .field{
     border: 1px solid var(--border);
     border-radius: 8px;
-    @apply mb-2 px-3 py-2;
+    @apply mb-2 px-3 py-2 select-none;
     cursor: pointer;
 }
 
