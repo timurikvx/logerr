@@ -33,14 +33,12 @@ Route::get('/', function () {
 //    })->name('dashboard');
 //});
 
-
-
 Route::middleware(['auth'])->group(function(){
 
     //Pages
     Route::get('/dashboard', [Controller::class, 'dashboard'])->name('dashboard');
-    Route::get('/errors', [Controller::class, 'errors'])->name('errors');
-    Route::get('/{team}/errors', [Controller::class, 'errorsTeam']);
+    Route::get('/errors', [ErrorController::class, 'errors'])->name('errors');
+    Route::get('/{team}/errors', [ErrorController::class, 'errorsTeam']);
 
     //Teams
     Route::post('/team/create', [CrewController::class, 'create']);
@@ -50,7 +48,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/filters/get', [Controller::class, 'filters']);
 
     //Errors
-    Route::post('/errors/filter', [ErrorController::class, 'filter']);
+    Route::post('/{team}/errors/filter', [ErrorController::class, 'filter']);
 
     //Logs
 

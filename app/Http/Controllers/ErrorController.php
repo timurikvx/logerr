@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Crew\CrewItemResource;
+use App\Http\Resources\Errors\ErrorItemResource;
+use App\Models\Crew;
+use App\Models\Error;
 use Illuminate\Http\Request;
 use App\Actions\RabbitMQ\LogerrRabbit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ValidatedInput;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ErrorController extends Controller
 {
@@ -62,9 +68,28 @@ class ErrorController extends Controller
 
     }
 
-    public function filter(Request $request)
+    public function errors(Request $request): Response
     {
+        return Inertia::render('Errors');
+    }
+
+    public function errorsTeam(Request $request, $guid): Response
+    {
+        $crew = Crew::getByGuid($guid);
+        $errors = Error::getErrors($guid)->orderByDesc('date')->limit(20);
+        $data = [
+            'guid'=>$guid,
+            'crew'=> (new CrewItemResource($crew))->toArray($request),
+            'errors'=>ErrorItemResource::collection($errors)->toArray($request)
+        ];
+        return Inertia::render('Errors/ErrorTeam', $data);
+    }
+
+    public function filter(Request $request, $guid)
+    {
+        $errors = Error::getErrors($guid)->orderByDesc('date')->limit(20);
         dump($request->all());
     }
+
 
 }

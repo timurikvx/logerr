@@ -23,23 +23,6 @@ class Controller extends BaseController
         return Inertia::render('Dashboard');
     }
 
-    public function errors(Request $request): Response
-    {
-        return Inertia::render('Errors');
-    }
-
-    public function errorsTeam(Request $request, $guid): Response
-    {
-        $crew = Crew::getByGuid($guid);
-        $errors = Error::getErrors($guid);
-        $data = [
-            'guid'=>$guid,
-            'crew'=> (new CrewItemResource($crew))->toArray($request),
-            'errors'=>ErrorItemResource::collection($errors)->toArray($request)
-        ];
-        return Inertia::render('Errors/ErrorTeam', $data);
-    }
-
     public function filters(Request $request): array
     {
         return Filters::equalsByTypes();

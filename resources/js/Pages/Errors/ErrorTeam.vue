@@ -28,7 +28,7 @@
         </div>
     </Layout>
     <TableOptions :columns="order"></TableOptions>
-    <Filters v-model:filters="filters" @filter="filtering"></Filters>
+    <Filters v-model:filters="fields" @filter="filtering"></Filters>
 </template>
 
 <script setup>
@@ -42,7 +42,7 @@
     import DataPrint from "@/Components/JSON/DataPrint.vue";
     import Filters from "@/Components/Filters.vue";
 
-    defineProps({
+    const props = defineProps({
         guid: String,
         crew: Object,
         errors: Array
@@ -67,7 +67,7 @@
         {class: 'column13', name: 'Длительность', column: 'duration', width: 1},
     ]);
 
-    let filters = ref({
+    let fields = ref({
         date: {'use': false, 'name': 'Дата', 'type': 'datetime-local', 'equal': null, 'value': null, 'value2': null, 'list': null},
         name: {'use': false, 'name': 'Имя', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
         category: {'use': false, 'name': 'Категория', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
@@ -79,6 +79,8 @@
         version: {'use': false, 'name': 'Версия', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
         duration: {'name': 'Длительность', 'type': 'number', 'equal': null, 'value': null, 'value2': null, 'list': null},
     });
+    let filters = ref({});
+    let sort = ref([]);
 
     function getValue(row, column){
         let value = row[column.column];
@@ -119,8 +121,8 @@
     }
 
     function filtering(filter){
-        console.log(filter);
-        axios.post('/errors/filter', filter).then(function (response){
+        filters.value = filter;
+        axios.post('/' + props.guid + '/errors/filter', {filter: filters.value, sort: sort.value}).then(function (response){
             console.log(response.data);
         });
     }

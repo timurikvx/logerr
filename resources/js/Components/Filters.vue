@@ -38,6 +38,7 @@
     import {filtersStore} from "@/Store/Filters.js";
     import SelectFromSlide from "@/Components/SelectFromSlide.vue";
     import {defineProps, onMounted, ref, defineEmits, computed} from 'vue';
+    import axios from "axios";
 
     const store = filtersStore();
     const props = defineProps({
@@ -98,6 +99,7 @@
 
     function confirm(){
         emits('filter', filters.value);
+        close();
     }
 
     function reset(){

@@ -77,16 +77,16 @@ class Error extends Model
         $error->save();
     }
 
-    public static function getErrors($team): Collection
+    public static function getErrors($team): mixed
     {
         $crew = Crew::getByGuid($team);
         if(is_null($crew)){
-            return collect([]);
+            return null;
         }
         $query = self::query();
-        $query->where('team', $crew->id)->orderByDesc('date')->limit(20); //->simplePaginate(10);
+        $query->where('team', $crew->id); //->simplePaginate(10);
         $query->where('type', '=', 'json');
-        return $query->get();
+        return $query;
     }
 
 }
