@@ -35,7 +35,6 @@
 <script setup>
 
     import Modal from "@/Components/Modal.vue";
-    //import {filtersStore} from "@/Store/Filters.js";
     import {modalStore} from "@/Store/Modal.js";
     import SelectFromSlide from "@/Components/SelectFromSlide.vue";
     import {defineProps, onMounted, ref, defineEmits, computed} from 'vue';
@@ -54,8 +53,8 @@
         get(){
             return props.filters;
         },
-        set(val){
-            emits('update:filters', val);
+        set(value){
+            emits('update:filters', value);
         }
     })
 
@@ -99,7 +98,7 @@
     }
 
     function confirm(){
-        emits('filter', filters.value);
+        emits('filter');
         close();
     }
 

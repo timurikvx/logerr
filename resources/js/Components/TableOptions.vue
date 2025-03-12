@@ -25,13 +25,11 @@
 <script setup>
 
     import Modal from "@/Components/Modal.vue";
-    //import { columnsStore } from '@/Store/Columns.js';
     import {defineProps, defineEmits, computed, ref} from 'vue'
     import Number from "@/Components/Number.vue";
     import {modalStore} from "@/Store/Modal.js";
 
     const store = modalStore();
-    //const store = columnsStore();
     const props = defineProps({
         columns: Array
     });

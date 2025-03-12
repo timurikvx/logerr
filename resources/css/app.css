@@ -17,6 +17,7 @@
     --main-back: #0e0e0e;
     --text-main-color: #eee;
     --main: #1d1d1f;
+    --gray: #656565;
     --head-color: #0f0f0f;
     --border: #36383a;
     --purple: #8851fa;
@@ -26,7 +27,7 @@
     --light-blue: #9aa5f7;
     --input-dark: #2d2d2f;
     --white: #fff;
-    --black: #000;
+    --black: #1b1b1b;
 }
 
 [x-cloak] {
@@ -94,6 +95,11 @@ body{
     color: var(--purple);
 }
 
+.button[disabled]{
+    border: 1px solid var(--gray);
+    color: var(--gray);
+}
+
 .button.red{
     border: 1px solid var(--red);
     color: var(--red);
@@ -106,7 +112,9 @@ body{
 
 .input{
     outline: none !important;
-    color: #1a202c;
+    color: var(--black);
+    background-color: #eaeaea;
+    box-shadow: 1px 1px 25px 0px rgba(3, 3, 3, 0.2) inset;
 }
 
 .input.dark{
@@ -362,5 +370,19 @@ body{
     border-bottom: 1px solid var(--border);
 }
 
+.sort{
+    width: 50%;
+    max-width: 500px;
+    height: 80%;
+}
 
+.sort .field{
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    @apply mb-2 px-3 py-2;
+    cursor: pointer;
+}
 
+.sort .active{
+    background-color: var(--purple);
+}

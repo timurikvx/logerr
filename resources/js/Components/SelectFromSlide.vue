@@ -18,18 +18,16 @@
     const slide = ref(null);
     const parent = ref(null);
     const id = Math.random() * 1000000000000000000;
+    const props = defineProps({
+        list: Array,
+        name: String
+    });
+    const emits = defineEmits(['change']);
 
     let top = ref(0);
     let width = ref(0);
     let show = ref(false);
     let into = ref(false);
-
-    const props = defineProps({
-        list: Array,
-        name: String
-    });
-
-    const emits = defineEmits(['change']);
 
     onMounted(()=>{
         document.addEventListener('click', click);

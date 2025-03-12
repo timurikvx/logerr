@@ -5,7 +5,7 @@
             <div class="grow"></div>
             <Button icon="options-pic" @click="modal.columns = true">Настройка таблицы</Button>
             <Button icon="filter-pic" @click="modal.filters = true">Фильтры</Button>
-            <Button icon="sort-pic">Сортировка</Button>
+            <Button icon="sort-pic" @click="modal.sort = true">Сортировка</Button>
         </div>
         <div class="table-field flex flex-col grow overflow-hidden">
             <div class="cursor-pointer grid head" :style="getGrid()">
@@ -29,6 +29,7 @@
     </Layout>
     <TableOptions :columns="order"></TableOptions>
     <Filters v-model:filters="fields" @filter="filtering"></Filters>
+    <Sort :sort="sort" :fields="fields" @confirm="sorting"></Sort>
 </template>
 
 <script setup>
@@ -36,12 +37,11 @@
     import Layout from "@/Layouts/Layout.vue";
     import {defineProps, ref} from 'vue'
     import Button from "@/Components/Button.vue";
-    // import { columnsStore } from '@/Store/Columns.js';
-    // import {filtersStore} from "@/Store/Filters.js";
     import TableOptions from "@/Components/TableOptions.vue";
     import DataPrint from "@/Components/JSON/DataPrint.vue";
     import Filters from "@/Components/Filters.vue";
     import {modalStore} from "@/Store/Modal.js";
+    import Sort from "@/Components/Sort.vue";
 
     const props = defineProps({
         guid: String,
@@ -49,8 +49,6 @@
         errors: Array
     });
     const modal = modalStore()
-    // const columns = columnsStore();
-    // const filter = filtersStore();
 
     let order = ref([
         {class: 'column1', name: 'Дата', type: 'date', column: 'date', width: 1},
@@ -79,7 +77,6 @@
         version: {'use': false, 'name': 'Версия', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
         duration: {'name': 'Длительность', 'type': 'number', 'equal': null, 'value': null, 'value2': null, 'list': null},
     });
-    let filters = ref({});
     let sort = ref([]);
 
     function getValue(row, column){
@@ -120,9 +117,14 @@
         return arr;
     }
 
-    function filtering(filter){
-        filters.value = filter;
-        axios.post('/' + props.guid + '/errors/filter', {filter: filters.value, sort: sort.value}).then(function (response){
+    function filtering(){
+        axios.post('/' + props.guid + '/errors/filter', {filter: fields.value, sort: sort.value}).then(function (response){
+            console.log(response.data);
+        });
+    }
+
+    function sorting(){
+        axios.post('/' + props.guid + '/errors/filter', {filter: fields.value, sort: sort.value}).then(function (response){
             console.log(response.data);
         });
     }
