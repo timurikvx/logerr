@@ -13,7 +13,7 @@
                 <div class="p-2"></div>
             </div>
             <PerfectScrollbar>
-                <div v-for="error in errors">
+                <div v-for="error in list">
                     <div class="grid line" :style="getGrid()">
                         <div v-for="column in getOrder()" class="p-2" :title="getValue(error, column)" :class="column.class">{{ getValue(error, column) }}</div>
                         <div class="p-2 flex" @click="error.show = !error.show">
@@ -29,13 +29,13 @@
     </Layout>
     <TableOptions :columns="order"></TableOptions>
     <Filters v-model:filters="fields" @filter="filtering"></Filters>
-    <Sort :sort="sort" :fields="fields" @confirm="sorting"></Sort>
+    <Sort :sort="sort" :fields="fields" @confirm="filtering"></Sort>
 </template>
 
 <script setup>
 
     import Layout from "@/Layouts/Layout.vue";
-    import {defineProps, ref} from 'vue'
+    import {defineProps, onMounted, ref} from 'vue'
     import Button from "@/Components/Button.vue";
     import TableOptions from "@/Components/TableOptions.vue";
     import DataPrint from "@/Components/JSON/DataPrint.vue";
@@ -78,6 +78,11 @@
         duration: {'name': 'Длительность', 'type': 'number', 'equal': null, 'value': null, 'value2': null, 'list': null},
     });
     let sort = ref([]);
+    let list = ref([]);
+
+    onMounted(()=>{
+        list.value = props.errors;
+    })
 
     function getValue(row, column){
         let value = row[column.column];
@@ -120,12 +125,9 @@
     function filtering(){
         axios.post('/' + props.guid + '/errors/filter', {filter: fields.value, sort: sort.value}).then(function (response){
             console.log(response.data);
-        });
-    }
-
-    function sorting(){
-        axios.post('/' + props.guid + '/errors/filter', {filter: fields.value, sort: sort.value}).then(function (response){
-            console.log(response.data);
+            if(response.data.errors){
+                list.value = response.data.errors;
+            }
         });
     }
 

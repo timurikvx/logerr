@@ -2,6 +2,8 @@
 
 namespace App\Actions;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class Filters
 {
 
@@ -46,6 +48,50 @@ class Filters
             $data[$key] = $list;
         }
         return $data;
+    }
+
+    public static function setFilters(Builder &$query, $filters)
+    {
+        $filters = collect($filters);
+        $keys = $filters->keys();
+        foreach ($keys as $key){
+            $filter = collect($filters->get($key));
+            if(empty($filter)){
+                continue;
+            }
+            $use = $filter->get('use', false);
+            if(!$use){
+                continue;
+            }
+            $equal = $filter->get('equal', 'equal');
+            $value = $filter->get('value');
+            $value2 = $filter->get('value2');
+            $list = $filter->get('list', []);
+            if(empty($equal)){
+                $equal = 'equal';
+            }
+            if($equal == 'equal'){
+                $query->where($key, '=', $value);
+            }else if($equal == 'not_equal'){
+                $query->where($key, '<>', $value);
+            }else if($equal == 'between'){
+                $query->whereBetween($keys, [$value, $value2]);
+            }else if($equal == 'list'){
+                $query->whereIn($key, $list);
+            }else if($equal == 'not_list'){
+                $query->whereNotIn($key, $list);
+            }else if($equal == 'more'){
+                $query->where($key, '>', $value);
+            }else if($equal == 'more_equal'){
+                $query->where($key, '>=', $value);
+            }else if($equal == 'less'){
+                $query->where($key, '<', $value);
+            }else if($equal == 'less_equal'){
+                $query->where($key, '<=', $value);
+            }else if($equal == 'like'){
+                $query->where($key, 'ILIKE', $filter->get('value'));
+            }
+        }
     }
 
 }

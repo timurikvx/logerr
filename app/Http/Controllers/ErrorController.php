@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Filters;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
 use App\Models\Crew;
@@ -87,8 +88,16 @@ class ErrorController extends Controller
 
     public function filter(Request $request, $guid)
     {
-        $errors = Error::getErrors($guid)->orderByDesc('date')->limit(20)->get();
-        dump($request->all());
+        $query = Error::getErrors($guid)->orderByDesc('date')->limit(20);
+        $filters = $request->get('filter');
+        $sort = $request->get('sort');
+        Filters::setFilters($query, $filters);
+        $errors = $query->get();
+        return [
+            'errors'=>ErrorItemResource::collection($errors)->toArray($request)
+        ];
+
+        //dump($request->all());
     }
 
 
