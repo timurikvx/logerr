@@ -1,5 +1,5 @@
 <template>
-    <Modal title="Фильтры" class="filters" v-model:visible="store.show">
+    <Modal title="Фильтры" class="filters" v-model:visible="store.filters">
         <div class="mb-4">
             <div class="grid list mb-2 title">
                 <div class="self-center" title="Использование отбора">Исп.</div>
@@ -18,8 +18,8 @@
                 </SelectFromSlide>
                 <div></div>
                 <div class="flex">
-                    <input :type="filter.type" class="input grow" v-model="filter.value" @input="inputValue(name)">
-                    <input v-if="filter.equal === 'between'" :type="filter.type" class="input grow ml-2" v-model="filter.value2" @input="inputValue(name)">
+                    <input :type="filter.type" class="input grow" v-model="filter.value" @blur="blur" @input="inputValue($event, name)">
+                    <input v-if="filter.equal === 'between'" :type="filter.type" class="input grow ml-2" v-model="filter.value2" @blur="blur" @input="inputValue($event,name)">
                 </div>
             </div>
         </div>
@@ -35,12 +35,13 @@
 <script setup>
 
     import Modal from "@/Components/Modal.vue";
-    import {filtersStore} from "@/Store/Filters.js";
+    //import {filtersStore} from "@/Store/Filters.js";
+    import {modalStore} from "@/Store/Modal.js";
     import SelectFromSlide from "@/Components/SelectFromSlide.vue";
     import {defineProps, onMounted, ref, defineEmits, computed} from 'vue';
     import axios from "axios";
 
-    const store = filtersStore();
+    const store = modalStore();
     const props = defineProps({
         filters: Object
     });
@@ -66,7 +67,7 @@
     });
 
     function close(){
-        store.show = false;
+        store.filters = false;
     }
 
     function fill(){
@@ -83,7 +84,7 @@
         item.use = true;
     }
 
-    function inputValue(name){
+    function inputValue(e, name){
         let item = filters.value[name];
         item.use = true;
     }
@@ -110,6 +111,11 @@
             filter.value2 = null;
             filter.equal = null;
         }
+    }
+
+    function blur(e){
+        console.log(e);
+        console.log(e.target);
     }
 
 </script>

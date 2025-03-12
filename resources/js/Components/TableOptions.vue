@@ -1,5 +1,5 @@
 <template>
-    <Modal title="Настройка таблицы" class="table-options" v-model:visible="store.show">
+    <Modal title="Настройка таблицы" class="table-options" v-model:visible="store.columns">
         <PerfectScrollbar class="flex flex-col pr-4">
             <div v-for="(column, key) in columns" :key="column.column" :data-order="key + 1" class="flex mb-2 drag relative" @dragstart="dragstart" @dragend="dragend" @dragover="dragover">
                 <div class="column flex grow mr-2 cursor-pointer">
@@ -25,11 +25,13 @@
 <script setup>
 
     import Modal from "@/Components/Modal.vue";
-    import { columnsStore } from '@/Store/Columns.js';
+    //import { columnsStore } from '@/Store/Columns.js';
     import {defineProps, defineEmits, computed, ref} from 'vue'
     import Number from "@/Components/Number.vue";
+    import {modalStore} from "@/Store/Modal.js";
 
-    const store = columnsStore();
+    const store = modalStore();
+    //const store = columnsStore();
     const props = defineProps({
         columns: Array
     });
@@ -37,7 +39,6 @@
 
     let column = ref(null);
     let activeElement = null;
-
     let columns = computed({
         get(){
             return props.columns;

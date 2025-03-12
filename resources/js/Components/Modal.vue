@@ -7,7 +7,6 @@
         class: String,
         visible: Boolean
     });
-
     const emits = defineEmits(['update:visible', 'close']);
 
     function close(){
@@ -23,7 +22,7 @@
 
 <template>
     <div class="modal-back" v-if="visible"></div>
-    <div class="modal flex flex-col overflow-hidden" :class="getClass()" v-if="visible">
+    <div class="modal flex flex-col overflow-hidden z-10" :class="getClass()" v-if="visible">
         <div class="flex flex-col my-auto">
             <div class="flex head p-2">
                 <div class="grow self-center">{{ title }}</div>

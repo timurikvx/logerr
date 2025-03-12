@@ -76,7 +76,7 @@ class ErrorController extends Controller
     public function errorsTeam(Request $request, $guid): Response
     {
         $crew = Crew::getByGuid($guid);
-        $errors = Error::getErrors($guid)->orderByDesc('date')->limit(20);
+        $errors = Error::getErrors($guid)->orderByDesc('date')->limit(20)->get();
         $data = [
             'guid'=>$guid,
             'crew'=> (new CrewItemResource($crew))->toArray($request),
@@ -87,7 +87,7 @@ class ErrorController extends Controller
 
     public function filter(Request $request, $guid)
     {
-        $errors = Error::getErrors($guid)->orderByDesc('date')->limit(20);
+        $errors = Error::getErrors($guid)->orderByDesc('date')->limit(20)->get();
         dump($request->all());
     }
 

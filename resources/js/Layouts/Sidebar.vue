@@ -1,9 +1,9 @@
 <template>
     <div class="sidebar flex flex-col p-4">
-        <button class="button mb-2" @click="store.createTeam = true">Создать команду</button>
+        <button class="button mb-2" @click="modal.createTeams = true">Создать команду</button>
         <div class="py-2">Ваши команды</div>
         <div class="flex flex-col">
-            <div class="p-2 flex team mb-2" v-for="item in store.list" :class="{'active': crew?.guid === item.guid}">
+            <div class="p-2 flex team mb-2" v-for="item in teams.list" :class="{'active': crew?.guid === item.guid}">
                 <a class="grow" :href="'/' + item.guid + '/errors'">{{ item.name }}</a>
             </div>
         </div>
@@ -14,10 +14,12 @@
 <script setup>
 
     import CreateTeam from "@/Modal/CreateTeam.vue";
-    import { modalStore } from '@/Store/Teams.js'
+    import {teamsStore} from '@/Store/Teams.js'
+    import {modalStore} from "@/Store/Modal.js";
     import { onMounted, defineProps } from "vue";
 
-    const store = modalStore();
+    const modal = modalStore();
+    const teams = teamsStore();
 
     defineProps({
         crew: {
@@ -28,7 +30,7 @@
 
     onMounted(() => {
         axios.post('/team/list').then(function(response){
-            store.list = response.data.list;
+            teams.list = response.data.list;
         })
     })
 

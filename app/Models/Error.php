@@ -85,7 +85,7 @@ class Error extends Model
         }
         $query = self::query();
         $query->where('team', $crew->id); //->simplePaginate(10);
-        $query->where('type', '=', 'json');
+        //$query->where('type', '=', 'json');
         return $query;
     }
 

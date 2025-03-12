@@ -8,4 +8,4 @@ export const columnsStore = defineStore('columns', {
     getters: {
 
     }
-})
+});

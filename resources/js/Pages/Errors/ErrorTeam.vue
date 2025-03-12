@@ -3,8 +3,8 @@
         <div class="flex mb-4">
             <div class="p-2 font-bold text-xl uppercase">Список ошибок</div>
             <div class="grow"></div>
-            <Button icon="options-pic" @click="columns.show = true">Настройка таблицы</Button>
-            <Button icon="filter-pic" @click="filter.show = true">Фильтры</Button>
+            <Button icon="options-pic" @click="modal.columns = true">Настройка таблицы</Button>
+            <Button icon="filter-pic" @click="modal.filters = true">Фильтры</Button>
             <Button icon="sort-pic">Сортировка</Button>
         </div>
         <div class="table-field flex flex-col grow overflow-hidden">
@@ -36,20 +36,21 @@
     import Layout from "@/Layouts/Layout.vue";
     import {defineProps, ref} from 'vue'
     import Button from "@/Components/Button.vue";
-    import { columnsStore } from '@/Store/Columns.js';
-    import {filtersStore} from "@/Store/Filters.js";
+    // import { columnsStore } from '@/Store/Columns.js';
+    // import {filtersStore} from "@/Store/Filters.js";
     import TableOptions from "@/Components/TableOptions.vue";
     import DataPrint from "@/Components/JSON/DataPrint.vue";
     import Filters from "@/Components/Filters.vue";
+    import {modalStore} from "@/Store/Modal.js";
 
     const props = defineProps({
         guid: String,
         crew: Object,
         errors: Array
     });
-
-    const columns = columnsStore();
-    const filter = filtersStore();
+    const modal = modalStore()
+    // const columns = columnsStore();
+    // const filter = filtersStore();
 
     let order = ref([
         {class: 'column1', name: 'Дата', type: 'date', column: 'date', width: 1},
@@ -66,7 +67,6 @@
         {class: 'column12', name: 'Версия', column: 'version', width: 1},
         {class: 'column13', name: 'Длительность', column: 'duration', width: 1},
     ]);
-
     let fields = ref({
         date: {'use': false, 'name': 'Дата', 'type': 'datetime-local', 'equal': null, 'value': null, 'value2': null, 'list': null},
         name: {'use': false, 'name': 'Имя', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
