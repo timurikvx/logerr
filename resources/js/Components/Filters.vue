@@ -17,9 +17,15 @@
                     <div class="self-center equal cursor-pointer">{{ getEqual(filter) }}</div>
                 </SelectFromSlide>
                 <div></div>
-                <div class="flex">
-                    <input :type="filter.type" class="input grow" v-model="filter.value" @blur="blur" @input="inputValue($event, name)">
-                    <input v-if="filter.equal === 'between'" :type="filter.type" class="input grow ml-2" v-model="filter.value2" @blur="blur" @input="inputValue($event,name)">
+                <div v-if="filter.equal === 'list' || filter.equal === 'not_list'" class="flex">
+                    <div class="add-to-list add" @click="showChoice(name, filter)"></div>
+                    <div class="grow flex truncate choice-list">
+                        <div class="choice-item mr-2" v-for="row in filter.list">{{ row }}</div>
+                    </div>
+                </div>
+                <div v-else class="flex">
+                    <input :type="filter.type" class="input grow" v-model="filter.value" @input="inputValue($event, name)">
+                    <input v-if="filter.equal === 'between'" :type="filter.type" class="input grow ml-2" v-model="filter.value2" @input="inputValue($event,name)">
                 </div>
             </div>
         </div>
@@ -30,6 +36,7 @@
             <button class="button" @click="confirm">Применить</button>
         </div>
     </Modal>
+    <ListChoice v-model:visible="list_choice" :list="choice" table="error" :column="field" @complete="choiceComplete"></ListChoice>
 </template>
 
 <script setup>
@@ -37,6 +44,7 @@
     import Modal from "@/Components/Modal.vue";
     import {modalStore} from "@/Store/Modal.js";
     import SelectFromSlide from "@/Components/SelectFromSlide.vue";
+    import ListChoice from "@/Components/ListChoice.vue";
     import {defineProps, onMounted, ref, defineEmits, computed} from 'vue';
     import axios from "axios";
 
@@ -56,7 +64,10 @@
         set(value){
             emits('update:filters', value);
         }
-    })
+    });
+    let list_choice = ref(false);
+    let choice = ref([]);
+    let field = ref('');
 
     onMounted(()=>{
         axios.post('/filters/get').then(function (response){
@@ -109,12 +120,22 @@
             filter.value = null;
             filter.value2 = null;
             filter.equal = null;
+            filter.list = null;
         }
     }
 
-    function blur(e){
-        console.log(e);
-        console.log(e.target);
+    function showChoice(name, item){
+        list_choice.value = true;
+        field.value = name;
+        if(item.list){
+            choice.value = item.list;
+        }else{
+            choice.value = [];
+        }
+    }
+
+    function choiceComplete(name){
+        filters.value[name].list = choice.value;
     }
 
 </script>

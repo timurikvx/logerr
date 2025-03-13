@@ -64,7 +64,7 @@ class Filters
                 continue;
             }
             $equal = $filter->get('equal', 'equal');
-            $value = $filter->get('value');
+            $value = trim($filter->get('value'));
             $value2 = $filter->get('value2');
             $list = $filter->get('list', []);
             if(empty($equal)){

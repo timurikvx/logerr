@@ -28,4 +28,21 @@ class Controller extends BaseController
         return Filters::equalsByTypes();
     }
 
+    public function choice(Request $request)
+    {
+        $value = $request->get('value');
+        $type = $request->get('type');
+        $field = $request->get('field');
+
+        $list = [];
+        if($type === 'error'){
+            $list = Error::query()->select([$field])->where($field, 'ILIKE', $value.'%')->limit(20)->distinct()->orderBy($field)->get();
+
+        }
+        return [
+            'list'=>$list->pluck($field)
+        ];
+    }
+
+
 }

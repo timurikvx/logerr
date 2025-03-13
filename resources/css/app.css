@@ -216,6 +216,10 @@ body{
     background-image: url("/storage/expand.png");
 }
 
+.add{
+    background-image: url("/storage/add.png");
+}
+
 /******************** icons *************************/
 
 .button-icon{
@@ -369,6 +373,23 @@ body{
     border-bottom: 1px solid var(--border);
 }
 
+.filters .add-to-list{
+    min-width: 42px;
+    height: 42px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 32px;
+    cursor: pointer;
+}
+
+/*.filters .choice-list{*/
+/*    transition: 0.3s;*/
+/*}*/
+
+/*.filters .choice-list:hover{*/
+/*    flex-wrap: wrap;*/
+/*}*/
+
 .sort{
     width: 50%;
     max-width: 500px;
@@ -384,4 +405,28 @@ body{
 
 .sort .active{
     background-color: var(--purple);
+}
+
+.list-choice{
+    z-index: 50;
+    width: 50%;
+    height: 50%;
+}
+
+.list-choice .choice{
+    background-color: var(--main);
+    border: 1px solid var(--border);
+    width: 100%;
+    top: 42px;
+}
+
+.list-choice .values{
+    transition-property: width, height, padding, margin;
+    transition-duration: 0.2s;
+}
+
+.choice-item{
+    @apply p-2;
+    border: 1px solid var(--border);
+    border-radius: 8px;
 }
