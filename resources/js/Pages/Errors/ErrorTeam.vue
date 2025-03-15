@@ -9,13 +9,13 @@
         </div>
         <div class="table-field flex flex-col grow overflow-hidden">
             <div class="cursor-pointer grid head" :style="getGrid()">
-                <div v-for="column in getOrder()" class="p-2" :class="column.class">{{ column.name }}</div>
+                <div v-for="column in getColumns()" class="p-2" :class="column.class">{{ column.name }}</div>
                 <div class="p-2"></div>
             </div>
-            <PerfectScrollbar>
+            <PerfectScrollbar class="grow">
                 <div v-for="error in list">
                     <div class="grid line" :style="getGrid()">
-                        <div v-for="column in getOrder()" class="p-2" :title="getValue(error, column)" :class="column.class">{{ getValue(error, column) }}</div>
+                        <div v-for="column in getColumns()" class="p-2" :title="getValue(error, column)" :class="column.class">{{ getValue(error, column) }}</div>
                         <div class="p-2 flex" @click="error.show = !error.show">
                             <div class="decoding self-center" :class="[{'collapse-icon': error.show}, {'expand-icon': !error.show}]"></div>
                         </div>
@@ -25,9 +25,14 @@
                     </div>
                 </div>
             </PerfectScrollbar>
+            <div class="flex p-2">
+                <button class="button px-6">Пред.</button>
+                <div class="grow"></div>
+                <button class="button px-6">След.</button>
+            </div>
         </div>
     </Layout>
-    <TableOptions :columns="order"></TableOptions>
+    <TableOptions :columns="columns"></TableOptions>
     <Filters v-model:filters="fields" @filter="filtering"></Filters>
     <Sort :sort="sort" :fields="fields" @confirm="filtering"></Sort>
 </template>
@@ -42,15 +47,17 @@
     import Filters from "@/Components/Filters.vue";
     import {modalStore} from "@/Store/Modal.js";
     import Sort from "@/Components/Sort.vue";
+    import {useButtons} from '@/Packs/Buttons';
 
     const props = defineProps({
         guid: String,
         crew: Object,
         errors: Array
     });
-    const modal = modalStore()
+    const modal = modalStore();
+    const buttons = useButtons();
 
-    let order = ref([
+    let columns = ref([
         {class: 'column1', name: 'Дата', type: 'date', column: 'date', width: 1},
         {class: 'column2', name: 'Имя', column: 'name', width: 1},
         {class: 'column3', name: 'ID', column: 'guid', width: 1},
@@ -82,7 +89,19 @@
 
     onMounted(()=>{
         list.value = props.errors;
-    })
+    });
+
+    buttons.escape(function (){
+        if(modal.columns){
+            modal.columns = false;
+        }
+        if(modal.filters){
+            modal.filters = false;
+        }
+        if(modal.sort){
+            modal.sort = false;
+        }
+    }, {stop: true, prevent: true});
 
     function getValue(row, column){
         let value = row[column.column];
@@ -94,7 +113,7 @@
 
     function getGrid(){
         let text = '';
-        for (let column of order.value){
+        for (let column of columns.value){
             if(column.hidden){
                 continue;
             }
@@ -108,9 +127,9 @@
         return 'grid-template-columns: ' + text.trim() + ' 50px';
     }
 
-    function getOrder(){
+    function getColumns(){
         let arr = [];
-        for (let row of order.value){
+        for (let row of columns.value){
             if(row.hidden){
                 continue;
             }

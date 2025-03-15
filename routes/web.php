@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/filters/get', [Controller::class, 'filters']);
 
     //Errors
+    Route::post('/error/options/set', [ErrorController::class, 'optionSet']);
     Route::post('/{team}/errors/filter', [ErrorController::class, 'filter']);
 
     //Logs

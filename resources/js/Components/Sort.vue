@@ -16,6 +16,8 @@
         </div>
         <div class="p-2" v-else>Нет сортировок</div>
         <div class="flex">
+            <button class="button mr-2">Очистить</button>
+            <button class="button">Сохранить</button>
             <div class="grow"></div>
             <button class="button" @click="confirm()">Применить</button>
         </div>

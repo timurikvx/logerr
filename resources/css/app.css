@@ -382,14 +382,6 @@ body{
     cursor: pointer;
 }
 
-/*.filters .choice-list{*/
-/*    transition: 0.3s;*/
-/*}*/
-
-/*.filters .choice-list:hover{*/
-/*    flex-wrap: wrap;*/
-/*}*/
-
 .sort{
     width: 50%;
     max-width: 500px;
@@ -401,6 +393,10 @@ body{
     border-radius: 8px;
     @apply mb-2 px-3 py-2 select-none;
     cursor: pointer;
+}
+
+.sort .field{
+    transition: 0.3s;
 }
 
 .sort .active{

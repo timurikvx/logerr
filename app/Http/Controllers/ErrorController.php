@@ -96,8 +96,16 @@ class ErrorController extends Controller
         return [
             'errors'=>ErrorItemResource::collection($errors)->toArray($request)
         ];
+    }
 
-        //dump($request->all());
+    public function optionSet(Request $request)
+    {
+        $filters = $request->get('filters');
+        $sort = $request->get('sort');
+        $columns = $request->get('columns');
+        dump($filters);
+        dump($sort);
+        dump($columns);
     }
 
 
