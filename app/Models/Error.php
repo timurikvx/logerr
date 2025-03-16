@@ -80,11 +80,11 @@ class Error extends Model
 
     public static function getErrors($team, $filters = [], $sort = []): mixed
     {
-        $crew = Crew::getByGuid($team);
-        if(is_null($crew)){
-            return null;
-        }
-        $query = self::query()->where('team', $crew->id);
+//        $crew = Crew::getByGuid($team);
+//        if(is_null($crew)){
+//            return null;
+//        }
+        $query = self::query()->where('team', $team);
         Filters::setFilters($query, $filters);
         Filters::setSort($query, $sort);
         return $query;

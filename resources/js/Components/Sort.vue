@@ -35,6 +35,7 @@
     const modal = modalStore();
     const emits = defineEmits(['update:sort', 'confirm']);
     const props = defineProps({
+        team: String,
         sort: Array,
         fields: Object
     });
@@ -85,7 +86,7 @@
 
     function save(){
         setTimeout(function (){
-            axios.post('/error/options/set', {sort: sort.value}).then(function (response){
+            axios.post('/error/options/set', {team: props.team, sort: sort.value}).then(function (response){
                 if(response.data.result){
                     console.log('true');
                 }

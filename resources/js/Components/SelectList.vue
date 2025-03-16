@@ -1,7 +1,7 @@
 <template>
     <div class="select-list flex flex-col relative">
-        <input v-if="input" ref="item" type="text" :placeholder="placeholder" :style="getInputStyle()" :value="value.name" class="input grow cursor-pointer">
-        <div v-else ref="item" class="input p-2 grow content-center cursor-pointer" :style="getInputStyle()">
+        <input v-if="input" ref="item" type="text" :placeholder="placeholder" :style="getInputStyle()" :value="value.name" class="value input grow cursor-pointer">
+        <div v-else ref="item" class="value input p-2 grow content-center cursor-pointer" :style="getInputStyle()">
             <div v-if="value?.name">{{ value.name }}</div>
             <div v-else>{{ placeholder }}</div>
         </div>
@@ -17,7 +17,7 @@
 
 <script setup>
 
-import {ref, defineProps, onMounted, defineEmits, computed} from "vue";
+    import {ref, defineProps, onMounted, defineEmits, computed} from "vue";
 
     const props = defineProps({
         input: Boolean,
@@ -62,7 +62,8 @@ import {ref, defineProps, onMounted, defineEmits, computed} from "vue";
     }
 
     function click(e){
-        if(item.value === e.target){
+        let element = e.target.closest('.value.input');
+        if(item.value === element){
             list_visible.value = !list_visible.value;
             return;
         }

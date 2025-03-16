@@ -482,9 +482,16 @@ body{
     background-color: var(--purple);
 }
 
+.errors .shade{
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+}
+
 .question{
     width: 500px;
 }
-
 
 

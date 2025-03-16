@@ -50,6 +50,7 @@
 
     const store = modalStore();
     const props = defineProps({
+        team: String,
         filters: Object
     });
     const emits = defineEmits(['update:filters', 'filter']);
@@ -140,7 +141,7 @@
     }
 
     function save(){
-        axios.post('/error/options/set', {filters: props.filters}).then(function (response){
+        axios.post('/error/options/set', {team: props.team, filters: props.filters}).then(function (response){
             if(response.data.result){
                 console.log('true');
             }

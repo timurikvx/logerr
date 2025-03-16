@@ -4,10 +4,11 @@
             <div class="p-2 font-bold text-xl uppercase">Список ошибок</div>
             <div class="grow"></div>
             <div class="self-center mr-4">Настройка списка:</div>
-            <SelectList placeholder="Нет настройки" :input="false" v-model:value="option" :minWidth="220" :list="options" @select="selectOption"></SelectList>
-            <button class="square-button save" title="Сохранить текущие фильтры, колонки и сортировку" @click="saveOptionBegin"></button>
-            <button class="square-button delete mr-4" :title="'Удалить текущую настройку ' + option?.name" @click="removeOptionBegin"></button>
-            <Button icon="options-pic" @click="modal.columns = true">Настройка таблицы</Button>
+            <SelectList placeholder="Нет настройки" :input="false" v-model:value="option" :minWidth="220" :list="getOptions()" @select="selectOption"></SelectList>
+            <button class="square-button add" title="Сохранить текущие фильтры, колонки и сортировку в новую настройку" @click="createOptionBegin"></button>
+            <button v-if="option?.guid" class="square-button save" title="Обновить текущие фильтры, колонки и сортировку настройки" @click="saveOption"></button>
+            <button v-if="option?.guid" class="square-button delete mr-4" :title="'Удалить текущую настройку ' + option?.name" @click="removeOptionBegin"></button>
+            <Button icon="options-pic" @click="modal.columns = true">Настройка колонок {{ countColumns() }}</Button>
             <Button icon="filter-pic" @click="modal.filters = true">Фильтры {{ countFilters() }}</Button>
             <Button icon="sort-pic" @click="modal.sort = true">Сортировка {{ countSort() }}</Button>
         </div>
@@ -28,6 +29,7 @@
                         <DataPrint :data="error.data"></DataPrint>
                     </div>
                 </div>
+                <div v-if="shade" class="shade"></div>
             </PerfectScrollbar>
             <div class="flex p-2">
                 <Button class="button px-6">Пред.</Button>
@@ -36,10 +38,10 @@
             </div>
         </div>
     </Layout>
-    <Columns v-model:columns="columns"></Columns>
-    <Filters v-model:filters="fields" @filter="filtering"></Filters>
-    <Sort v-model:sort="sort" :fields="fields" @confirm="filtering"></Sort>
-    <SetName title="Введите наименование настройки" @complete="saveOption"></SetName>
+    <Columns :team="guid" v-model:columns="columns"></Columns>
+    <Filters :team="guid" v-model:filters="fields" @filter="filtering"></Filters>
+    <Sort :team="guid" v-model:sort="sort" :fields="fields" @confirm="filtering"></Sort>
+    <SetName title="Введите наименование настройки" @complete="createOption"></SetName>
     <Question :title="question.title" :question="question.question" :type="question.type" v-model:visible="question.visible" @confirm="questionEnd"></Question>
 </template>
 
@@ -108,7 +110,8 @@
         title: '',
         question: '',
         visible: false
-    })
+    });
+    let shade = ref(false);
 
     onMounted(()=>{
         list.value = props.errors;
@@ -175,10 +178,14 @@
     }
 
     function filtering(){
-        axios.post('/' + props.guid + '/errors/filter', {filter: fields.value, sort: sort.value}).then(function (response){
+        shade.value = true;
+        axios.post('/' + props.guid + '/errors/filter', {team: props.guid, filter: fields.value, sort: sort.value}).then(function (response){
+            shade.value = false;
             if(response.data.errors){
                 list.value = response.data.errors;
             }
+        }).catch(function (error){
+            shade.value = false;
         });
     }
 
@@ -194,13 +201,56 @@
         return '(' + sort.value.length + ')';
     }
 
-    function saveOptionBegin(){
+    function countColumns(){
+        let count = 0;
+        for (let column of columns.value){
+            if(column?.width !== 1 || column?.hidden){
+                count += 1;
+            }
+        }
+        return '(' + count + ')';
+    }
+
+    function createOptionBegin(){
         modal.setName = true;
+    }
+
+    function createOption(name){
+        shade.value = true;
+        axios.post('/error/options/create', {team: props.guid, name: name, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
+            shade.value = false;
+            if(response.data.options){
+                options.value = response.data.options;
+            }
+            if(response.data.option){
+                option.value = response.data.option;
+            }
+        }).catch(function (error){
+            shade.value = false;
+        });
+    }
+
+    function saveOption(){
+        let data = option.value;
+        shade.value = true;
+        axios.post('/error/options/save', {team: props.guid, guid: data.guid, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
+            shade.value = false;
+            if(response.data.options){
+                options.value = response.data.options;
+            }
+            if(response.data.option){
+                option.value = response.data.option;
+            }
+        }).catch(function (error){
+            shade.value = false;
+        });
     }
 
     function selectOption(item){
         let data = Object.assign({team: props.guid, guid: item.guid});
+        shade.value = true;
         axios.post('/error/options/change', data).then(function (response){
+            shade.value = false;
             let data = response.data;
             if(data.filters){
                 fields.value = data.filters;
@@ -214,17 +264,8 @@
             if(data.errors){
                 list.value = data.errors;
             }
-        });
-    }
-
-    function saveOption(name){
-        axios.post('/error/options/save', {name: name, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
-            if(response.data.options){
-                options.value = response.data.options;
-            }
-            if(response.data.option){
-                option.value = response.data.option;
-            }
+        }).catch(function (error){
+            shade.value = false;
         });
     }
 
@@ -236,7 +277,9 @@
     }
 
     function removeOption(){
+        shade.value = true;
         axios.post('/error/options/delete', {team: props.guid, guid: option.value.guid}).then(function (response){
+            shade.value = false;
             if(response.data.options){
                 options.value = response.data.options;
             }
@@ -246,6 +289,8 @@
             if(response.data.errors){
                 list.value = response.data.errors;
             }
+        }).catch(function (error){
+            shade.value = false;
         });
     }
 
@@ -253,6 +298,15 @@
         if(type === 'remove option'){
             removeOption();
         }
+    }
+
+    function getOptions(){
+        let arr = [];
+        if(option.value?.guid){
+            arr.push({name: 'Нет настройки'});
+        }
+        options.value.forEach((item)=> arr.push(item));
+        return arr;
     }
 
 </script>

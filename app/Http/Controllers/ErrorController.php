@@ -76,17 +76,17 @@ class ErrorController extends Controller
 
     public function errorsTeam(Request $request, $guid): Response
     {
-        $sort = UserOption::get('error_sort', []);
-        $filters = UserOption::get('error_filters', []);
-        $columns = UserOption::get('error_columns', []);
-        $crew = Crew::getByGuid($guid);
-        $errors = Error::getErrors($guid, $filters, $sort)->limit(20)->get();
-        $options = ErrorOption::getAll(true);
-        $guid_option = UserOption::get('current_option', '');
-        $option = ErrorOption::getByGuid($guid_option);
+        $team = Crew::getByGuid($guid);
+        $sort = UserOption::get('error_sort', $team->id, []);
+        $filters = UserOption::get('error_filters', $team->id, []);
+        $columns = UserOption::get('error_columns', $team->id, []);
+        $errors = Error::getErrors($team->id, $filters, $sort)->limit(20)->get();
+        $options = ErrorOption::getAll($team->id,true);
+        $guid_option = UserOption::get('current_option', $team->id, '');
+        $option = ErrorOption::getByGuid($team->id, $guid_option);
         $data = [
             'guid'=>$guid,
-            'crew'=> (new CrewItemResource($crew))->toArray($request),
+            'crew'=> (new CrewItemResource($team))->toArray($request),
             'errors'=>ErrorItemResource::collection($errors)->toArray($request),
             'sort'=>$sort,
             'filters'=>$filters,
@@ -97,89 +97,130 @@ class ErrorController extends Controller
         return Inertia::render('Errors/ErrorTeam', $data);
     }
 
-    public function filter(Request $request, $guid)
+    public function filter(Request $request, $guid): array
     {
+        $team = Crew::getByGuid($guid);
         $filters = $request->get('filter');
         $sort = $request->get('sort');
-        $errors = Error::getErrors($guid, $filters, $sort)->limit(20)->get();
+        $errors = Error::getErrors($team->id, $filters, $sort)->limit(20)->get();
         return [
             'errors'=>ErrorItemResource::collection($errors)->toArray($request)
         ];
     }
 
-    public function optionSet(Request $request)
+    public function optionSet(Request $request): array
     {
+        $team_guid = $request->get('team');
+        $team = Crew::getByGuid($team_guid);
         $filters = $request->get('filters');
         $sort = $request->get('sort');
         $columns = $request->get('columns');
         if(!is_null($sort)){
-            UserOption::set('error_sort', $sort);
+            UserOption::set('error_sort', $team->id, $sort);
             return ['result'=>true];
         }
         if(!is_null($filters)){
-            UserOption::set('error_filters', $filters);
+            UserOption::set('error_filters', $team->id, $filters);
             return ['result'=>true];
         }
         if(!is_null($columns)){
-            UserOption::set('error_columns', $columns);
+            UserOption::set('error_columns', $team->id, $columns);
             return ['result'=>true];
         }
         return ['result'=>false];
     }
 
-    public function optionSave(Request $request): array
+    public function optionCreate(Request $request): array
     {
+        $team_guid = $request->get('team');
+        $team = Crew::getByGuid($team_guid);
+
         $name = $request->get('name');
         $filters = $request->get('filters');
         $sort = $request->get('sort');
         $columns = $request->get('columns');
-        $data = [
-            'filters'=>$filters,
-            'sort'=>$sort,
-            'columns'=>$columns
-        ];
-        $guid = ErrorOption::set($name, $data);
-        UserOption::set('current_option', $guid);
 
-        UserOption::set('error_sort', $sort);
-        UserOption::set('error_filters', $filters);
-        UserOption::set('error_columns', $columns);
+        $data = $this->getData($request);
+        $guid = ErrorOption::set($team->id, $name, $data);
 
-        $option = ErrorOption::getByGuid($guid, true);
-        $options = ErrorOption::getAll(true);
+        UserOption::set('current_option', $team->id, $guid);
+        UserOption::set('error_sort', $team->id, $sort);
+        UserOption::set('error_filters', $team->id, $filters);
+        UserOption::set('error_columns', $team->id, $columns);
+
+        $option = ErrorOption::getByGuid($team->id, $guid, true);
+        $options = ErrorOption::getAll($team->id, true);
+
         return ['result'=>true, 'options'=>$options, 'option'=>$option];
+    }
+
+    public function optionSave(Request $request): array
+    {
+        $team_guid = $request->get('team');
+        $team = Crew::getByGuid($team_guid);
+
+        $guid = $request->get('guid');
+        $filters = $request->get('filters');
+        $sort = $request->get('sort');
+        $columns = $request->get('columns');
+
+        $data = $this->getData($request);
+        ErrorOption::setByGuid($team->id, $guid, $data);
+
+        UserOption::set('current_option', $team->id, $guid);
+        UserOption::set('error_sort',    $team->id, $sort);
+        UserOption::set('error_filters', $team->id, $filters);
+        UserOption::set('error_columns', $team->id, $columns);
+
+        $option = ErrorOption::getByGuid($team->id, $guid, true);
+        $options = ErrorOption::getAll($team->id, true);
+
+        return ['result'=>true, 'options'=>$options, 'option'=>$option];
+    }
+
+    private function getData(Request $request): array
+    {
+        return [
+            'filters'=>$request->get('filters'),
+            'sort'=>$request->get('sort'),
+            'columns'=>$request->get('columns')
+        ];
     }
 
     public function optionDelete(Request $request): array
     {
-        $team = $request->get('team');
-        $guid = $request->get('guid');
-        ErrorOption::removeByGuid($guid);
+        $team_guid = $request->get('team');
+        $team = Crew::getByGuid($team_guid);
 
-        $options = ErrorOption::getAll();
+        $guid = $request->get('guid');
+        ErrorOption::removeByGuid($team->id, $guid);
+
+        $options = ErrorOption::getAll($team->id);
         $option = [];
         if(count($options) > 0){
             $option = $options[0];
-            UserOption::set('current_option', $option['guid']);
+            UserOption::set('current_option', $team->id, $option['guid']);
         }
-        $errors = $this->getErrors($team, $option);
+        $errors = $this->getErrors($team->id, $option);
         ErrorOption::clearData($options);
         return ['options'=>$options, 'option'=>$option, 'errors'=>$errors];
     }
 
     public function optionChange(Request $request): array
     {
-        $team = $request->get('team');
+        $team_guid = $request->get('team');
+        $team = Crew::getByGuid($team_guid);
+
         $guid = $request->get('guid');
-        $option = ErrorOption::getByGuid($guid);
+        $option = ErrorOption::getByGuid($team->id, $guid);
         if(is_null($option)){
             return [];
         }
-        UserOption::set('current_option', $guid);
-        $option = ErrorOption::getByGuid($guid);
+        UserOption::set('current_option', $team->id, $guid);
+        $option = ErrorOption::getByGuid($team->id, $guid);
 
         $data = $option['data'];
-        $errors = $this->getErrors($team, $option);
+        $errors = $this->getErrors($team->id, $option);
         $data['errors'] = $errors;
         return $data;
     }
@@ -191,9 +232,9 @@ class ErrorController extends Controller
         }else{
             $data = ['sort'=>[], 'filters'=>[], 'columns'=>[]];
         }
-        UserOption::set('error_sort', $data['sort']);
-        UserOption::set('error_filters', $data['filters']);
-        UserOption::set('error_columns', $data['columns']);
+        UserOption::set('error_sort', $team, $data['sort']);
+        UserOption::set('error_filters', $team, $data['filters']);
+        UserOption::set('error_columns', $team, $data['columns']);
         return Error::getErrors($team, $data['filters'], $data['sort'])->limit(20)->get();
     }
 

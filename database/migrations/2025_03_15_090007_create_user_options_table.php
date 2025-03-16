@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('user_options', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user')->index();
+            $table->unsignedBigInteger('team')->index();
             $table->string('name');
             $table->json('data')->nullable();
             $table->timestamps();
+            $table->foreign('user')->references('id')->on('users');
         });
     }
 
