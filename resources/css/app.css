@@ -482,6 +482,9 @@ body{
     background-color: var(--purple);
 }
 
+.question{
+    width: 500px;
+}
 
 
 

@@ -3,10 +3,10 @@
         <div class="flex mb-4">
             <div class="p-2 font-bold text-xl uppercase">Список ошибок</div>
             <div class="grow"></div>
-            <SelectList :input="false" v-model:value="option" :minWidth="220" :list="options" class=""></SelectList>
+            <div class="self-center mr-4">Настройка списка:</div>
+            <SelectList placeholder="Нет настройки" :input="false" v-model:value="option" :minWidth="220" :list="options" @select="selectOption"></SelectList>
             <button class="square-button save" title="Сохранить текущие фильтры, колонки и сортировку" @click="saveOptionBegin"></button>
-            <button class="square-button delete mr-4" :title="'Удалить текущую настройку ' + option.name"></button>
-            <Button icon="options-pic" @click="modal.setName = true">Настройки</Button>
+            <button class="square-button delete mr-4" :title="'Удалить текущую настройку ' + option?.name" @click="removeOptionBegin"></button>
             <Button icon="options-pic" @click="modal.columns = true">Настройка таблицы</Button>
             <Button icon="filter-pic" @click="modal.filters = true">Фильтры {{ countFilters() }}</Button>
             <Button icon="sort-pic" @click="modal.sort = true">Сортировка {{ countSort() }}</Button>
@@ -36,10 +36,11 @@
             </div>
         </div>
     </Layout>
-    <Columns :columns="columns"></Columns>
+    <Columns v-model:columns="columns"></Columns>
     <Filters v-model:filters="fields" @filter="filtering"></Filters>
-    <Sort :sort="sort" :fields="fields" @confirm="filtering"></Sort>
+    <Sort v-model:sort="sort" :fields="fields" @confirm="filtering"></Sort>
     <SetName title="Введите наименование настройки" @complete="saveOption"></SetName>
+    <Question :title="question.title" :question="question.question" :type="question.type" v-model:visible="question.visible" @confirm="questionEnd"></Question>
 </template>
 
 <script setup>
@@ -55,8 +56,8 @@
     import Sort from "@/Components/Sort.vue";
     import {useButtons} from '@/Packs/Buttons';
     import SelectList from "@/Components/SelectList.vue";
+    import Question from "@/Components/JSON/Question.vue";
     import axios from "axios";
-    import {s} from "../../../../public/build/assets/app-CWDMpo7l.js";
 
     const props = defineProps({
         guid: String,
@@ -66,6 +67,7 @@
         filters: Object,
         columns: Array,
         options: Array,
+        option: Object,
     });
     const modal = modalStore();
     const buttons = useButtons();
@@ -99,14 +101,14 @@
     });
     let sort = ref([]);
     let list = ref([]);
-    let options = ref([
-        {name: 'Настройка 1', guid: '3g3g3g3g3g3g'},
-        {name: 'Настройка для того чтобы', guid: 'nt55h4h43g2g2'},
-        {name: 'Настройка этого', guid: '23423fdsassd'},
-        {name: 'Настройка 2', guid: 'fdgfgddsfdsf223242'},
-        {name: 'Для просмотра ошибок таких то', guid: '23324323232'},
-    ]);
-    let option = ref({name: 'Настройка этого', guid: '23423fdsassd'});
+    let options = ref([]);
+    let option = ref({});
+    let question = ref({
+        type: '',
+        title: '',
+        question: '',
+        visible: false
+    })
 
     onMounted(()=>{
         list.value = props.errors;
@@ -117,6 +119,9 @@
         if(props.columns.length > 0){
             columns.value = props.columns;
         }
+        options.value = props.options;
+        option.value = props.option;
+        console.log(props);
     });
 
     buttons.escape(function (){
@@ -193,12 +198,61 @@
         modal.setName = true;
     }
 
+    function selectOption(item){
+        let data = Object.assign({team: props.guid, guid: item.guid});
+        axios.post('/error/options/change', data).then(function (response){
+            let data = response.data;
+            if(data.filters){
+                fields.value = data.filters;
+            }
+            if(data.sort){
+                sort.value = data.sort;
+            }
+            if(data.columns){
+                columns.value = data.columns;
+            }
+            if(data.errors){
+                list.value = data.errors;
+            }
+        });
+    }
+
     function saveOption(name){
-        axios.post('/error/options/save', {name: name, filters: fields.value, sort: sort.value, columns: columns.value});
+        axios.post('/error/options/save', {name: name, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
+            if(response.data.options){
+                options.value = response.data.options;
+            }
+            if(response.data.option){
+                option.value = response.data.option;
+            }
+        });
+    }
+
+    function removeOptionBegin(){
+        question.value.visible = true;
+        question.value.type = 'remove option';
+        question.value.title = 'Удалиние настройки';
+        question.value.question = 'Удалить настройку ' + option.value.name + '?';
     }
 
     function removeOption(){
+        axios.post('/error/options/delete', {team: props.guid, guid: option.value.guid}).then(function (response){
+            if(response.data.options){
+                options.value = response.data.options;
+            }
+            if(response.data.option){
+                option.value = response.data.option;
+            }
+            if(response.data.errors){
+                list.value = response.data.errors;
+            }
+        });
+    }
 
+    function questionEnd(type){
+        if(type === 'remove option'){
+            removeOption();
+        }
     }
 
 </script>

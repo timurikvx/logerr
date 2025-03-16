@@ -84,8 +84,7 @@ class Error extends Model
         if(is_null($crew)){
             return null;
         }
-        $query = self::query();
-        $query->where('team', $crew->id);
+        $query = self::query()->where('team', $crew->id);
         Filters::setFilters($query, $filters);
         Filters::setSort($query, $sort);
         return $query;

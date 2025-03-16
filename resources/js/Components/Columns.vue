@@ -104,7 +104,6 @@
             column.hidden = false;
             column.width = 1;
         }
-        columns.value = [];
         save();
     }
 

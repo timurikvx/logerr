@@ -84,11 +84,14 @@
     }
 
     function save(){
-        axios.post('/error/options/set', {sort: props.sort}).then(function (response){
-            if(response.data.result){
-                console.log('true');
-            }
-        })
+        setTimeout(function (){
+            axios.post('/error/options/set', {sort: sort.value}).then(function (response){
+                if(response.data.result){
+                    console.log('true');
+                }
+            })
+        }, 20);
+
     }
 
 </script>

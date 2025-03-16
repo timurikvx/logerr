@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function(){
     //Errors
     Route::post('/error/options/set', [ErrorController::class, 'optionSet']);
     Route::post('/error/options/save', [ErrorController::class, 'optionSave']);
+    Route::post('/error/options/change', [ErrorController::class, 'optionChange']);
     Route::post('/error/options/delete', [ErrorController::class, 'optionDelete']);
     Route::post('/{team}/errors/filter', [ErrorController::class, 'filter']);
 

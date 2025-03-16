@@ -1,7 +1,10 @@
 <template>
     <div class="select-list flex flex-col relative">
-        <input v-if="input" ref="item" type="text" placeholder="" :style="getInputStyle()" :value="value.name" class="input grow cursor-pointer">
-        <div v-else ref="item" class="input p-2 grow content-center cursor-pointer" :style="getInputStyle()">{{ value.name }}</div>
+        <input v-if="input" ref="item" type="text" :placeholder="placeholder" :style="getInputStyle()" :value="value.name" class="input grow cursor-pointer">
+        <div v-else ref="item" class="input p-2 grow content-center cursor-pointer" :style="getInputStyle()">
+            <div v-if="value?.name">{{ value.name }}</div>
+            <div v-else>{{ placeholder }}</div>
+        </div>
         <div class="fixed listing z-10 flex flex-col overflow-hidden" :style="style" :key="key" v-show="list_visible"  @mouseleave="mouseleave" @mouseover="mouseover">
             <PerfectScrollbar>
                 <div v-for="item in list" class="p-2 item cursor-pointer" @click="select(item)">
@@ -23,9 +26,13 @@ import {ref, defineProps, onMounted, defineEmits, computed} from "vue";
         minWidth:{
             type: Number,
             default: 0
+        },
+        placeholder: {
+            type: String,
+            default: ''
         }
     });
-    const emits = defineEmits(['update:value'])
+    const emits = defineEmits(['update:value', 'select']);
     const item = ref(null);
 
     let style = ref('');
@@ -74,9 +81,8 @@ import {ref, defineProps, onMounted, defineEmits, computed} from "vue";
         key.value = Math.random();
         list_visible.value = false;
         setTimeout(show, 20);
-        console.log('item', item);
         value.value = item;
-        console.log('value.value', value.value);
+        emits('select', item);
     }
 
     function getInputStyle(){

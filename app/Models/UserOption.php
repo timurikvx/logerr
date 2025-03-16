@@ -23,7 +23,7 @@ class UserOption extends Model
         $option->save();
     }
 
-    public static function get($name, $default = null): array
+    public static function get($name, $default = null): array|string
     {
         $user = Auth::id();
         $option = self::query()->where('user', '=', $user)->where('name', '=', $name)->first();

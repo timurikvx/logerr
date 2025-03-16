@@ -11,7 +11,7 @@ class ErrorOption extends Model
 {
     use HasFactory;
 
-    public static function set($name, $value): void
+    public static function set($name, $value): string
     {
         $user = Auth::id();
         $option = self::query()->where('user', '=', $user)->where('name', '=', $name)->first();
@@ -23,16 +23,35 @@ class ErrorOption extends Model
         }
         $option->data = json_encode($value);
         $option->save();
+        return $option->guid;
     }
 
-    public static function get($name, $default = null): array
+    public static function get($name, $without_data = false): mixed
     {
         $user = Auth::id();
         $option = self::query()->where('user', '=', $user)->where('name', '=', $name)->first();
         if(is_null($option)){
-            return $default;
+            return null;
         }
-        return ['name'=>$option->name, 'guid'=> $option->guid, 'value'=>json_decode($option->data, true)];
+        $item = ['name'=>$option->name, 'guid'=> $option->guid];
+        if(!$without_data){
+            $item['data'] = json_decode($option->data, true);
+        }
+        return $item;
+    }
+
+    public static function getByGuid($guid, $without_data = false): mixed
+    {
+        $user = Auth::id();
+        $option = self::query()->where('user', '=', $user)->where('guid', '=', $guid)->first();
+        if(is_null($option)){
+            return null;
+        }
+        $item = ['name'=>$option->name, 'guid'=> $option->guid];
+        if(!$without_data){
+            $item['data'] = json_decode($option->data, true);
+        }
+        return $item;
     }
 
     public static function getAll($without_data = false): array
@@ -59,5 +78,20 @@ class ErrorOption extends Model
         }
     }
 
+    public static function removeByGuid($guid): void
+    {
+        $user = Auth::id();
+        $option = self::query()->where('user', '=', $user)->where('guid', '=', $guid)->first();
+        if(!is_null($option)){
+            $option->delete();
+        }
+    }
+
+    public static function clearData(&$options): void
+    {
+        foreach ($options as $option){
+            unset($option['data']);
+        }
+    }
 
 }

@@ -16,6 +16,7 @@ use Illuminate\Support\ValidatedInput;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
+use phpseclib3\Crypt\DES;
 
 class ErrorController extends Controller
 {
@@ -84,6 +85,8 @@ class ErrorController extends Controller
         $crew = Crew::getByGuid($guid);
         $errors = Error::getErrors($guid, $filters, $sort)->limit(20)->get();
         $options = ErrorOption::getAll(true);
+        $guid_option = UserOption::get('current_option', '');
+        $option = ErrorOption::getByGuid($guid_option);
         $data = [
             'guid'=>$guid,
             'crew'=> (new CrewItemResource($crew))->toArray($request),
@@ -91,7 +94,8 @@ class ErrorController extends Controller
             'sort'=>$sort,
             'filters'=>$filters,
             'columns'=>$columns,
-            'options'=>$options
+            'options'=>$options,
+            'option'=>$option
         ];
         return Inertia::render('Errors/ErrorTeam', $data);
     }
@@ -137,15 +141,54 @@ class ErrorController extends Controller
             'sort'=>$sort,
             'columns'=>$columns
         ];
-        ErrorOption::set($name, $data);
-        return ['result'=>true];
+        $guid = ErrorOption::set($name, $data);
+        UserOption::set('current_option', $guid);
+
+        $option = ErrorOption::getByGuid($guid, true);
+        $options = ErrorOption::getAll(true);
+        return ['result'=>true, 'options'=>$options, 'option'=>$option];
     }
 
     public function optionDelete(Request $request): array
     {
-        $name = $request->get('name');
-        ErrorOption::remove($name);
-        return ['result'=>true];
+        $team = $request->get('team');
+        $guid = $request->get('guid');
+        ErrorOption::removeByGuid($guid);
+
+        $options = ErrorOption::getAll();
+        $option = [];
+        if(count($options) > 0){
+            $option = $options[0];
+            UserOption::set('current_option', $option['guid']);
+        }
+        $errors = $this->getErrors($team, $option);
+        ErrorOption::clearData($options);
+        return ['options'=>$options, 'option'=>$option, 'errors'=>$errors];
+    }
+
+    public function optionChange(Request $request): array
+    {
+        $team = $request->get('team');
+        $guid = $request->get('guid');
+        $option = ErrorOption::getByGuid($guid);
+        if(is_null($option)){
+            return [];
+        }
+        UserOption::set('current_option', $guid);
+
+        $errors = $this->getErrors($team, $option);
+        $data['errors'] = $errors;
+        return $data;
+    }
+
+    private function getErrors($team, $option)
+    {
+        $data = $option['data'];
+        UserOption::set('error_sort', $data['sort']);
+        UserOption::set('error_filters', $data['filters']);
+        UserOption::set('error_columns', $data['columns']);
+
+        return Error::getErrors($team, $data['filters'], $data['sort'])->limit(20)->get();
     }
 
 }
