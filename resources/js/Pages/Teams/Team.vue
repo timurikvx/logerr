@@ -1,6 +1,6 @@
 <template>
     <Layout>
-        <div>errors</div>
+        team
     </Layout>
 </template>
 
@@ -10,5 +10,6 @@
 
 </script>
 
+<style scoped>
 
-
+</style>

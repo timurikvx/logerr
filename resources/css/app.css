@@ -67,6 +67,23 @@ body{
     background-color: var(--main);
 }
 
+.sidebar .menu-item{
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.sidebar .menu-item.active{
+    background-color: var(--purple);
+}
+
+.sidebar .menu-item.active:hover{
+    background-color: var(--purple);
+}
+
+.sidebar .menu-item:hover{
+    background-color: var(--border);
+}
+
 .sidebar .team{
     transition: 0.3s;
     border-radius: 8px;
@@ -492,6 +509,35 @@ body{
 
 .question{
     width: 500px;
+}
+
+.teams .content{
+    background-color: var(--main);
+    border: 1px solid var(--border);
+}
+
+.teams .team{
+    /*width: 230px;*/
+    height: 130px;
+    transition: 0.3s;
+    border: 1px solid var(--border);
+}
+
+.teams .team .refs{
+    width: 240px;
+}
+
+.teams .team .refs .btn{
+    transition: 0.3s;
+}
+
+.teams .team .refs .btn:hover{
+    background-color: var(--purple);
+}
+
+.teams .team:hover{
+    /*background-color: var(--purple);*/
+    box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.5);
 }
 
 

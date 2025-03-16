@@ -1,5 +1,5 @@
 <template>
-    <Modal :title="title" v-model:visible="modal.setName" class="set-name">
+    <Modal :title="title" v-model:visible="modal.setName" class="set-name" @close="close">
         <div class="flex">
             <input type="text" class="input grow mr-2" v-model="name">
             <button class="button" @click="complete">Установить</button>
@@ -14,7 +14,6 @@
     import {modalStore} from "@/Store/Modal.js";
 
     const modal = modalStore();
-
     const props = defineProps({
         title: {
             type: String,
@@ -25,7 +24,6 @@
             default: ''
         }
     });
-
     const emits = defineEmits(['complete']);
 
     onMounted(()=>{
@@ -40,6 +38,11 @@
         }
         modal.setName = false;
         emits('complete', name.value);
+        name.value = '';
+    }
+
+    function close(){
+        name.value = '';
     }
 
 </script>

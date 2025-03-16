@@ -6,6 +6,8 @@ use App\Models\Crew;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Crew\CrewItemResource;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class CrewController extends Controller
 {
@@ -37,9 +39,19 @@ class CrewController extends Controller
         return ['list'=>CrewItemResource::collection(Crew::list())->toArray($request)];
     }
 
-    public function list(Request $request)
+    public function list(Request $request): array
     {
         return ['list'=>CrewItemResource::collection(Crew::list())->toArray($request)];
+    }
+
+    public function teams(Request $request): Response
+    {
+        return Inertia::render('Teams/Teams');
+    }
+
+    public function team(Request $request): Response
+    {
+        return Inertia::render('Teams/Team');
     }
 
 }

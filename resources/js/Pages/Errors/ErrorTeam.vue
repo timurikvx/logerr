@@ -7,8 +7,8 @@
             <SelectList placeholder="Нет настройки" :input="false" v-model:value="option" :minWidth="220" :list="getOptions()" @select="selectOption"></SelectList>
             <button class="square-button add" title="Сохранить текущие фильтры, колонки и сортировку в новую настройку" @click="createOptionBegin"></button>
             <button v-if="option?.guid" class="square-button save" title="Обновить текущие фильтры, колонки и сортировку настройки" @click="saveOption"></button>
-            <button v-if="option?.guid" class="square-button delete mr-4" :title="'Удалить текущую настройку ' + option?.name" @click="removeOptionBegin"></button>
-            <Button icon="options-pic" @click="modal.columns = true">Настройка колонок {{ countColumns() }}</Button>
+            <button v-if="option?.guid" class="square-button delete" :title="'Удалить текущую настройку ' + option?.name" @click="removeOptionBegin"></button>
+            <Button icon="options-pic" class="ml-4" @click="modal.columns = true">Настройка колонок {{ countColumns() }}</Button>
             <Button icon="filter-pic" @click="modal.filters = true">Фильтры {{ countFilters() }}</Button>
             <Button icon="sort-pic" @click="modal.sort = true">Сортировка {{ countSort() }}</Button>
         </div>

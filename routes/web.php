@@ -38,14 +38,23 @@ Route::middleware(['auth'])->group(function(){
     //Pages
     Route::get('/dashboard', [Controller::class, 'dashboard'])->name('dashboard');
     Route::get('/errors', [ErrorController::class, 'errors'])->name('errors');
-    Route::get('/{team}/errors', [ErrorController::class, 'errorsTeam']);
+    Route::get('/teams', [CrewController::class, 'teams'])->name('teams');
+
+    Route::get('/team/{team}', [CrewController::class, 'team']);
+    Route::get('/errors/{team}', [ErrorController::class, 'errorsTeam']);
+
+
 
     //Teams
     Route::post('/team/create', [CrewController::class, 'create']);
     Route::post('/team/list', [CrewController::class, 'list']);
 
+
+
     //Choice
     Route::post('/choice', [Controller::class, 'choice']);
+
+
 
     //Common
     Route::post('/filters/get', [Controller::class, 'filters']);

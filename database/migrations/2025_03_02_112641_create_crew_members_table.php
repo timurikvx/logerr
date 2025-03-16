@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user')->index();
             $table->unsignedBigInteger('crew')->index();
+            $table->json('roles')->nullable();
             $table->foreign('user')->references('id')->on('users');
             $table->foreign('crew')->references('id')->on('crews');
             $table->timestamps();

@@ -70,13 +70,26 @@ class Filters
             if(empty($equal)){
                 $equal = 'equal';
             }
+            //dump([$value, $value2]);
             if($equal == 'equal'){
+                if(empty($value)){
+                    continue;
+                }
                 $query->where($key, '=', $value);
             }else if($equal == 'not_equal'){
+                if(empty($value)){
+                    continue;
+                }
                 $query->where($key, '<>', $value);
             }else if($equal == 'between'){
-                $query->whereBetween($keys, [$value, $value2]);
+                if(empty($value) && empty($value2)){
+                    continue;
+                }
+                $query->whereBetween($key, [$value, $value2]);
             }else if($equal == 'list'){
+                if(empty($list)){
+                    continue;
+                }
                 $query->whereIn($key, $list);
             }else if($equal == 'not_list'){
                 $query->whereNotIn($key, $list);
@@ -89,7 +102,7 @@ class Filters
             }else if($equal == 'less_equal'){
                 $query->where($key, '<=', $value);
             }else if($equal == 'like'){
-                $query->where($key, 'ILIKE', $filter->get('value'));
+                $query->where($key, 'ILIKE', $value.'%');
             }
         }
     }

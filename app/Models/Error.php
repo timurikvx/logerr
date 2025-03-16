@@ -3,10 +3,8 @@
 namespace App\Models;
 
 use App\Actions\Filters;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 
@@ -80,10 +78,6 @@ class Error extends Model
 
     public static function getErrors($team, $filters = [], $sort = []): mixed
     {
-//        $crew = Crew::getByGuid($team);
-//        if(is_null($crew)){
-//            return null;
-//        }
         $query = self::query()->where('team', $team);
         Filters::setFilters($query, $filters);
         Filters::setSort($query, $sort);
