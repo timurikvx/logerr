@@ -30,9 +30,9 @@
                 </div>
             </PerfectScrollbar>
             <div class="flex p-2">
-                <button class="button px-6">Пред.</button>
+                <Button class="button px-6">Пред.</Button>
                 <div class="grow"></div>
-                <button class="button px-6">След.</button>
+                <Button class="button px-6">След.</Button>
             </div>
         </div>
     </Layout>
@@ -121,7 +121,7 @@
         }
         options.value = props.options;
         option.value = props.option;
-        console.log(props);
+        console.log(props.columns);
     });
 
     buttons.escape(function (){

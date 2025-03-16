@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Filters;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
 use App\Models\Crew;
@@ -12,11 +11,9 @@ use App\Models\UserOption;
 use Illuminate\Http\Request;
 use App\Actions\RabbitMQ\LogerrRabbit;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\ValidatedInput;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
-use phpseclib3\Crypt\DES;
 
 class ErrorController extends Controller
 {
@@ -144,6 +141,10 @@ class ErrorController extends Controller
         $guid = ErrorOption::set($name, $data);
         UserOption::set('current_option', $guid);
 
+        UserOption::set('error_sort', $sort);
+        UserOption::set('error_filters', $filters);
+        UserOption::set('error_columns', $columns);
+
         $option = ErrorOption::getByGuid($guid, true);
         $options = ErrorOption::getAll(true);
         return ['result'=>true, 'options'=>$options, 'option'=>$option];
@@ -175,7 +176,9 @@ class ErrorController extends Controller
             return [];
         }
         UserOption::set('current_option', $guid);
+        $option = ErrorOption::getByGuid($guid);
 
+        $data = $option['data'];
         $errors = $this->getErrors($team, $option);
         $data['errors'] = $errors;
         return $data;
@@ -183,11 +186,14 @@ class ErrorController extends Controller
 
     private function getErrors($team, $option)
     {
-        $data = $option['data'];
+        if(key_exists('data', $option)){
+            $data = $option['data'];
+        }else{
+            $data = ['sort'=>[], 'filters'=>[], 'columns'=>[]];
+        }
         UserOption::set('error_sort', $data['sort']);
         UserOption::set('error_filters', $data['filters']);
         UserOption::set('error_columns', $data['columns']);
-
         return Error::getErrors($team, $data['filters'], $data['sort'])->limit(20)->get();
     }
 
