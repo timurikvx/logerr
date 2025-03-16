@@ -50,7 +50,7 @@ class Filters
         return $data;
     }
 
-    public static function setFilters(Builder &$query, $filters)
+    public static function setFilters(Builder &$query, $filters): void
     {
         $filters = collect($filters);
         $keys = $filters->keys();
@@ -91,6 +91,18 @@ class Filters
             }else if($equal == 'like'){
                 $query->where($key, 'ILIKE', $filter->get('value'));
             }
+        }
+    }
+
+    public static function setSort(Builder &$query, $sort): void
+    {
+        if(count($sort) === 0){
+            $query->orderByDesc('date');
+            return;
+        }
+        foreach ($sort as $item){
+            $desc = $item['desc']? 'desc': 'asc';
+            $query->orderBy($item['field'], $desc);
         }
     }
 

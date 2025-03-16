@@ -16,8 +16,8 @@
         </div>
         <div class="p-2" v-else>Нет сортировок</div>
         <div class="flex">
-            <button class="button mr-2">Очистить</button>
-            <button class="button">Сохранить</button>
+            <button class="button red mr-2" @click="clear">Очистить</button>
+            <button class="button green" @click="save">Сохранить</button>
             <div class="grow"></div>
             <button class="button" @click="confirm()">Применить</button>
         </div>
@@ -30,6 +30,7 @@
     import {modalStore} from "@/Store/Modal.js";
     import {defineProps, defineEmits, computed} from 'vue';
     import SelectFromSlide from "@/Components/SelectFromSlide.vue";
+    import axios from "axios";
 
     const modal = modalStore();
     const emits = defineEmits(['update:sort', 'confirm']);
@@ -75,6 +76,19 @@
 
     function remove(index){
         sort.value.splice(index, 1);
+    }
+
+    function clear(){
+        sort.value = [];
+        save();
+    }
+
+    function save(){
+        axios.post('/error/options/set', {sort: props.sort}).then(function (response){
+            if(response.data.result){
+                console.log('true');
+            }
+        })
     }
 
 </script>

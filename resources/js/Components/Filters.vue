@@ -30,8 +30,8 @@
             </div>
         </div>
         <div class="flex">
-            <button class="button mr-4" @click="close()">Отменить</button>
-            <button class="button red" @click="reset()">Сбросить</button>
+            <button class="button red mr-2" @click="reset()">Сбросить</button>
+            <button class="button green" @click="save">Сохранить</button>
             <div class="grow"></div>
             <button class="button" @click="confirm">Применить</button>
         </div>
@@ -122,6 +122,7 @@
             filter.equal = null;
             filter.list = null;
         }
+        save();
     }
 
     function showChoice(name, item){
@@ -136,6 +137,14 @@
 
     function choiceComplete(name){
         filters.value[name].list = choice.value;
+    }
+
+    function save(){
+        axios.post('/error/options/set', {filters: props.filters}).then(function (response){
+            if(response.data.result){
+                console.log('true');
+            }
+        })
     }
 
 </script>

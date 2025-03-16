@@ -2,12 +2,12 @@
     <Modal title="Выбор списка значений" class="list-choice" v-model:visible="visible" back_class="z-50">
         <div class="flex mb-4 relative">
             <input ref="input" type="text" placeholder="Поиск..." class="input grow" @input="search($event.target.value)">
-            <div class="fixed choice z-10" :style="style" :key="key" v-show="list_visible"  @mouseleave="mouseleave" @mouseover="mouseover">
-                <div v-for="item in getListChoice()">
-                    <div class="p-2 cursor-pointer" @click="select(item)">
+            <div class="fixed listing z-10 flex flex-col overflow-hidden" :style="style" :key="key" v-show="list_visible"  @mouseleave="mouseleave" @mouseover="mouseover">
+                <PerfectScrollbar>
+                    <div v-for="item in getListChoice()" class="p-2 item cursor-pointer" @click="select(item)">
                         <div>{{ item }}</div>
                     </div>
-                </div>
+                </PerfectScrollbar>
             </div>
         </div>
         <PerfectScrollbar class="flex flex-wrap values mb-4">

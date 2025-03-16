@@ -7,6 +7,8 @@ use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
 use App\Models\Crew;
 use App\Models\Error;
+use App\Models\ErrorOption;
+use App\Models\UserOption;
 use Illuminate\Http\Request;
 use App\Actions\RabbitMQ\LogerrRabbit;
 use Illuminate\Support\Facades\Auth;
@@ -76,23 +78,29 @@ class ErrorController extends Controller
 
     public function errorsTeam(Request $request, $guid): Response
     {
+        $sort = UserOption::get('error_sort', []);
+        $filters = UserOption::get('error_filters', []);
+        $columns = UserOption::get('error_columns', []);
         $crew = Crew::getByGuid($guid);
-        $errors = Error::getErrors($guid)->orderByDesc('date')->limit(20)->get();
+        $errors = Error::getErrors($guid, $filters, $sort)->limit(20)->get();
+        $options = ErrorOption::getAll(true);
         $data = [
             'guid'=>$guid,
             'crew'=> (new CrewItemResource($crew))->toArray($request),
-            'errors'=>ErrorItemResource::collection($errors)->toArray($request)
+            'errors'=>ErrorItemResource::collection($errors)->toArray($request),
+            'sort'=>$sort,
+            'filters'=>$filters,
+            'columns'=>$columns,
+            'options'=>$options
         ];
         return Inertia::render('Errors/ErrorTeam', $data);
     }
 
     public function filter(Request $request, $guid)
     {
-        $query = Error::getErrors($guid)->orderByDesc('date')->limit(20);
         $filters = $request->get('filter');
         $sort = $request->get('sort');
-        Filters::setFilters($query, $filters);
-        $errors = $query->get();
+        $errors = Error::getErrors($guid, $filters, $sort)->limit(20)->get();
         return [
             'errors'=>ErrorItemResource::collection($errors)->toArray($request)
         ];
@@ -103,10 +111,41 @@ class ErrorController extends Controller
         $filters = $request->get('filters');
         $sort = $request->get('sort');
         $columns = $request->get('columns');
-        dump($filters);
-        dump($sort);
-        dump($columns);
+        if(!is_null($sort)){
+            UserOption::set('error_sort', $sort);
+            return ['result'=>true];
+        }
+        if(!is_null($filters)){
+            UserOption::set('error_filters', $filters);
+            return ['result'=>true];
+        }
+        if(!is_null($columns)){
+            UserOption::set('error_columns', $columns);
+            return ['result'=>true];
+        }
+        return ['result'=>false];
     }
 
+    public function optionSave(Request $request): array
+    {
+        $name = $request->get('name');
+        $filters = $request->get('filters');
+        $sort = $request->get('sort');
+        $columns = $request->get('columns');
+        $data = [
+            'filters'=>$filters,
+            'sort'=>$sort,
+            'columns'=>$columns
+        ];
+        ErrorOption::set($name, $data);
+        return ['result'=>true];
+    }
+
+    public function optionDelete(Request $request): array
+    {
+        $name = $request->get('name');
+        ErrorOption::remove($name);
+        return ['result'=>true];
+    }
 
 }

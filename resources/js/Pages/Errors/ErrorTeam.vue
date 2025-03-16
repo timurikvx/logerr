@@ -3,9 +3,13 @@
         <div class="flex mb-4">
             <div class="p-2 font-bold text-xl uppercase">Список ошибок</div>
             <div class="grow"></div>
+            <SelectList :input="false" v-model:value="option" :minWidth="220" :list="options" class=""></SelectList>
+            <button class="square-button save" title="Сохранить текущие фильтры, колонки и сортировку" @click="saveOptionBegin"></button>
+            <button class="square-button delete mr-4" :title="'Удалить текущую настройку ' + option.name"></button>
+            <Button icon="options-pic" @click="modal.setName = true">Настройки</Button>
             <Button icon="options-pic" @click="modal.columns = true">Настройка таблицы</Button>
-            <Button icon="filter-pic" @click="modal.filters = true">Фильтры</Button>
-            <Button icon="sort-pic" @click="modal.sort = true">Сортировка</Button>
+            <Button icon="filter-pic" @click="modal.filters = true">Фильтры {{ countFilters() }}</Button>
+            <Button icon="sort-pic" @click="modal.sort = true">Сортировка {{ countSort() }}</Button>
         </div>
         <div class="table-field flex flex-col grow overflow-hidden">
             <div class="cursor-pointer grid head" :style="getGrid()">
@@ -32,9 +36,10 @@
             </div>
         </div>
     </Layout>
-    <TableOptions :columns="columns"></TableOptions>
+    <Columns :columns="columns"></Columns>
     <Filters v-model:filters="fields" @filter="filtering"></Filters>
     <Sort :sort="sort" :fields="fields" @confirm="filtering"></Sort>
+    <SetName title="Введите наименование настройки" @complete="saveOption"></SetName>
 </template>
 
 <script setup>
@@ -42,17 +47,25 @@
     import Layout from "@/Layouts/Layout.vue";
     import {defineProps, onMounted, ref} from 'vue'
     import Button from "@/Components/Button.vue";
-    import TableOptions from "@/Components/TableOptions.vue";
+    import Columns from "@/Components/Columns.vue";
     import DataPrint from "@/Components/JSON/DataPrint.vue";
     import Filters from "@/Components/Filters.vue";
+    import SetName from "@/Components/SetName.vue";
     import {modalStore} from "@/Store/Modal.js";
     import Sort from "@/Components/Sort.vue";
     import {useButtons} from '@/Packs/Buttons';
+    import SelectList from "@/Components/SelectList.vue";
+    import axios from "axios";
+    import {s} from "../../../../public/build/assets/app-CWDMpo7l.js";
 
     const props = defineProps({
         guid: String,
         crew: Object,
-        errors: Array
+        errors: Array,
+        sort: Array,
+        filters: Object,
+        columns: Array,
+        options: Array,
     });
     const modal = modalStore();
     const buttons = useButtons();
@@ -86,9 +99,24 @@
     });
     let sort = ref([]);
     let list = ref([]);
+    let options = ref([
+        {name: 'Настройка 1', guid: '3g3g3g3g3g3g'},
+        {name: 'Настройка для того чтобы', guid: 'nt55h4h43g2g2'},
+        {name: 'Настройка этого', guid: '23423fdsassd'},
+        {name: 'Настройка 2', guid: 'fdgfgddsfdsf223242'},
+        {name: 'Для просмотра ошибок таких то', guid: '23324323232'},
+    ]);
+    let option = ref({name: 'Настройка этого', guid: '23423fdsassd'});
 
     onMounted(()=>{
         list.value = props.errors;
+        sort.value = props.sort;
+        if(Object.keys(props.filters).length > 0){
+            fields.value = props.filters;
+        }
+        if(props.columns.length > 0){
+            columns.value = props.columns;
+        }
     });
 
     buttons.escape(function (){
@@ -143,11 +171,34 @@
 
     function filtering(){
         axios.post('/' + props.guid + '/errors/filter', {filter: fields.value, sort: sort.value}).then(function (response){
-            console.log(response.data);
             if(response.data.errors){
                 list.value = response.data.errors;
             }
         });
+    }
+
+    function countFilters(){
+        let count = 0;
+        for (let i of Object.keys(fields.value)){
+            count += fields.value[i].use? 1: 0;
+        }
+        return '(' + count + ')';
+    }
+
+    function countSort(){
+        return '(' + sort.value.length + ')';
+    }
+
+    function saveOptionBegin(){
+        modal.setName = true;
+    }
+
+    function saveOption(name){
+        axios.post('/error/options/save', {name: name, filters: fields.value, sort: sort.value, columns: columns.value});
+    }
+
+    function removeOption(){
+
     }
 
 </script>

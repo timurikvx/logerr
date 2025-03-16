@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Actions\Filters;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -77,15 +78,16 @@ class Error extends Model
         $error->save();
     }
 
-    public static function getErrors($team): mixed
+    public static function getErrors($team, $filters = [], $sort = []): mixed
     {
         $crew = Crew::getByGuid($team);
         if(is_null($crew)){
             return null;
         }
         $query = self::query();
-        $query->where('team', $crew->id); //->simplePaginate(10);
-        //$query->where('type', '=', 'json');
+        $query->where('team', $crew->id);
+        Filters::setFilters($query, $filters);
+        Filters::setSort($query, $sort);
         return $query;
     }
 

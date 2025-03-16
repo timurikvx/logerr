@@ -1,6 +1,6 @@
 <template>
     <Modal title="Настройка таблицы" class="table-options" v-model:visible="store.columns">
-        <PerfectScrollbar class="flex flex-col pr-4">
+        <PerfectScrollbar class="flex flex-col pr-4 mb-4">
             <div v-for="(column, key) in columns" :key="column.column" :data-order="key + 1" class="flex mb-2 drag relative" @dragstart="dragstart" @dragend="dragend" @dragover="dragover">
                 <div class="column flex grow mr-2 cursor-pointer">
                     <div class="capture mr-4" draggable="true"></div>
@@ -19,6 +19,12 @@
                 </div>
             </div>
         </PerfectScrollbar>
+        <div class="flex">
+            <button class="button red mr-2" @click="clear">Очистить</button>
+            <button class="button green" @click="save">Сохранить</button>
+            <div class="grow"></div>
+            <button class="button" @click="confirm()">Применить</button>
+        </div>
     </Modal>
 </template>
 
@@ -28,12 +34,13 @@
     import {defineProps, defineEmits, computed, ref} from 'vue'
     import Number from "@/Components/Number.vue";
     import {modalStore} from "@/Store/Modal.js";
+    import axios from "axios";
 
     const store = modalStore();
     const props = defineProps({
         columns: Array
     });
-    const emits = defineEmits(['update:columns']);
+    const emits = defineEmits(['update:columns', 'confirm']);
 
     let column = ref(null);
     let activeElement = null;
@@ -90,6 +97,28 @@
 
     function swap(arr, a, b) {
         arr[a] = arr.splice(b, 1, arr[a])[0];
+    }
+
+    function clear(){
+        for (let column of columns.value){
+            column.hidden = false;
+            column.width = 1;
+        }
+        columns.value = [];
+        save();
+    }
+
+    function save(){
+        axios.post('/error/options/set', {columns: columns.value}).then(function (response){
+            if(response.data.result){
+                console.log('true');
+            }
+        })
+    }
+
+    function confirm(){
+        store.columns = false;
+        emits('confirm');
     }
 
 </script>
