@@ -1,5 +1,5 @@
 <template>
-    <button class="button mr-4">
+    <button class="button">
         <span v-if="icon" class="button-icon" :class="icon"></span>
         <span>
             <slot></slot>

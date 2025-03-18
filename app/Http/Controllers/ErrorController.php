@@ -99,9 +99,10 @@ class ErrorController extends Controller
         return Inertia::render('Errors/ErrorTeam', $data);
     }
 
-    public function filter(Request $request, $guid): array
+    public function filter(Request $request): array
     {
-        $team = Crew::getByGuid($guid);
+        $team_guid = $request->get('team');
+        $team = Crew::getByGuid($team_guid);
         $filters = $request->get('filter');
         $sort = $request->get('sort');
         $errors = Error::getErrors($team->id, $filters, $sort)->limit(20)->get();

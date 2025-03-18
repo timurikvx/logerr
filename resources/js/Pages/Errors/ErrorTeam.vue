@@ -8,8 +8,8 @@
             <button class="square-button add" title="Сохранить текущие фильтры, колонки и сортировку в новую настройку" @click="createOptionBegin"></button>
             <button v-if="option?.guid" class="square-button save" title="Обновить текущие фильтры, колонки и сортировку настройки" @click="saveOption"></button>
             <button v-if="option?.guid" class="square-button delete" :title="'Удалить текущую настройку ' + option?.name" @click="removeOptionBegin"></button>
-            <Button icon="options-pic" class="ml-4" @click="modal.columns = true">Настройка колонок {{ countColumns() }}</Button>
-            <Button icon="filter-pic" @click="modal.filters = true">Фильтры {{ countFilters() }}</Button>
+            <Button icon="options-pic" class="ml-4 mr-4" @click="modal.columns = true">Настройка колонок {{ countColumns() }}</Button>
+            <Button icon="filter-pic" class="mr-4" @click="modal.filters = true">Фильтры {{ countFilters() }}</Button>
             <Button icon="sort-pic" @click="modal.sort = true">Сортировка {{ countSort() }}</Button>
         </div>
         <div class="table-field flex flex-col grow overflow-hidden">
@@ -32,15 +32,15 @@
                 <div v-if="shade" class="shade"></div>
             </PerfectScrollbar>
             <div class="flex p-2">
-                <Button class="button px-6">Пред.</Button>
+                <Button class="button mr-4 px-6">Пред.</Button>
                 <div class="grow"></div>
                 <Button class="button px-6">След.</Button>
             </div>
         </div>
     </Layout>
-    <Columns :team="guid" v-model:columns="columns"></Columns>
-    <Filters :team="guid" v-model:filters="fields" @filter="filtering"></Filters>
-    <Sort :team="guid" v-model:sort="sort" :fields="fields" @confirm="filtering"></Sort>
+    <Columns :team="guid" v-model:columns="columns" type="error"></Columns>
+    <Filters :team="guid" v-model:filters="fields" type="error" @filter="filtering"></Filters>
+    <Sort :team="guid" v-model:sort="sort" :fields="fields" type="error" @confirm="filtering"></Sort>
     <SetName title="Введите наименование настройки" @complete="createOption"></SetName>
     <Question :title="question.title" :question="question.question" :type="question.type" v-model:visible="question.visible" @confirm="questionEnd"></Question>
 </template>
@@ -179,7 +179,7 @@
 
     function filtering(){
         shade.value = true;
-        axios.post('/' + props.guid + '/errors/filter', {team: props.guid, filter: fields.value, sort: sort.value}).then(function (response){
+        axios.post('/errors/filter', {team: props.guid, filter: fields.value, sort: sort.value}).then(function (response){
             shade.value = false;
             if(response.data.errors){
                 list.value = response.data.errors;

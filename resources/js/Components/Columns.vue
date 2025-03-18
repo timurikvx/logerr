@@ -39,7 +39,8 @@
     const store = modalStore();
     const props = defineProps({
         team: String,
-        columns: Array
+        columns: Array,
+        type: String
     });
     const emits = defineEmits(['update:columns', 'confirm']);
 
@@ -109,7 +110,7 @@
     }
 
     function save(){
-        axios.post('/error/options/set', {team: props.team, columns: columns.value}).then(function (response){
+        axios.post('/' + props.type + '/options/set', {team: props.team, columns: columns.value}).then(function (response){
             if(response.data.result){
                 console.log('true');
             }

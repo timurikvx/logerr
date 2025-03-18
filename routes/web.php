@@ -54,12 +54,8 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/team/create', [CrewController::class, 'create']);
     Route::post('/team/list', [CrewController::class, 'list']);
 
-
-
     //Choice
     Route::post('/choice', [Controller::class, 'choice']);
-
-
 
     //Common
     Route::post('/filters/get', [Controller::class, 'filters']);
@@ -70,10 +66,15 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/error/options/save', [ErrorController::class, 'optionSave']);
     Route::post('/error/options/change', [ErrorController::class, 'optionChange']);
     Route::post('/error/options/delete', [ErrorController::class, 'optionDelete']);
-    Route::post('/{team}/errors/filter', [ErrorController::class, 'filter']);
+    Route::post('/errors/filter', [ErrorController::class, 'filter']);
 
     //Logs
-
+    Route::post('/logs/filter', [LogController::class, 'filter']);
+    Route::post('/log/options/set', [LogController::class, 'optionSet']);
+    Route::post('/log/options/create', [LogController::class, 'optionCreate']);
+    Route::post('/log/options/save', [LogController::class, 'optionSave']);
+    Route::post('/log/options/change', [LogController::class, 'optionChange']);
+    Route::post('/log/options/delete', [LogController::class, 'optionDelete']);
 
 
 });

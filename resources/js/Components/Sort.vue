@@ -37,7 +37,8 @@
     const props = defineProps({
         team: String,
         sort: Array,
-        fields: Object
+        fields: Object,
+        type: String
     });
 
     let sort = computed({
@@ -86,7 +87,7 @@
 
     function save(){
         setTimeout(function (){
-            axios.post('/error/options/set', {team: props.team, sort: sort.value}).then(function (response){
+            axios.post('/' + props.type + '/options/set', {team: props.team, sort: sort.value}).then(function (response){
                 if(response.data.result){
                     console.log('true');
                 }
