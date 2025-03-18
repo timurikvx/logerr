@@ -217,7 +217,7 @@
 
     function createOption(name){
         shade.value = true;
-        axios.post('/error/options/create', {team: props.guid, name: name, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
+        axios.post('/log/options/create', {team: props.guid, name: name, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
             shade.value = false;
             if(response.data.options){
                 options.value = response.data.options;
@@ -233,7 +233,7 @@
     function saveOption(){
         let data = option.value;
         shade.value = true;
-        axios.post('/error/options/save', {team: props.guid, guid: data.guid, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
+        axios.post('/log/options/save', {team: props.guid, guid: data.guid, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
             shade.value = false;
             if(response.data.options){
                 options.value = response.data.options;
@@ -249,7 +249,7 @@
     function selectOption(item){
         let data = Object.assign({team: props.guid, guid: item.guid});
         shade.value = true;
-        axios.post('/error/options/change', data).then(function (response){
+        axios.post('/log/options/change', data).then(function (response){
             shade.value = false;
             let data = response.data;
             if(data.filters){
@@ -278,7 +278,7 @@
 
     function removeOption(){
         shade.value = true;
-        axios.post('/error/options/delete', {team: props.guid, guid: option.value.guid}).then(function (response){
+        axios.post('/log/options/delete', {team: props.guid, guid: option.value.guid}).then(function (response){
             shade.value = false;
             if(response.data.options){
                 options.value = response.data.options;

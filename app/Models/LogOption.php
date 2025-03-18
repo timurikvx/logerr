@@ -21,7 +21,7 @@ class LogOption extends Model
             ->first();
 
         if(is_null($option)){
-            $option = new ErrorOption();
+            $option = new LogOption();
             $option->user = $user;
             $option->team = $team;
             $option->name = $name;

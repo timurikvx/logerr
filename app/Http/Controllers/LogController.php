@@ -14,6 +14,7 @@ use Inertia\Response;
 
 class LogController extends Controller
 {
+
     public function logs(Request $request): Response
     {
         $data = ['title'=>'Выбор команды логов'];
