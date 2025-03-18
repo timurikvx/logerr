@@ -20,7 +20,8 @@ class Controller extends BaseController
 
     public function dashboard(Request $request): Response
     {
-        return Inertia::render('Dashboard');
+        $data = ['title'=>'Панель управления'];
+        return Inertia::render('Dashboard', $data);
     }
 
     public function filters(Request $request): array

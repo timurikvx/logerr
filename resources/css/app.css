@@ -100,6 +100,15 @@ body{
 
 }
 
+.sidebar .crew{
+    background-color: var(--red);
+    transition: 0.3s;
+}
+
+.sidebar .crew:hover{
+    background-color: var(--red-light);
+}
+
 .button{
     @apply px-4 py-2 flex items-center;
     background-color: transparent;
@@ -174,7 +183,6 @@ body{
 .modal > div{
 
     border: 1px solid var(--border);
-    /*box-shadow: 0px 0px 22px 0px rgba(0, 0, 0, 1.0);*/
     box-shadow: 0px 1px 10px 0px rgb(0 0 0 / 89%);
     background-color: var(--main);
     border-radius: 8px;
@@ -511,27 +519,25 @@ body{
     width: 500px;
 }
 
-.teams .content{
-    background-color: var(--main);
-    border: 1px solid var(--border);
-}
-
 .teams .team{
-    /*width: 230px;*/
     height: 130px;
     transition: 0.3s;
     border: 1px solid var(--border);
+    border-radius: 6px;
+    width:49%;
+    margin-right: 1%;
 }
 
 .teams .team .refs{
-    width: 240px;
+    width: 150px;
 }
 
-.teams .team .refs .btn{
+.teams .team .btn{
+    cursor: pointer;
     transition: 0.3s;
 }
 
-.teams .team .refs .btn:hover{
+.teams .team .btn:hover{
     background-color: var(--purple);
 }
 

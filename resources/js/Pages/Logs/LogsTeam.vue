@@ -1,7 +1,7 @@
 <template>
-    <Layout :title="title" :crew="crew" class="errors flex flex-col grow">
+    <Layout :crew="crew" class="errors flex flex-col grow">
         <div class="flex mb-4">
-            <div class="p-2 font-bold text-xl uppercase">Список ошибок</div>
+            <div class="p-2 font-bold text-xl uppercase">Список логов</div>
             <div class="grow"></div>
             <div class="self-center mr-4">Настройка списка:</div>
             <SelectList placeholder="Нет настройки" :input="false" v-model:value="option" :minWidth="220" :list="getOptions()" @select="selectOption"></SelectList>
@@ -62,10 +62,9 @@
     import axios from "axios";
 
     const props = defineProps({
-        title: String,
         guid: String,
         crew: Object,
-        errors: Array,
+        logs: Array,
         sort: Array,
         filters: Object,
         columns: Array,
@@ -115,7 +114,7 @@
     let shade = ref(false);
 
     onMounted(()=>{
-        list.value = props.errors;
+        list.value = props.logs;
         sort.value = props.sort;
         if(Object.keys(props.filters).length > 0){
             fields.value = props.filters;

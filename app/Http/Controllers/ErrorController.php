@@ -71,7 +71,8 @@ class ErrorController extends Controller
 
     public function errors(Request $request): Response
     {
-        return Inertia::render('Errors');
+        $data = ['title'=>'Выбор команды ошибок'];
+        return Inertia::render('Errors/Errors', $data);
     }
 
     public function errorsTeam(Request $request, $guid): Response
@@ -85,6 +86,7 @@ class ErrorController extends Controller
         $guid_option = UserOption::get('current_option', $team->id, '');
         $option = ErrorOption::getByGuid($team->id, $guid_option);
         $data = [
+            'title'=>'Список ошибок',
             'guid'=>$guid,
             'crew'=> (new CrewItemResource($team))->toArray($request),
             'errors'=>ErrorItemResource::collection($errors)->toArray($request),

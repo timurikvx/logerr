@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\CrewController;
 use App\Http\Controllers\ErrorController;
+use App\Http\Controllers\LogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,11 +38,15 @@ Route::middleware(['auth'])->group(function(){
 
     //Pages
     Route::get('/dashboard', [Controller::class, 'dashboard'])->name('dashboard');
-    Route::get('/errors', [ErrorController::class, 'errors'])->name('errors');
-    Route::get('/teams', [CrewController::class, 'teams'])->name('teams');
 
-    Route::get('/team/{team}', [CrewController::class, 'team']);
+    Route::get('/errors', [ErrorController::class, 'errors'])->name('errors');
     Route::get('/errors/{team}', [ErrorController::class, 'errorsTeam']);
+
+    Route::get('/teams', [CrewController::class, 'teams'])->name('teams');
+    Route::get('/teams/{team}', [CrewController::class, 'team']);
+
+    Route::get('/logs', [LogController::class, 'logs'])->name('logs');
+    Route::get('/logs/{team}', [LogController::class, 'logsTeam']);
 
 
 

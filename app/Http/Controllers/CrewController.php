@@ -46,12 +46,14 @@ class CrewController extends Controller
 
     public function teams(Request $request): Response
     {
-        return Inertia::render('Teams/Teams');
+        $data = ['title'=>'Управление командами'];
+        return Inertia::render('Teams/Teams', $data);
     }
 
     public function team(Request $request): Response
     {
-        return Inertia::render('Teams/Team');
+        $data = ['title'=>'Команда'];
+        return Inertia::render('Teams/Team', $data);
     }
 
 }
