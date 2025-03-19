@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ErrorController;
+use App\Http\Controllers\LogController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,7 +20,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group(function (){
+
     Route::post('/add/error', [ErrorController::class, 'apiAdd']);
+    Route::post('/add/log', [LogController::class, 'apiAdd']);
     //Route::post('/read', [ErrorController::class, 'read']);
 });
 

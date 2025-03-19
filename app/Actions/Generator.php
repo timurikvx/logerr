@@ -11,8 +11,10 @@ use function Termwind\render;
 class Generator
 {
 
-    public static function render($user, $count = 100):void
+    public static function render($user, $count = 100000):void
     {
+        $start = intval(microtime(true));
+
         Auth::login($user);
         $names = self::names();
         $errors = self::errors();
@@ -69,10 +71,12 @@ class Generator
                 'duration'=>$duration,
                 'text'=>$data
             ];
-            //dump($error);
             Error::write($error, $user);
 
         }
+
+        $end= intval(microtime(true));
+        dump($end - $start);
 
     }
 

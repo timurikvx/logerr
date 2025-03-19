@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Redis;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,7 +30,7 @@ class Controller extends BaseController
         return Filters::equalsByTypes();
     }
 
-    public function choice(Request $request)
+    public function choice(Request $request): array
     {
         $value = $request->get('value');
         $type = $request->get('type');

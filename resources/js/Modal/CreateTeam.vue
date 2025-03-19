@@ -25,12 +25,13 @@
 <script setup>
 
     import Modal from "@/Components/Modal.vue";
-    import {ref} from 'vue'
+    import {ref, defineEmits} from 'vue'
     import {teamsStore} from '@/Store/Teams.js';
     import {modalStore} from '@/Store/Modal.js'
 
     const modal = modalStore();
     const teams = teamsStore();
+    const emits = defineEmits(['created']);
 
     let form = ref({
         name: '',
@@ -40,13 +41,19 @@
 
     function create(){
         axios.post('/team/create', form.value).then(function (response){
-            if(response.data.errors){
-                errors.value = response.data.errors
-            }else{
-                teams.list = response.data.list;
-                modal.createTeam = false;
-                clear();
+            if(response.data.list){
+                form.value.name = '';
+                form.value.guid = '';
+                modal.createTeams = false;
+                emits('created', response.data.list)
             }
+            // if(response.data.errors){
+            //     errors.value = response.data.errors
+            // }else{
+            //     teams.list = response.data.list;
+            //     modal.createTeam = false;
+            //     clear();
+            // }
         });
     }
 

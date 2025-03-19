@@ -22,7 +22,7 @@ return new class extends Migration
 
     }
 
-    public function table(Blueprint &$table)
+    public function table(Blueprint &$table): void
     {
         $table->id();
         $table->string('name')->index();
@@ -52,5 +52,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('errors');
+        Schema::dropIfExists('logs');
     }
 };

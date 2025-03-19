@@ -26,7 +26,7 @@
             </div>
         </div>
     </Layout>
-    <CreateTeam></CreateTeam>
+    <CreateTeam @created="created"></CreateTeam>
 </template>
 
 <script setup>
@@ -53,6 +53,10 @@
             teams.value = response.data.list;
         })
     });
+
+    function created(list){
+        teams.value = list;
+    }
 
 </script>
 

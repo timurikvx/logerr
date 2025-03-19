@@ -73,6 +73,7 @@ class Error extends Model
         $error->version = $fields->get('version', '');
         $error->data = $error_text;
         $error->duration = $fields->get('duration', 0);
+        $error->len = strlen($error_text);
         $error->save();
     }
 

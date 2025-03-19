@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\Actions\Generator;
 use App\Models\User;
+use Detection\Cache\Cache;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Redis;
 
 class ErrorRender extends Command
 {
