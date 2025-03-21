@@ -3,6 +3,7 @@
     import Header from "@/Layouts/Header.vue";
     import Sidebar from "@/Layouts/Sidebar.vue";
     import {Head} from '@inertiajs/vue3';
+    import Notifications from "@/Layouts/Notifications.vue"
 
     import {defineProps} from 'vue'
 
@@ -40,6 +41,7 @@
                 <slot></slot>
             </div>
         </div>
+        <Notifications></Notifications>
     </div>
 </template>
 

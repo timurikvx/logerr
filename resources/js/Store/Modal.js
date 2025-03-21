@@ -6,7 +6,8 @@ export const modalStore = defineStore('modal', {
         sort: false,
         createTeams: false,
         columns: false,
-        setName: false
+        setName: false,
+        notifications: true
     }),
     getters: {
 

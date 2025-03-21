@@ -266,6 +266,10 @@ body{
     background-image: url("/storage/delete.png");
 }
 
+.notification{
+    background-image: url("/storage/notification.png");
+}
+
 /******************** icons *************************/
 
 .button-icon{
@@ -545,4 +549,17 @@ body{
     box-shadow: 0 0 12px 3px rgba(0, 0, 0, 0.5);
 }
 
+.notifications{
+    position: fixed;
+    min-width: 24%;
+    right: 0;
+    background-color: var(--main);
+    height: 100%;
+    box-shadow: 0 0 12px 8px rgb(0 0 0 / 85%);
+    border-left: 1px solid var(--border);
+}
 
+.notifications .empty{
+    color: var(--gray);
+
+}
