@@ -6,7 +6,7 @@
                 <div class="grow self-center">{{ title }}</div>
                 <button class="close" @click="close"></button>
             </div>
-            <div class="content m-4 grow flex flex-col overflow-hidden">
+            <div class="content p-4 grow flex flex-col overflow-hidden">
                 <slot></slot>
             </div>
         </div>

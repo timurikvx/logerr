@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Crew;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Crew\CrewItemResource;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Cache;
 
 class CrewController extends Controller
 {
@@ -54,6 +57,27 @@ class CrewController extends Controller
     {
         $data = ['title'=>'Команда'];
         return Inertia::render('Teams/Team', $data);
+    }
+
+    public function invite(Request $request)
+    {
+        $iam = Auth::id();
+        $team_guid = $request->get('guid');
+        $email = $request->get('email');
+
+        $team = Crew::getByGuid($team_guid);
+        $user = User::query()->where('email', '=', $email)->first();
+        if(is_null($team)){
+            return ['error'=>'Команда не найдена'];
+        }
+        $try = Cache::get('invite_try_'.$iam, 0);
+        if($try >= 5){
+            return ['error'=>'Слишком много неудачных приглашений. Подождите 2 минуты перед следующей попыткой', 'try'=>$try];
+        }
+        if(is_null($user)){
+            Cache::set('invite_try_'.$iam, $try + 1, 120);
+            return ['error'=>'Пользователь не найден', 'try'=>$try];
+        }
     }
 
 }

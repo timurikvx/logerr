@@ -12,7 +12,6 @@
                 <button type="submit">Выйти</button>
             </form>
         </div>
-
     </div>
 </template>
 

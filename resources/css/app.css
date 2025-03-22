@@ -196,8 +196,7 @@ body{
 }
 
 .create-team{
-    width: 450px;
-    height: 320px;
+    width: 550px;
 }
 
 .error{
@@ -207,6 +206,7 @@ body{
 .close{
     background-image: url("/storage/close.png");
     background-position: center;
+    background-repeat: no-repeat;
     background-size: 80%;
     width: 30px;
     height: 30px;
@@ -498,7 +498,7 @@ body{
     background-color: var(--active-list);
 }
 
-.errors .square-button{
+.square-button{
     width: 44px;
     height: 44px;
     background-repeat: no-repeat;
@@ -507,7 +507,7 @@ body{
     transition: 0.3s;
 }
 
-.errors .square-button:hover{
+.square-button:hover{
     background-color: var(--purple);
 }
 
@@ -557,9 +557,32 @@ body{
     height: 100%;
     box-shadow: 0 0 12px 8px rgb(0 0 0 / 85%);
     border-left: 1px solid var(--border);
+    animation: notifications 0.3s ease-in;
+}
+
+@keyframes notifications {
+    0% { opacity: 0 }
+    100% { opacity: 1 }
 }
 
 .notifications .empty{
     color: var(--gray);
+}
 
+.invite{
+    width: 540px;
+}
+
+.errors{
+    width: 550px;
+    z-index: 1000;
+}
+
+.errors .head{
+    background-color: #8f2121;
+    border-bottom: 1px solid #c52e2e;
+}
+
+.errors .content{
+    background-color: #691616;
 }

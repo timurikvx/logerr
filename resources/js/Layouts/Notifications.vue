@@ -1,5 +1,5 @@
 <template>
-    <div class="notifications flex flex-col" v-if="modal.notifications">
+    <div class="notifications flex flex-col" v-show="modal.notifications">
         <div class="p-2 flex flex-col grow">
             <div class="text-2xl px-1 font-bold">Уведомления</div>
             <div class="flex flex-col grow">

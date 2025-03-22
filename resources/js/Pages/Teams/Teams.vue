@@ -11,9 +11,17 @@
                     <div class="flex grow item" :class="{'active': crew?.guid === item.guid}">
                         <div class="grow self-center text-2xl px-4">{{ item.name }}</div>
                     </div>
-                    <a class="flex btn py-4 px-8" :href="'/teams/' + item.guid">
-                        <div class="self-center">Управление</div>
-                    </a>
+                    <div class="flex flex-col refs">
+                        <a class="grow p-2 text-center btn flex" :href="'/teams/' + item.guid">
+                            <div class="m-auto">Управление</div>
+                        </a>
+                        <a class="grow p-2 text-center btn flex" @click="inviting(item)">
+                            <div class="m-auto">Пригласить</div>
+                        </a>
+                    </div>
+<!--                    <a class="flex btn py-4 px-8" :href="'/teams/' + item.guid">-->
+<!--                        <div class="self-center">Управление</div>-->
+<!--                    </a>-->
                     <div class="flex flex-col refs">
                         <a class="grow p-2 text-center btn flex" :href="'/errors/' + item.guid">
                             <div class="m-auto">Ошибки</div>
@@ -34,9 +42,11 @@
     import Layout from "@/Layouts/Layout.vue";
     import {defineProps, onMounted, ref} from "vue";
     import {modalStore} from "@/Store/Modal.js";
+    import {inviteStore} from "@/Store/Invite.js";
     import CreateTeam from "@/Modal/CreateTeam.vue";
 
     const modal = modalStore();
+    const invite = inviteStore();
 
     let teams = ref([]);
 
@@ -56,6 +66,11 @@
 
     function created(list){
         teams.value = list;
+    }
+
+    function inviting(item){
+        invite.team = item;
+        invite.show = true;
     }
 
 </script>

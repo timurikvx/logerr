@@ -53,9 +53,12 @@ Route::middleware(['auth'])->group(function(){
     //Teams
     Route::post('/team/create', [CrewController::class, 'create']);
     Route::post('/team/list', [CrewController::class, 'list']);
-
+    Route::post('/team/invite', [CrewController::class, 'invite']);
     //Choice
     Route::post('/choice', [Controller::class, 'choice']);
+
+    //Invite
+
 
     //Common
     Route::post('/filters/get', [Controller::class, 'filters']);
