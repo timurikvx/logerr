@@ -16,8 +16,8 @@
         </div>
         <div class="p-2" v-else>Нет сортировок</div>
         <div class="flex">
-            <button class="button red mr-2" @click="clear">Очистить</button>
-            <button class="button green" @click="save">Сохранить</button>
+            <button class="button red mr-2" @click="reset">Очистить</button>
+<!--            <button class="button green" @click="save">Сохранить</button>-->
             <div class="grow"></div>
             <button class="button" @click="confirm()">Применить</button>
         </div>
@@ -66,6 +66,7 @@
     function confirm(){
         emits('confirm');
         modal.sort = false;
+        save();
     }
 
     function setDesc(item, value){
@@ -80,20 +81,27 @@
         sort.value.splice(index, 1);
     }
 
-    function clear(){
+    function reset(){
         sort.value = [];
-        save();
+        clear();
     }
 
     function save(){
         setTimeout(function (){
-            axios.post('/' + props.type + '/options/set', {team: props.team, sort: sort.value}).then(function (response){
+            axios.post('/' + props.type + '/options/set', {team: props.team, sort: props.sort}).then(function (response){
                 if(response.data.result){
                     console.log('true');
                 }
             })
         }, 20);
+    }
 
+    function clear(){
+        axios.post('/' + props.type + '/options/clear', {team: props.team, field: 'sort'}).then(function (response){
+            if(response.data.result){
+                console.log('true');
+            }
+        })
     }
 
 </script>

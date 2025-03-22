@@ -126,7 +126,7 @@
         }
         options.value = props.options;
         option.value = props.option;
-        console.log(props.errors);
+        console.log(props);
     });
 
     buttons.escape(function (){
@@ -290,6 +290,15 @@
             }
             if(response.data.errors){
                 list.value = response.data.errors;
+            }
+            if(response.data.filters){
+                fields.value = response.data.filters;
+            }
+            if(response.data.columns){
+                columns.value = response.data.columns;
+            }
+            if(response.data.sort){
+                sort.value = response.data.sort;
             }
         }).catch(function (error){
             shade.value = false;

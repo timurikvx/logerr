@@ -70,6 +70,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/error/options/set', [ErrorController::class, 'optionSet']);
     Route::post('/error/options/create', [ErrorController::class, 'optionCreate']);
     Route::post('/error/options/save', [ErrorController::class, 'optionSave']);
+    Route::post('/error/options/clear', [ErrorController::class, 'optionClear']);
     Route::post('/error/options/change', [ErrorController::class, 'optionChange']);
     Route::post('/error/options/delete', [ErrorController::class, 'optionDelete']);
     Route::post('/errors/filter', [ErrorController::class, 'filter']);
@@ -78,6 +79,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/logs/filter', [LogController::class, 'filter']);
     Route::post('/log/options/set', [LogController::class, 'optionSet']);
     Route::post('/log/options/create', [LogController::class, 'optionCreate']);
+    Route::post('/log/options/clear', [LogController::class, 'optionClear']);
     Route::post('/log/options/save', [LogController::class, 'optionSave']);
     Route::post('/log/options/change', [LogController::class, 'optionChange']);
     Route::post('/log/options/delete', [LogController::class, 'optionDelete']);

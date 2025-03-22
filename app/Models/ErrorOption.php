@@ -111,8 +111,11 @@ class ErrorOption extends Model
             ->where('name', '=', $name)
             ->first();
         if(!is_null($option)){
+            Cache::delete('error_option'.$user.'_'.$option->guid);
             $option->delete();
+
         }
+
     }
 
     public static function removeByGuid($team, $guid): void
@@ -124,6 +127,7 @@ class ErrorOption extends Model
             ->where('guid', '=', $guid)
             ->first();
         if(!is_null($option)){
+            Cache::delete('error_option'.$user.'_'.$option->guid);
             $option->delete();
         }
     }

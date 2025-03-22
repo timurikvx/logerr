@@ -20,8 +20,8 @@
             </div>
         </PerfectScrollbar>
         <div class="flex">
-            <button class="button red mr-2" @click="clear">Очистить</button>
-            <button class="button green" @click="save">Сохранить</button>
+            <button class="button red mr-2" @click="reset">Очистить</button>
+<!--            <button class="button green" @click="save">Сохранить</button>-->
             <div class="grow"></div>
             <button class="button" @click="confirm()">Применить</button>
         </div>
@@ -101,12 +101,12 @@
         arr[a] = arr.splice(b, 1, arr[a])[0];
     }
 
-    function clear(){
+    function reset(){
         for (let column of columns.value){
             column.hidden = false;
             column.width = 1;
         }
-        save();
+        clear();
     }
 
     function save(){
@@ -118,8 +118,17 @@
     }
 
     function confirm(){
+        save();
         store.columns = false;
         emits('confirm');
+    }
+
+    function clear(){
+        axios.post('/' + props.type + '/options/clear', {team: props.team, field: 'columns'}).then(function (response){
+            if(response.data.result){
+                console.log('true');
+            }
+        })
     }
 
 </script>

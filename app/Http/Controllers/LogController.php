@@ -84,6 +84,17 @@ class LogController extends Controller
         return ['result'=>false];
     }
 
+    public function optionClear(Request $request): array
+    {
+        $team_guid = $request->get('team');
+        $team = Crew::getByGuid($team_guid);
+
+        $field = $request->get('field');
+        $name = 'error_'.$field;
+        UserOption::remove($name, $team->id);
+        return ['result'=>true];
+    }
+
     public function optionCreate(Request $request): array
     {
         $team_guid = $request->get('team');

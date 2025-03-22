@@ -30,7 +30,7 @@ class UserOption extends Model
         Cache::set('user_option'.$user.$team.$name, json_encode($value), 3600);
     }
 
-    public static function get($name, $team, $default = null): array|string
+    public static function get(string $name, int $team, $default = null): array|string
     {
         $user = Auth::id();
         $data = Cache::get('user_option'.$user.$team.$name);
@@ -45,7 +45,19 @@ class UserOption extends Model
         if(is_null($option)){
             return $default;
         }
+        //Cache::set('user_option'.$user.$team.$name, json_encode($value), 3600);
         return json_decode($option->data, true);
+    }
+
+    public static function remove($name, $team): void
+    {
+        $user = Auth::id();
+        self::query()
+            ->where('user', '=', $user)
+            ->where('team', '=', $team)
+            ->where('name', '=', $name)
+            ->delete();
+        Cache::delete('user_option'.$user.$team.$name);
     }
 
 }
