@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\CrewController;
 use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,8 +58,10 @@ Route::middleware(['auth'])->group(function(){
     //Choice
     Route::post('/choice', [Controller::class, 'choice']);
 
-    //Invite
-
+    //Notifications
+    Route::post('/notifications/get', [NotificationController::class, 'get']);
+    Route::post('/notifications/confirm', [NotificationController::class, 'confirm']);
+    Route::post('/notifications/end', [NotificationController::class, 'end']);
 
     //Common
     Route::post('/filters/get', [Controller::class, 'filters']);

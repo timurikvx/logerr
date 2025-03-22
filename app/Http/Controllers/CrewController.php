@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Crew;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -61,7 +62,7 @@ class CrewController extends Controller
 
     public function invite(Request $request)
     {
-        $iam = Auth::id();
+        $iam = Auth::user();
         $team_guid = $request->get('guid');
         $email = $request->get('email');
 
@@ -78,6 +79,17 @@ class CrewController extends Controller
             Cache::set('invite_try_'.$iam, $try + 1, 120);
             return ['error'=>'Пользователь не найден', 'try'=>$try];
         }
+        if($iam->id === $user->id){
+            Cache::set('invite_try_'.$iam, $try + 1, 120);
+            return ['error'=>'Вы приглашаете самого себя', 'try'=>$try];
+        }
+        $type = 'invite_to_team';
+        if(Notification::exist($type, $user->id)){
+            Cache::set('invite_try_'.$iam, $try + 1, 120);
+            return ['error'=>'Вы приглашаете самого себя', 'try'=>$try];
+        }
+        $text = 'Вы приглашены в команду '.$team->name.' вступите или проигнорируйте уведомление!';
+        Notification::create($type, $user->id, 'Приглашение в команду '.$team->name, $text, $team->toArray());
     }
 
 }

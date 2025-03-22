@@ -10,15 +10,25 @@ export const modalStore = defineStore('modal', () => {
     const setName = ref(false);
     const notifications = ref(false);
     const invite = ref(false);
+    //errors
     const errors = ref(false);
-
     const error = ref('');
+    //notice
+    const notices = ref(false);
+    const notice = ref('');
 
     function setError(text){
         if(text.length > 0){
             errors.value = true;
         }
-        error.value = text
+        error.value = text;
+    }
+
+    function setNotice(text){
+        if(text.length > 0){
+            notices.value = true;
+        }
+        notice.value = text;
     }
 
     return {
@@ -31,8 +41,10 @@ export const modalStore = defineStore('modal', () => {
         invite,
         errors,
         error,
+        notice,
         //functions
-        setError
+        setError,
+        setNotice
     }
 })
 

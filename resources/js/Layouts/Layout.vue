@@ -25,8 +25,9 @@
     import Notifications from "@/Layouts/Notifications.vue";
     import Invite from "@/Components/Invite.vue";
     import Error from "@/Components/Error.vue";
+    import {notificationsStore} from "@/Store/Notifications.js";
 
-    import {defineProps} from 'vue'
+    import {defineProps, onMounted} from 'vue'
 
     const props = defineProps({
         title: {
@@ -42,6 +43,12 @@
             default: ''
         }
     });
+    const notifications = notificationsStore();
+
+    onMounted(()=>{
+        notifications.get();
+        notifications.intervalGet(30000);
+    })
 
     function getClass(){
         return props.class;

@@ -12,16 +12,13 @@
                         <div class="grow self-center text-2xl px-4">{{ item.name }}</div>
                     </div>
                     <div class="flex flex-col refs">
-                        <a class="grow p-2 text-center btn flex" :href="'/teams/' + item.guid">
+                        <a v-if="item.roles.includes('admin')" class="grow p-2 text-center btn flex" :href="'/teams/' + item.guid">
                             <div class="m-auto">Управление</div>
                         </a>
-                        <a class="grow p-2 text-center btn flex" @click="inviting(item)">
+                        <a v-if="item.roles.includes('manager') || item.roles.includes('admin')" class="grow p-2 text-center btn flex" @click="inviting(item)">
                             <div class="m-auto">Пригласить</div>
                         </a>
                     </div>
-<!--                    <a class="flex btn py-4 px-8" :href="'/teams/' + item.guid">-->
-<!--                        <div class="self-center">Управление</div>-->
-<!--                    </a>-->
                     <div class="flex flex-col refs">
                         <a class="grow p-2 text-center btn flex" :href="'/errors/' + item.guid">
                             <div class="m-auto">Ошибки</div>

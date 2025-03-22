@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user')->index();
             $table->string('type')->index();
+            $table->string('guid');
             $table->string('title');
             $table->text('content');
             $table->json('data')->nullable();

@@ -551,6 +551,7 @@ body{
 
 .notifications{
     position: fixed;
+    max-width: 500px;
     min-width: 24%;
     right: 0;
     background-color: var(--main);
@@ -569,6 +570,23 @@ body{
     color: var(--gray);
 }
 
+.notifications .list .item{
+    @apply p-4;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.notifications .list .item:hover{
+    background-color: var(--purple);
+}
+
+.notification-item{
+    width: 90%;
+    max-width: 600px;
+}
+
 .invite{
     width: 540px;
 }
@@ -585,4 +603,14 @@ body{
 
 .errors .content{
     background-color: #691616;
+}
+
+.notification .exist{
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--purple);
+    border-radius: 10px;
 }

@@ -52,8 +52,14 @@ class Crew extends Model
     public static function list(): Collection
     {
         $user = Auth::id();
-        $ids = CrewMembers::query()->select(['crew'])->where('user', '=', $user)->get()->pluck('crew');
-        return self::query()->whereIn('id', $ids)->get();
+        $ids = CrewMembers::query()->select(['crew', 'roles'])->where('user', '=', $user)->get();
+        $roles = $ids->pluck('roles', 'crew');
+        $list = self::query()->whereIn('id', $ids->pluck('crew'))->get();
+
+        foreach ($list as $item){
+            $item->roles = json_decode($roles->get($item->id));
+        }
+        return $list;
     }
 
     public static function getByGuid($guid): Model|null
@@ -62,6 +68,16 @@ class Crew extends Model
         $ids = CrewMembers::query()->select(['crew'])->where('user', '=', $user)->get()->pluck('crew');
         $query = self::query()->whereIn('id', $ids->toArray())->where('guid', '=', $guid);
         return $query->first();
+    }
+
+    public static function addToTeam($user_id, $team_id, $role = null): void
+    {
+        $role = ($role === null)? 'user': $role;
+        $member = new CrewMembers();
+        $member->user = $user_id;
+        $member->crew = $team_id;
+        $member->roles = json_encode([$role]);
+        $member->save();
     }
 
 }

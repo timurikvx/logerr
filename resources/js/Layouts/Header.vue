@@ -6,7 +6,9 @@
                 <slot></slot>
             </div>
             <div class="flex mr-4">
-                <button @click="show" class="self-center square-button notification"></button>
+                <button @click="show" class="self-center square-button notification relative">
+                    <span v-if="notifications.exist" class="exist"></span>
+                </button>
             </div>
             <form method="POST" @submit.prevent="logout" class="self-center">
                 <button type="submit">Выйти</button>
@@ -20,8 +22,11 @@
     import { defineProps } from 'vue'
     import { router } from '@inertiajs/vue3';
     import {modalStore} from '@/Store/Modal.js';
+    import {notificationsStore} from "@/Store/Notifications.js";
 
     const modal = modalStore();
+    const notifications = notificationsStore();
+
     const logout = () => {
         router.post('/logout');
     };

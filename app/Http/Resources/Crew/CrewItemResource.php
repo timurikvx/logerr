@@ -17,7 +17,8 @@ class CrewItemResource extends JsonResource
         return [
             'id'=>$this->id,
             'name'=>$this->name,
-            'guid'=>$this->guid
+            'guid'=>$this->guid,
+            'roles'=>$this->roles
         ];
     }
 }
