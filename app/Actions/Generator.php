@@ -11,7 +11,7 @@ use function Termwind\render;
 class Generator
 {
 
-    public static function render($user, $count = 200000):void
+    public static function render($user, $count = 500000):void
     {
         $start = intval(microtime(true));
 

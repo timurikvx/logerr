@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Paginate;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
 use App\Models\Crew;
@@ -12,6 +13,7 @@ use Detection\Cache\Cache;
 use Illuminate\Http\Request;
 use App\Actions\RabbitMQ\LogerrRabbit;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -91,18 +93,22 @@ class ErrorController extends Controller
             $filters = $option['data']['filters'];
             $columns = $option['data']['columns'];
         }
-        $errors = Error::getErrors($team->id, $filters, $sort)->offset(70000)->limit(20)->get();
+
+        $query = Error::getErrors($team->id, $filters, $sort);
+        $paginate = Paginate::paginate($query, ErrorItemResource::class);
+
         $options = ErrorOption::getAll($team->id,true);
         $data = [
             'title'=>'Список ошибок',
             'guid'=>$guid,
             'crew'=> (new CrewItemResource($team))->toArray($request),
-            'errors'=>ErrorItemResource::collection($errors)->toArray($request),
+            'errors'=>$paginate->data,
             'sort'=>$sort,
             'filters'=>$filters,
             'columns'=>$columns,
             'options'=>$options,
-            'option'=>$option
+            'option'=>$option,
+            'paginate'=>$paginate->paginate
         ];
         return Inertia::render('Errors/ErrorTeam', $data);
     }
@@ -176,7 +182,7 @@ class ErrorController extends Controller
         $columns = $request->get('columns');
 
         $data = $this->getData($request);
-        ErrorOption::setByGuid($team->id, $guid, $data);
+        ErrorOption::updateByGuid($team->id, $guid, $data);
 
         UserOption::set('current_option', $team->id, $guid);
         UserOption::set('error_sort',    $team->id, $sort);

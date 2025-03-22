@@ -31,10 +31,10 @@
                 </div>
                 <div v-if="shade" class="shade"></div>
             </PerfectScrollbar>
-            <div class="flex p-2">
-                <Button class="button mr-4 px-6">Пред.</Button>
-                <div class="grow"></div>
-                <Button class="button px-6">След.</Button>
+            <div class="flex p-2 mt-2 paginate">
+                <a class="button mr-2 px-6" :href="'?page=' + paginate.prev">Пред.</a>
+                <a class="self-center py-2 px-4 mr-2 link" v-for="link in paginate.links" :href="link.url" :class="{active: link.active}">{{ link.label }}</a>
+                <a class="button px-6" :href="'?page=' + paginate.next">След.</a>
             </div>
         </div>
     </Layout>
@@ -71,6 +71,7 @@
         columns: Array,
         options: Array,
         option: Object,
+        paginate: Object
     });
     const modal = modalStore();
     const buttons = useButtons();
@@ -125,6 +126,7 @@
         }
         options.value = props.options;
         option.value = props.option;
+        console.log(props.errors);
     });
 
     buttons.escape(function (){

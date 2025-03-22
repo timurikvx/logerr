@@ -614,3 +614,21 @@ body{
     background-color: var(--purple);
     border-radius: 10px;
 }
+
+.paginate{
+
+}
+
+.paginate .link{
+    border: 1px solid #9a9a9a;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.paginate .link:hover{
+    background-color: var(--purple);
+}
+
+.paginate .active{
+    background-color: var(--purple);
+}

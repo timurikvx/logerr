@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Ramsey\Uuid\Uuid;
 
 class ErrorOption extends Model
@@ -14,11 +15,11 @@ class ErrorOption extends Model
     public static function set($team, $name, $value): string
     {
         $user = Auth::id();
-        $option = self::query()
+        $query = self::query()
             ->where('user', '=', $user)
             ->where('team', '=', $team)
-            ->where('name', '=', $name)
-            ->first();
+            ->where('name', '=', $name);
+        $option = $query->first();
 
         if(is_null($option)){
             $option = new ErrorOption();
@@ -29,10 +30,11 @@ class ErrorOption extends Model
         }
         $option->data = json_encode($value);
         $option->save();
+        Cache::set('error_option'.$user.'_'.$option->guid, json_encode($option->toArray()), 3600);
         return $option->guid;
     }
 
-    public static function setByGuid($team, $guid, $value): string|null
+    public static function updateByGuid($team, $guid, $value): string|null
     {
         $user = Auth::id();
         $option = self::query()
@@ -40,18 +42,27 @@ class ErrorOption extends Model
             ->where('team', '=', $team)
             ->where('guid', '=', $guid)
             ->first();
-
         if(is_null($option)){
             return null;
         }
         $option->data = json_encode($value);
         $option->save();
+        Cache::set('error_option'.$user.'_'.$option->guid, json_encode($option->toArray()), 3600);
         return $option->guid;
     }
 
     public static function getByGuid($team, $guid, $without_data = false): mixed
     {
         $user = Auth::id();
+        $data = Cache::get('error_option'.$user.'_'.$guid);
+        if(!is_null($data)){
+            $option = json_decode($data);
+            $item = ['name'=>$option->name, 'guid'=> $option->guid];
+            if(!$without_data){
+                $item['data'] = json_decode($option->data, true);
+            }
+            return $item;
+        }
         $option = self::query()
             ->where('user', '=', $user)
             ->where('team', '=', $team)
@@ -60,6 +71,7 @@ class ErrorOption extends Model
         if(is_null($option)){
             return null;
         }
+        Cache::set('error_option'.$user.'_'.$option->guid, json_encode($option->toArray()), 3600);
         $item = ['name'=>$option->name, 'guid'=> $option->guid];
         if(!$without_data){
             $item['data'] = json_decode($option->data, true);
@@ -70,11 +82,15 @@ class ErrorOption extends Model
     public static function getAll($team, $without_data = false): array
     {
         $user = Auth::id();
-        $options = self::query()
-            ->select(['name', 'guid', 'data'])
-            ->where('user', '=', $user)
-            ->where('team', '=', $team)
-            ->get();
+        $data = Cache::get('all_error_option'.$user.'_'.$team);
+        if(!is_null($data)){
+            $options = json_decode($data);
+        }else{
+            $options = self::query()->select(['name', 'guid', 'data'])
+                ->where('user', '=', $user)
+                ->where('team', '=', $team)->get();
+            Cache::set('all_error_option'.$user.'_'.$team, json_encode($options->toArray()), 3600);
+        }
         $list = [];
         foreach ($options as $option){
             $item = ['name'=>$option->name, 'guid'=> $option->guid];

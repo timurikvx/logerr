@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Actions\Filters;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 
@@ -77,7 +78,7 @@ class Error extends Model
         $error->save();
     }
 
-    public static function getErrors($team, $filters = [], $sort = []): mixed
+    public static function getErrors($team, $filters = [], $sort = []): Builder
     {
         $query = self::query()->where('team', $team);
         Filters::setFilters($query, $filters);
