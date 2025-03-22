@@ -79,13 +79,20 @@ class ErrorController extends Controller
     public function errorsTeam(Request $request, $guid): Response
     {
         $team = Crew::getByGuid($guid);
-        $sort = UserOption::get('error_sort', $team->id, []);
-        $filters = UserOption::get('error_filters', $team->id, []);
-        $columns = UserOption::get('error_columns', $team->id, []);
-        $errors = Error::getErrors($team->id, $filters, $sort)->offset(70000)->limit(20)->get();
-        $options = ErrorOption::getAll($team->id,true);
+
         $guid_option = UserOption::get('current_option', $team->id, '');
         $option = ErrorOption::getByGuid($team->id, $guid_option);
+        if(is_null($option)){
+            $sort = UserOption::get('error_sort', $team->id, []);
+            $filters = UserOption::get('error_filters', $team->id, []);
+            $columns = UserOption::get('error_columns', $team->id, []);
+        }else{
+            $sort = $option['data']['sort'];
+            $filters = $option['data']['filters'];
+            $columns = $option['data']['columns'];
+        }
+        $errors = Error::getErrors($team->id, $filters, $sort)->offset(70000)->limit(20)->get();
+        $options = ErrorOption::getAll($team->id,true);
         $data = [
             'title'=>'Список ошибок',
             'guid'=>$guid,
@@ -218,7 +225,11 @@ class ErrorController extends Controller
         $guid = $request->get('guid');
         $option = ErrorOption::getByGuid($team->id, $guid);
         if(is_null($option)){
-            return [];
+            UserOption::set('current_option', $team->id,'');
+            $sort = UserOption::get('error_sort', $team->id, []);
+            $filters = UserOption::get('error_filters', $team->id, []);
+            $columns = UserOption::get('error_columns', $team->id, []);
+            return ['sort'=>$sort, 'filters'=>$filters, 'columns'=>$columns];
         }
         UserOption::set('current_option', $team->id, $guid);
         $option = ErrorOption::getByGuid($team->id, $guid);

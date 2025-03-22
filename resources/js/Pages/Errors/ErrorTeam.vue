@@ -59,7 +59,7 @@
     import {useButtons} from '@/Packs/Buttons';
     import SelectList from "@/Components/SelectList.vue";
     import Question from "@/Components/JSON/Question.vue";
-    import axios from "axios";;
+    import axios from "axios";
 
     const props = defineProps({
         title: String,

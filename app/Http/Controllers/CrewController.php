@@ -60,7 +60,7 @@ class CrewController extends Controller
         return Inertia::render('Teams/Team', $data);
     }
 
-    public function invite(Request $request)
+    public function invite(Request $request): array
     {
         $iam = Auth::user();
         $team_guid = $request->get('guid');
@@ -90,6 +90,7 @@ class CrewController extends Controller
         }
         $text = 'Вы приглашены в команду '.$team->name.' вступите или проигнорируйте уведомление!';
         Notification::create($type, $user->id, 'Приглашение в команду '.$team->name, $text, $team->toArray());
+        return ['result'=>true];
     }
 
 }

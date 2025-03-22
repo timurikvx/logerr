@@ -1,5 +1,5 @@
 <template>
-    <Modal class="errors" title="Ошибка" v-model:visible="modal.errors">
+    <Modal class="error-form" title="Ошибка" v-model:visible="modal.errors">
         <div class="text-center font-mono py-4">
             {{ modal.error }}
         </div>

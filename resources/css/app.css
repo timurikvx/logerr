@@ -591,17 +591,17 @@ body{
     width: 540px;
 }
 
-.errors{
+.error-form{
     width: 550px;
     z-index: 1000;
 }
 
-.errors .head{
+.error-form .head{
     background-color: #8f2121;
     border-bottom: 1px solid #c52e2e;
 }
 
-.errors .content{
+.error-form .content{
     background-color: #691616;
 }
 

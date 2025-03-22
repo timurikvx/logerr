@@ -39,9 +39,11 @@ class NotificationController extends Controller
 
     public function end(Request $request): array
     {
-
-
-        return [];
+        $guid = $request->get('guid');
+        $notification = Notification::getByGuid($guid);
+        $notification->completed = true;
+        $notification->save();
+        return $this->get($request);
     }
 
 }

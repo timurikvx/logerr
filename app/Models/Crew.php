@@ -28,6 +28,7 @@ class Crew extends Model
         $crewMember = new CrewMembers();
         $crewMember->user = $user;
         $crewMember->crew = $crew->id;
+        $crewMember->roles = json_encode(['admin']);
         $crewMember->save();
     }
 
@@ -54,8 +55,7 @@ class Crew extends Model
         $user = Auth::id();
         $ids = CrewMembers::query()->select(['crew', 'roles'])->where('user', '=', $user)->get();
         $roles = $ids->pluck('roles', 'crew');
-        $list = self::query()->whereIn('id', $ids->pluck('crew'))->get();
-
+        $list = self::query()->whereIn('id', $ids->pluck('crew'))->orderBy('name')->get();
         foreach ($list as $item){
             $item->roles = json_decode($roles->get($item->id));
         }
