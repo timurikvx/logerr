@@ -3,10 +3,12 @@
 namespace App\Actions;
 
 use App\Models\Crew;
+use App\Models\CrewMembers;
 use App\Models\Error;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
-use function Termwind\render;
+use App\Models\User;
 
 class Generator
 {
@@ -25,7 +27,7 @@ class Generator
         $regions = self::regions();
         $versions = self::versions();
         $devices = self::devices();
-        $users = self::users();
+        $users = self::people();
         $crew_list = Crew::list()->pluck('id')->toArray();
 
         for ($i = 0; $i < $count; $i++){
@@ -79,6 +81,34 @@ class Generator
         dump($end - $start);
 
     }
+
+    public static function users($count = 1): void
+    {
+        $crews = Crew::all();
+        $commands = rand(1, $crews->count());
+
+        $list = fake()->randomElements($crews, $commands);
+
+        for ($i = 0; $i < $count; $i++){
+            $name = explode(' ', fake()->name('man'));
+            $user = new User();
+            $user->name = $name[0];
+            $user->surname = $name[1];
+            $user->birth = fake()->date('Y-m-d H:i:s');
+            $user->email = fake()->email();
+            $user->password = Hash::make('123123123');
+            $user->save();
+
+            foreach ($list as $crew){
+                $member = new CrewMembers();
+                $member->user = $user->id;
+                $member->crew = $crew->id;
+                $member->roles = json_encode(['user']);
+                $member->save();
+            }
+        }
+    }
+
 
     private static function getValue($array, $can_null = false): mixed
     {
@@ -894,7 +924,7 @@ class Generator
         ];
     }
 
-    private static function users(): array
+    private static function people(): array
     {
         return [
             'Авалян Мерине Меликовна',

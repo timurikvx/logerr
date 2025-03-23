@@ -56,9 +56,10 @@ body{
 }
 
 .header > div{
-    max-width: 1600px;
-    width: 70%;
-    @apply mx-auto;
+    /*max-width: 1600px;*/
+    /*width: 70%;*/
+    /*@apply mx-auto;*/
+    @apply mx-4;
 }
 
 .sidebar{
@@ -393,6 +394,15 @@ body{
     width: 65px;
 }
 
+.table-field .toggle{
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.table-field .toggle:hover{
+    background-color: var(--purple);
+}
+
 .drag .selected{
     position: absolute;
 }
@@ -631,4 +641,34 @@ body{
 
 .paginate .active{
     background-color: var(--purple);
+}
+
+.team-item{
+
+}
+
+/*.team-item .member{*/
+/*    transition: 0.3s;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.team-item .member:hover{*/
+/*    background-color: var(--purple);*/
+/*}*/
+
+.team-item .role{
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.team-item .active{
+    background-color: var(--purple);
+}
+
+.team-item .role:hover{
+    background-color: var(--purple);
+}
+
+.border-bottom{
+    border-bottom: 1px solid var(--border);
 }

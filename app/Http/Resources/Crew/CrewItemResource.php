@@ -18,7 +18,8 @@ class CrewItemResource extends JsonResource
             'id'=>$this->id,
             'name'=>$this->name,
             'guid'=>$this->guid,
-            'roles'=>$this->roles
+            'roles'=>$this->roles,
+            'date'=>$this->created_at
         ];
     }
 }

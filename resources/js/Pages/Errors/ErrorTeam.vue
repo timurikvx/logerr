@@ -21,11 +21,11 @@
                 <div v-for="error in list">
                     <div class="grid line" :style="getGrid()">
                         <div v-for="column in getColumns()" class="p-2" :title="getValue(error, column)" :class="column.class">{{ getValue(error, column) }}</div>
-                        <div class="p-2 flex" @click="error.show = !error.show">
-                            <div class="decoding self-center" :class="[{'collapse-icon': error.show}, {'expand-icon': !error.show}]"></div>
+                        <div class="p-2 flex toggle" @click="error.show = !error.show">
+                            <div class="decoding self-center m-auto" :class="[{'collapse-icon': error.show}, {'expand-icon': !error.show}]"></div>
                         </div>
                     </div>
-                    <div v-if="error.show" class="p-2 data">
+                    <div v-if="error.show" class="p-2 data mr-2">
                         <DataPrint :data="error.data"></DataPrint>
                     </div>
                 </div>
@@ -71,38 +71,41 @@
         columns: Array,
         options: Array,
         option: Object,
-        paginate: Object
+        paginate: Object,
+        time: Number
     });
     const modal = modalStore();
     const buttons = useButtons();
 
-    let columns = ref([
-        {class: 'column1', name: 'Дата', type: 'date', column: 'date', width: 1},
-        {class: 'column2', name: 'Имя', column: 'name', width: 1},
-        {class: 'column3', name: 'ID', column: 'guid', width: 1},
-        {class: 'column4', name: 'Категория', column: 'category', width: 1},
-        {class: 'column5', name: 'Подкатегория', column: 'sub_category', width: 1},
-        {class: 'column6', name: 'Отправитель', column: 'sender_name', width: 1},
-        {class: 'column7', name: 'Код', column: 'code', width: 1},
-        {class: 'column8', name: 'Пользователь', column: 'user', width: 1},
-        {class: 'column9', name: 'Устройство', column: 'device', width: 1},
-        {class: 'column10', name: 'Город', column: 'city', width: 1},
-        {class: 'column11', name: 'Регион', column: 'region', width: 1},
-        {class: 'column12', name: 'Версия', column: 'version', width: 1},
-        {class: 'column13', name: 'Длительность', column: 'duration', width: 1},
-    ]);
-    let fields = ref({
-        date: {'use': false, 'name': 'Дата', 'type': 'datetime-local', 'equal': null, 'value': null, 'value2': null, 'list': null},
-        name: {'use': false, 'name': 'Имя', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-        category: {'use': false, 'name': 'Категория', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-        sub_category: {'use': false, 'name': 'Подкатегория', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-        user: {'use': false, 'name': 'Пользователь', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-        device: {'use': false, 'name': 'Устройство', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-        city: {'use': false, 'name': 'Город', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-        region: {'use': false, 'name': 'Регион', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-        version: {'use': false, 'name': 'Версия', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-        duration: {'name': 'Длительность', 'type': 'number', 'equal': null, 'value': null, 'value2': null, 'list': null},
-    });
+    // let columns = ref([
+    //     {class: 'column1', name: 'Дата', type: 'date', column: 'date', width: 1},
+    //     {class: 'column2', name: 'Имя', column: 'name', width: 1},
+    //     {class: 'column3', name: 'ID', column: 'guid', width: 1},
+    //     {class: 'column4', name: 'Категория', column: 'category', width: 1},
+    //     {class: 'column5', name: 'Подкатегория', column: 'sub_category', width: 1},
+    //     {class: 'column6', name: 'Отправитель', column: 'sender_name', width: 1},
+    //     {class: 'column7', name: 'Код', column: 'code', width: 1},
+    //     {class: 'column8', name: 'Пользователь', column: 'user', width: 1},
+    //     {class: 'column9', name: 'Устройство', column: 'device', width: 1},
+    //     {class: 'column10', name: 'Город', column: 'city', width: 1},
+    //     {class: 'column11', name: 'Регион', column: 'region', width: 1},
+    //     {class: 'column12', name: 'Версия', column: 'version', width: 1},
+    //     {class: 'column13', name: 'Длительность', column: 'duration', width: 1},
+    // ]);
+    // let fields = ref({
+    //     date: {'use': false, 'name': 'Дата', 'type': 'datetime-local', 'equal': null, 'value': null, 'value2': null, 'list': null},
+    //     name: {'use': false, 'name': 'Имя', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+    //     category: {'use': false, 'name': 'Категория', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+    //     sub_category: {'use': false, 'name': 'Подкатегория', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+    //     user: {'use': false, 'name': 'Пользователь', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+    //     device: {'use': false, 'name': 'Устройство', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+    //     city: {'use': false, 'name': 'Город', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+    //     region: {'use': false, 'name': 'Регион', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+    //     version: {'use': false, 'name': 'Версия', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
+    //     duration: {'name': 'Длительность', 'type': 'number', 'equal': null, 'value': null, 'value2': null, 'list': null},
+    // });
+    let columns = ref([]);
+    let fields = ref({});
     let sort = ref([]);
     let list = ref([]);
     let options = ref([]);
@@ -118,15 +121,10 @@
     onMounted(()=>{
         list.value = props.errors;
         sort.value = props.sort;
-        if(Object.keys(props.filters).length > 0){
-            fields.value = props.filters;
-        }
-        if(props.columns.length > 0){
-            columns.value = props.columns;
-        }
+        fields.value = props.filters;
+        columns.value = props.columns;
         options.value = props.options;
         option.value = props.option;
-        console.log(props);
     });
 
     buttons.escape(function (){
@@ -274,7 +272,7 @@
     function removeOptionBegin(){
         question.value.visible = true;
         question.value.type = 'remove option';
-        question.value.title = 'Удалиние настройки';
+        question.value.title = 'Удаление настройки';
         question.value.question = 'Удалить настройку ' + option.value.name + '?';
     }
 

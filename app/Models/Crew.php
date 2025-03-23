@@ -65,9 +65,14 @@ class Crew extends Model
     public static function getByGuid($guid): Model|null
     {
         $user = Auth::id();
-        $ids = CrewMembers::query()->select(['crew'])->where('user', '=', $user)->get()->pluck('crew');
-        $query = self::query()->whereIn('id', $ids->toArray())->where('guid', '=', $guid);
-        return $query->first();
+        $ids = CrewMembers::query()->select(['crew', 'roles'])->where('user', '=', $user)->get();
+        $roles = $ids->pluck('roles', 'crew');
+        $crew = self::query()->whereIn('id', $ids->pluck('crew'))->where('guid', '=', $guid)->first();
+        if(is_null($crew)){
+            return null;
+        }
+        $crew->roles = json_decode($roles->get($crew->id));
+        return $crew;
     }
 
     public static function addToTeam($user_id, $team_id, $role = null): void
@@ -78,6 +83,27 @@ class Crew extends Model
         $member->crew = $team_id;
         $member->roles = json_encode([$role]);
         $member->save();
+    }
+
+    public static function roles(): array
+    {
+        return [
+            'admin'=>'Администратор',
+            'manager'=>'Управляющий',
+            'user'=>'Пользователь'
+        ];
+    }
+
+    public static function getMembers($team): Collection
+    {
+        $ids = CrewMembers::query()->select(['user', 'roles'])->where('crew', '=', $team)->get();
+        $roles = $ids->pluck('roles', 'user');
+        $users = User::query()->whereIn('id', $ids->pluck('user'))->orderBy('surname')->orderBy('name')->get();
+        $list = collect([]);
+        foreach ($users as $user){
+            $list[] = ['user'=>$user, 'roles'=>json_decode($roles->get($user->id))];
+        }
+        return $list;
     }
 
 }

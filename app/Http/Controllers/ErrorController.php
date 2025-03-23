@@ -83,6 +83,7 @@ class ErrorController extends Controller
 
     public function errorsTeam(Request $request, $guid): Response
     {
+        $start = microtime(true) * 1000;
         $team = Crew::getByGuid($guid);
         $guid_option = UserOption::get('current_option', $team->id, '');
         $option = ErrorOption::getByGuid($team->id, $guid_option);
@@ -100,6 +101,7 @@ class ErrorController extends Controller
         $paginate = Paginate::paginate($query, ErrorItemResource::class);
 
         $options = ErrorOption::getAll($team->id,true);
+        $end = microtime(true) * 1000;
         $data = [
             'title'=>'Список ошибок',
             'guid'=>$guid,
@@ -110,7 +112,8 @@ class ErrorController extends Controller
             'columns'=>$columns,
             'options'=>$options,
             'option'=>$option,
-            'paginate'=>$paginate->paginate
+            'paginate'=>$paginate->paginate,
+            'time'=>($end - $start)
         ];
         return Inertia::render('Errors/ErrorTeam', $data);
     }

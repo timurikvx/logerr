@@ -31,6 +31,7 @@ class ErrorOption extends Model
         $option->data = json_encode($value);
         $option->save();
         Cache::set('error_option'.$user.'_'.$option->guid, json_encode($option->toArray()), 3600);
+        Cache::delete('all_error_option'.$user.'_'.$team);
         return $option->guid;
     }
 
@@ -112,10 +113,9 @@ class ErrorOption extends Model
             ->first();
         if(!is_null($option)){
             Cache::delete('error_option'.$user.'_'.$option->guid);
+            Cache::delete('all_error_option'.$user.'_'.$team);
             $option->delete();
-
         }
-
     }
 
     public static function removeByGuid($team, $guid): void
@@ -128,6 +128,7 @@ class ErrorOption extends Model
             ->first();
         if(!is_null($option)){
             Cache::delete('error_option'.$user.'_'.$option->guid);
+            Cache::delete('all_error_option'.$user.'_'.$team);
             $option->delete();
         }
     }

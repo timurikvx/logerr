@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Crew\CrewMembersResource;
 use App\Models\Crew;
+use App\Models\CrewMembers;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -54,9 +56,17 @@ class CrewController extends Controller
         return Inertia::render('Teams/Teams', $data);
     }
 
-    public function team(Request $request): Response
+    public function team(Request $request, $guid): Response
     {
-        $data = ['title'=>'Команда'];
+        $team = Crew::getByGuid($guid);
+        $members = Crew::getMembers($team->id);
+        $data = [
+            'title'=>'Команда '.$team->name,
+            'team'=>(new CrewItemResource($team))->toArray($request),
+            'roles'=>Crew::roles(),
+            'members'=>CrewMembersResource::collection($members)->toArray($request),
+            'user'=>Auth::id()
+        ];
         return Inertia::render('Teams/Team', $data);
     }
 
@@ -91,6 +101,46 @@ class CrewController extends Controller
         $text = 'Вы приглашены в команду '.$team->name.' вступите или проигнорируйте уведомление!';
         Notification::create($type, $user->id, 'Приглашение в команду '.$team->name, $text, $team->toArray());
         return ['result'=>true];
+    }
+
+    public function save(Request $request): array
+    {
+        $name = $request->get('name');
+        $id = $request->get('id');
+
+        $team = Crew::find($id);
+        $team->name = $name;
+        $team->save();
+
+        return ['result'=>true];
+    }
+
+    public function roleChange(Request $request): array
+    {
+        $role = $request->get('role');
+        $team_id = $request->get('team');
+        $user_id = $request->get('user');
+
+        $member = CrewMembers::query()->where('user', '=',$user_id)->where('crew', '=', $team_id)->first();
+        if($member == null){
+            return ['result'=>false];
+        }
+        $member->roles = json_encode([$role]);
+        $member->save();
+        return ['result'=>true];
+    }
+
+    public function exclude(Request $request): array
+    {
+        $team_id = $request->get('team');
+        $user_id = $request->get('user');
+
+        CrewMembers::query()->where('user', '=',$user_id)->where('crew', '=', $team_id)->delete();
+
+        $members = Crew::getMembers($team_id);
+        return [
+            'members'=>CrewMembersResource::collection($members)->toArray($request)
+        ];
     }
 
 }
