@@ -11,8 +11,14 @@
             <button v-else class="button" @click="change = true">Изменить имя</button>
         </div>
         <PerfectScrollbar class="flex flex-col">
-            <div class="p-2 mb-2 text-2xl border-bottom">Учатники команды</div>
-            <div v-for="member in members" class="flex mb-2 border-bottom pb-2">
+            <div class="flex border-bottom mb-2">
+                <div class="p-2 text-2xl">Учатники команды</div>
+                <div class="grow"></div>
+                <div class="w-1/4 flex mr-4">
+                    <input type="text" class="self-center input grow" placeholder="Поиск" v-model="search" @input="searching">
+                </div>
+            </div>
+            <div v-for="member in filtered" class="flex mb-2 border-bottom pb-2">
                 <div class="flex member p-2">
                     <div class="mr-3">{{ member.user.surname }}</div>
                     <div>{{ member.user.name }}</div>
@@ -20,17 +26,14 @@
                 <div class="grow"></div>
                 <div class="flex mr-6" v-if="member.user.id === props.user">
                     <div class="self-center font-bold p-2 px-4">{{ getRole(member) }}</div>
-<!--                    <div v-for="role in Object.keys(roles)" class="py-2 px-4 mr-2">-->
-<!--                        {{ roles[role] }}-->
-<!--                    </div>-->
                 </div>
                 <div class="roles flex mr-6" v-else>
                     <div v-for="role in Object.keys(roles)" class="role py-2 px-4 mr-2" :class="{active: member.roles.includes(role)}" @click="changeRole(member, role)">
                         {{ roles[role] }}
                     </div>
                 </div>
-                <div v-if="member.user.id === props.user" class="p-2 px-8 font-bold">Это вы</div>
-                <button v-else class="button red" @click="excludeBegin(member.user)">Исключить</button>
+                <div v-if="member.user.id === props.user" class="p-2 px-8 font-bold mr-4">Это вы</div>
+                <button v-else class="button red mr-4" @click="excludeBegin(member.user)">Исключить</button>
             </div>
         </PerfectScrollbar>
         <Question :title="question.title" :question="question.question" :type="question.type" v-model:visible="question.visible" @confirm="questionEnd"></Question>
@@ -56,6 +59,7 @@
     let name = ref('');
     let team = ref({});
     let members = ref([]);
+    let filtered = ref([]);
     let question = ref({
         type: '',
         title: '',
@@ -63,11 +67,13 @@
         visible: false
     });
     let excludable = ref({});
+    let search = ref('');
 
     onMounted(()=>{
         name.value = props.team.name;
         team.value = props.team;
         members.value = props.members;
+        filtered.value = props.members;
     });
 
     function save(){
@@ -110,6 +116,13 @@
     function getRole(member){
         let role = member.roles[0];
         return props.roles[role];
+    }
+
+    function searching(){
+        filtered.value = members.value.filter((item) => {
+            let full_name = item.user.surname + ' ' + item.user.name;
+            return full_name.indexOf(search.value) !== -1;
+        })
     }
 
 </script>
