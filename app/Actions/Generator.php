@@ -14,7 +14,7 @@ use App\Models\User;
 class Generator
 {
 
-    public static function errors($user, $count = 500000):void
+    public static function errors($user, $count = 5000):void
     {
         $start = intval(microtime(true));
 
@@ -59,7 +59,7 @@ class Generator
             $error = [
                 'name'=>self::getValue($names),
                 'team'=>$crew->guid,
-                'date'=>(new \DateTime())->format('Y-m-d H:i:s'),
+                //'date'=>(new \DateTime())->modify('+3 hours')->format('Y-m-d H:i:s'),
                 'guid'=>$guid,
                 'category'=>self::getValue($categories, true),
                 'sub_category'=>self::getValue($subCategories, true),
@@ -82,7 +82,7 @@ class Generator
 
     }
 
-    public static function logs($user, $count = 100):void
+    public static function logs($user, $count = 10):void
     {
         $start = intval(microtime(true));
 
@@ -127,7 +127,7 @@ class Generator
             $error = [
                 'name'=>self::getValue($names),
                 'team'=>$crew->guid,
-                'date'=>(new \DateTime())->format('Y-m-d H:i:s'),
+                'date'=>(new \DateTime())->modify('+3 hours')->format('Y-m-d H:i:s'),
                 'guid'=>$guid,
                 'category'=>self::getValue($categories, true),
                 'sub_category'=>self::getValue($subCategories, true),
@@ -176,7 +176,6 @@ class Generator
             }
         }
     }
-
 
     private static function getValue($array, $can_null = false): mixed
     {
@@ -1017,6 +1016,5 @@ class Generator
             'Попова Елена Александровна',
         ];
     }
-
 
 }

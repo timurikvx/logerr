@@ -47,7 +47,7 @@ class Error extends Model
         }
         $date = $fields->get('date');
         if(empty($date)){
-            $date = (new \DateTime())->format('Y-m-d H:i:s');
+            $date = (new \DateTime())->modify('+3 hours')->format('Y-m-d H:i:s');
         }
 
         $team = Crew::getByGuid($fields->get('team'));
