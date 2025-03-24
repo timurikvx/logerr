@@ -1,7 +1,7 @@
 <template>
     <Layout :title="title" :crew="crew" class="errors flex flex-col grow">
         <div class="flex mb-4">
-            <div class="p-2 font-bold text-xl uppercase">Список ошибок</div>
+            <div class="p-2 font-bold text-xl uppercase">{{ head }}</div>
             <div class="grow"></div>
             <div class="self-center mr-4">Настройка списка:</div>
             <SelectList placeholder="Нет настройки" :input="false" v-model:value="option" :minWidth="220" :list="getOptions()" @select="selectOption"></SelectList>
@@ -17,7 +17,7 @@
                 <div v-for="column in getColumns()" class="p-2" :class="column.class">{{ column.name }}</div>
                 <div class="p-2"></div>
             </div>
-            <PerfectScrollbar class="grow">
+            <PerfectScrollbar ref="scroll" class="grow">
                 <div v-for="error in list">
                     <div class="grid line" :style="getGrid()">
                         <div v-for="column in getColumns()" class="p-2" :title="getValue(error, column)" :class="column.class">{{ getValue(error, column) }}</div>
@@ -32,9 +32,9 @@
                 <div v-if="shade" class="shade"></div>
             </PerfectScrollbar>
             <div class="flex p-2 mt-2 paginate">
-                <a class="button mr-2 px-6" :href="'?page=' + paginate.prev">Пред.</a>
+                <a class="button mr-2 px-6" :href="paginate.prev">Пред.</a>
                 <a class="self-center py-2 px-4 mr-2 link" v-for="link in paginate.links" :href="link.url" :class="{active: link.active}">{{ link.label }}</a>
-                <a class="button px-6" :href="'?page=' + paginate.next">След.</a>
+                <a class="button px-6" :href="paginate.next">След.</a>
             </div>
         </div>
     </Layout>
@@ -72,38 +72,14 @@
         options: Array,
         option: Object,
         paginate: Object,
-        time: Number
+        time: Number,
+        head: String,
+        prefix: String
     });
     const modal = modalStore();
     const buttons = useButtons();
+    const scroll = ref(null);
 
-    // let columns = ref([
-    //     {class: 'column1', name: 'Дата', type: 'date', column: 'date', width: 1},
-    //     {class: 'column2', name: 'Имя', column: 'name', width: 1},
-    //     {class: 'column3', name: 'ID', column: 'guid', width: 1},
-    //     {class: 'column4', name: 'Категория', column: 'category', width: 1},
-    //     {class: 'column5', name: 'Подкатегория', column: 'sub_category', width: 1},
-    //     {class: 'column6', name: 'Отправитель', column: 'sender_name', width: 1},
-    //     {class: 'column7', name: 'Код', column: 'code', width: 1},
-    //     {class: 'column8', name: 'Пользователь', column: 'user', width: 1},
-    //     {class: 'column9', name: 'Устройство', column: 'device', width: 1},
-    //     {class: 'column10', name: 'Город', column: 'city', width: 1},
-    //     {class: 'column11', name: 'Регион', column: 'region', width: 1},
-    //     {class: 'column12', name: 'Версия', column: 'version', width: 1},
-    //     {class: 'column13', name: 'Длительность', column: 'duration', width: 1},
-    // ]);
-    // let fields = ref({
-    //     date: {'use': false, 'name': 'Дата', 'type': 'datetime-local', 'equal': null, 'value': null, 'value2': null, 'list': null},
-    //     name: {'use': false, 'name': 'Имя', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-    //     category: {'use': false, 'name': 'Категория', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-    //     sub_category: {'use': false, 'name': 'Подкатегория', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-    //     user: {'use': false, 'name': 'Пользователь', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-    //     device: {'use': false, 'name': 'Устройство', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-    //     city: {'use': false, 'name': 'Город', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-    //     region: {'use': false, 'name': 'Регион', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-    //     version: {'use': false, 'name': 'Версия', 'type': 'text', 'equal': null, 'value': null, 'value2': null, 'list': null},
-    //     duration: {'name': 'Длительность', 'type': 'number', 'equal': null, 'value': null, 'value2': null, 'list': null},
-    // });
     let columns = ref([]);
     let fields = ref({});
     let sort = ref([]);
@@ -117,6 +93,7 @@
         visible: false
     });
     let shade = ref(false);
+    let paginate = ref({});
 
     onMounted(()=>{
         list.value = props.errors;
@@ -125,6 +102,7 @@
         columns.value = props.columns;
         options.value = props.options;
         option.value = props.option;
+        paginate.value = props.paginate;
     });
 
     buttons.escape(function (){
@@ -179,10 +157,14 @@
 
     function filtering(){
         shade.value = true;
-        axios.post('/errors/filter', {team: props.guid, filter: fields.value, sort: sort.value}).then(function (response){
+        axios.post('/' + props.prefix + '/filter', {team: props.guid, filter: fields.value, sort: sort.value}).then(function (response){
             shade.value = false;
+            scroll.value.$el.scrollTop = 0;
             if(response.data.errors){
                 list.value = response.data.errors;
+            }
+            if(response.data.paginate){
+                paginate.value = response.data.paginate;
             }
         }).catch(function (error){
             shade.value = false;
@@ -217,7 +199,7 @@
 
     function createOption(name){
         shade.value = true;
-        axios.post('/error/options/create', {team: props.guid, name: name, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
+        axios.post('/' + props.prefix + '/options/create', {team: props.guid, name: name, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
             shade.value = false;
             if(response.data.options){
                 options.value = response.data.options;
@@ -233,7 +215,7 @@
     function saveOption(){
         let data = option.value;
         shade.value = true;
-        axios.post('/error/options/save', {team: props.guid, guid: data.guid, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
+        axios.post('/' + props.prefix + '/options/save', {team: props.guid, guid: data.guid, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
             shade.value = false;
             if(response.data.options){
                 options.value = response.data.options;
@@ -249,8 +231,9 @@
     function selectOption(item){
         let data = Object.assign({team: props.guid, guid: item.guid});
         shade.value = true;
-        axios.post('/error/options/change', data).then(function (response){
+        axios.post('/' + props.prefix + '/options/change', data).then(function (response){
             shade.value = false;
+            scroll.value.$el.scrollTop = 0;
             let data = response.data;
             if(data.filters){
                 fields.value = data.filters;
@@ -263,6 +246,9 @@
             }
             if(data.errors){
                 list.value = data.errors;
+            }
+            if(data.paginate){
+                paginate.value = data.paginate;
             }
         }).catch(function (error){
             shade.value = false;
@@ -278,7 +264,7 @@
 
     function removeOption(){
         shade.value = true;
-        axios.post('/error/options/delete', {team: props.guid, guid: option.value.guid}).then(function (response){
+        axios.post('/' + props.prefix + '/options/delete', {team: props.guid, guid: option.value.guid}).then(function (response){
             shade.value = false;
             if(response.data.options){
                 options.value = response.data.options;
@@ -288,6 +274,9 @@
             }
             if(response.data.errors){
                 list.value = response.data.errors;
+            }
+            if(response.data.paginate){
+                paginate.value = response.data.paginate;
             }
             if(response.data.filters){
                 fields.value = response.data.filters;

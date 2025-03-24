@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Models\Crew;
 use App\Models\CrewMembers;
 use App\Models\Error;
+use App\Models\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
@@ -13,13 +14,13 @@ use App\Models\User;
 class Generator
 {
 
-    public static function render($user, $count = 500000):void
+    public static function errors($user, $count = 500000):void
     {
         $start = intval(microtime(true));
 
         Auth::login($user);
         $names = self::names();
-        $errors = self::errors();
+        $errors = self::errors_list();
         $categories = self::categories();
         $subCategories = self::subCategories();
         $senders = self::senders();
@@ -76,7 +77,74 @@ class Generator
             Error::write($error, $user);
 
         }
+        $end= intval(microtime(true));
+        dump($end - $start);
 
+    }
+
+    public static function logs($user, $count = 100):void
+    {
+        $start = intval(microtime(true));
+
+        Auth::login($user);
+        $names = self::names();
+        $errors = self::errors_list();
+        $categories = self::categories();
+        $subCategories = self::subCategories();
+        $senders = self::senders();
+        $codes = self::codes();
+        $regions = self::regions();
+        $versions = self::versions();
+        $devices = self::devices();
+        $users = self::people();
+        $crew_list = Crew::list()->pluck('id')->toArray();
+
+        for ($i = 0; $i < $count; $i++){
+
+            $crew_id = self::getValue($crew_list);
+            $crew = Crew::find($crew_id);
+            $guid = Uuid::uuid4()->toString();
+
+            $sender = self::getValue($senders);
+            $region = self::getValue($regions, true);
+            $duration = rand(0, 3000);
+            if($duration < 1000){
+                $duration = null;
+            }
+
+            $city = null;
+            if(!is_null($region)){
+                $city = self::getValue($region['cities'], true);
+                $region = $region['region'];
+            }
+
+            $data = self::getValue($errors);
+            $result = json_decode($data, true);
+            if(is_array($result)){
+                $data = $result;
+            }
+
+            $error = [
+                'name'=>self::getValue($names),
+                'team'=>$crew->guid,
+                'date'=>(new \DateTime())->format('Y-m-d H:i:s'),
+                'guid'=>$guid,
+                'category'=>self::getValue($categories, true),
+                'sub_category'=>self::getValue($subCategories, true),
+                'sender_name'=>$sender['name'],
+                'sender_guid'=>$sender['guid'],
+                'code'=>self::getValue($codes, true),
+                'user'=>self::getValue($users, true),
+                'device'=>self::getValue($devices, true),
+                'city'=>$city,
+                'region'=>$region,
+                'version'=>self::getValue($versions, true),
+                'duration'=>$duration,
+                'text'=>$data
+            ];
+            Log::write($error, $user);
+
+        }
         $end= intval(microtime(true));
         dump($end - $start);
 
@@ -125,7 +193,7 @@ class Generator
         return $array[$index];
     }
 
-    private static function errors(): array
+    private static function errors_list(): array
     {
         return [
             '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"><html><head><title>1C:Enterprise 8 application error</title></head><body><h2>1C:Enterprise 8 application error:</h2>Connection error<br><b>by reason: </b><br>Could not find an available working process on 1C:Enterprise server. Attempts: 5, interval: 1000 milliseconds.</body></html>',

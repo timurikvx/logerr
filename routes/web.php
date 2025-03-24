@@ -41,15 +41,13 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/dashboard', [Controller::class, 'dashboard'])->name('dashboard');
 
     Route::get('/errors', [ErrorController::class, 'errors'])->name('errors');
-    Route::get('/errors/{team}', [ErrorController::class, 'errorsTeam']);
+    Route::get('/errors/{team}', [ErrorController::class, 'getList']);
 
     Route::get('/teams', [CrewController::class, 'teams'])->name('teams');
     Route::get('/teams/{team}', [CrewController::class, 'team']);
 
     Route::get('/logs', [LogController::class, 'logs'])->name('logs');
-    Route::get('/logs/{team}', [LogController::class, 'logsTeam']);
-
-
+    Route::get('/logs/{team}', [LogController::class, 'getList']);
 
     //Teams
     Route::post('/team/create', [CrewController::class, 'create']);
@@ -58,7 +56,6 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/team/save', [CrewController::class, 'save']);
     Route::post('/team/role/change', [CrewController::class, 'roleChange']);
     Route::post('/team/exclude', [CrewController::class, 'exclude']);
-
 
     //Choice
     Route::post('/choice', [Controller::class, 'choice']);
@@ -78,16 +75,16 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/error/options/clear', [ErrorController::class, 'optionClear']);
     Route::post('/error/options/change', [ErrorController::class, 'optionChange']);
     Route::post('/error/options/delete', [ErrorController::class, 'optionDelete']);
-    Route::post('/errors/filter', [ErrorController::class, 'filter']);
+    Route::post('/error/filter', [ErrorController::class, 'filter']);
 
     //Logs
-    Route::post('/logs/filter', [LogController::class, 'filter']);
     Route::post('/log/options/set', [LogController::class, 'optionSet']);
     Route::post('/log/options/create', [LogController::class, 'optionCreate']);
     Route::post('/log/options/clear', [LogController::class, 'optionClear']);
     Route::post('/log/options/save', [LogController::class, 'optionSave']);
     Route::post('/log/options/change', [LogController::class, 'optionChange']);
     Route::post('/log/options/delete', [LogController::class, 'optionDelete']);
+    Route::post('/log/filter', [LogController::class, 'filter']);
 
 
 });

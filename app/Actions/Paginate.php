@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 class Paginate
 {
-    public static function paginate(Builder $query, mixed $resource = null): \stdClass
+    public static function paginate(Builder $query, $path, mixed $resource = null): \stdClass
     {
         $request = Route::getCurrentRequest();
         $max = 50;
@@ -21,13 +21,13 @@ class Paginate
         if(!is_null($resource)){
             $data = $resource::collection($data)->toArray($request);
         }
-        $base = $request->fullUrlWithoutQuery(['page']);
+        //$base = $request->fullUrlWithoutQuery(['page']);
 
         $start = max($page - $side, 1);
         $end = $start + ($side * 2) + 1;
         $links = array();
         for($i = $start; $i < $end; $i++){
-            $links[] = ['url'=>$base.'?page='.$i, 'active'=>($i === $page), 'label'=>$i];
+            $links[] = ['url'=>$path.'?page='.$i, 'active'=>($i === $page), 'label'=>$i];
         }
 
         $answer = new \stdClass();
@@ -38,6 +38,7 @@ class Paginate
             'current'=>$page,
             'next'=>$page + 1
         ];
+        //dump($answer);
         return $answer;
     }
 

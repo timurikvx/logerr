@@ -12,6 +12,8 @@ class Log extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public static function writeFromText($text): void
     {
         if(empty($text)){
@@ -37,10 +39,10 @@ class Log extends Model
         $text = $fields->get('text');
         if(is_array($text)){
             $type = 'json';
-            $error_text = json_encode($text);
+            $log_text = json_encode($text);
         }else{
             $type = 'text';
-            $error_text = $text;
+            $log_text = $text;
         }
         $date = $fields->get('date');
         if(empty($date)){
@@ -69,8 +71,9 @@ class Log extends Model
         $error->city = $fields->get('city', '');
         $error->region = $fields->get('region', '');
         $error->version = $fields->get('version', '');
-        $error->data = $error_text;
+        $error->data = $log_text;
         $error->duration = $fields->get('duration', 0);
+        $error->len = strlen($log_text);
         $error->save();
     }
 

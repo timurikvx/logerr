@@ -4,18 +4,16 @@ namespace App\Console\Commands;
 
 use App\Actions\Generator;
 use App\Models\User;
-use Detection\Cache\Cache;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Redis;
 
-class ErrorRender extends Command
+class LogRender extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'error:render';
+    protected $signature = 'log:render';
 
     /**
      * The console command description.
@@ -30,6 +28,6 @@ class ErrorRender extends Command
     public function handle()
     {
         $user = User::find(1);
-        Generator::errors($user);
+        Generator::logs($user);
     }
 }
