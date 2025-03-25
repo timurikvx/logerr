@@ -84,4 +84,5 @@ class Log extends Model
         Filters::setSort($query, $sort);
         return $query;
     }
+
 }
