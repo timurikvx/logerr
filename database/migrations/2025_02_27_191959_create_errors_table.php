@@ -12,19 +12,23 @@ return new class extends Migration
     public function up(): void
     {
 
-        Schema::create('errors', function (Blueprint $table) {
-            $this->table($table);
-        });
+//        Schema::create('errors', function (Blueprint $table) {
+//            $this->table($table);
+//        });
 
         Schema::create('logs', function (Blueprint $table) {
             $this->table($table);
+            $table->longText('query')->nullable();
+            $table->longText('response')->nullable();
+            $table->longText('query_type')->nullable();
+            $table->longText('response_type')->nullable();
         });
 
     }
 
     public function table(Blueprint &$table): void
     {
-        $table->id();
+        //$table->id();
         $table->string('name')->index();
         $table->unsignedBigInteger('team')->index();
         $table->dateTime('date')->index();
@@ -44,6 +48,7 @@ return new class extends Migration
         $table->longText('data')->nullable();
         $table->unsignedBigInteger('len')->default(0);
         $table->index(['name', 'team', 'date']);
+        $table->primary(['name', 'team', 'date', 'guid']);
     }
 
     /**
@@ -51,7 +56,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('errors');
+        //Schema::dropIfExists('errors');
         Schema::dropIfExists('logs');
     }
 };

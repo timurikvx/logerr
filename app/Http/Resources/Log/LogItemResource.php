@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Errors;
+namespace App\Http\Resources\Log;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ErrorItemResource extends JsonResource
+class LogItemResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -31,7 +31,7 @@ class ErrorItemResource extends JsonResource
             'version'=>$this->version,
             'duration'=>$this->duration,
             'data'=>$this->getData($this->type, $this->data),
-            'length'=>$this->len,
+            'length'=>$this->len
         ];
     }
 

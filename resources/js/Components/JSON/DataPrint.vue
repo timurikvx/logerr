@@ -32,7 +32,9 @@
 
     let type = computed({
         get(){
-            if(Array.isArray(props.data)){
+            if(!props.data){
+                return 'null';
+            }else if(Array.isArray(props.data)){
                 return 'array';
             }else if(props.data instanceof Object){
                 return 'object';

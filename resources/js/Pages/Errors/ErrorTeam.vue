@@ -25,8 +25,19 @@
                             <div class="decoding self-center m-auto" :class="[{'collapse-icon': error.show}, {'expand-icon': !error.show}]"></div>
                         </div>
                     </div>
-                    <div v-if="error.show" class="p-2 data mr-2">
-                        <DataPrint :data="error.data"></DataPrint>
+                    <div v-if="error.show" class="p-2 data">
+                        <div v-if="error.data" class="flex flex-col">
+                            <div class="mb-2">Данные:</div>
+                            <DataPrint :data="error.data"></DataPrint>
+                        </div>
+                        <div v-if="error.query" class="flex flex-col">
+                            <div class="mb-2">Запрос:</div>
+                            <DataPrint :data="error.query"></DataPrint>
+                        </div>
+                        <div v-if="error.response" class="flex flex-col">
+                            <div class="mb-2">Ответ:</div>
+                            <DataPrint :data="error.response"></DataPrint>
+                        </div>
                     </div>
                 </div>
                 <div v-if="shade" class="shade"></div>

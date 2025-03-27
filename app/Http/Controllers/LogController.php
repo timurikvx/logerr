@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Errors\ErrorItemResource;
+use App\Http\Resources\Log\LogItemResource;
 use App\Models\LogOption;
 use App\Models\Log;
 use Illuminate\Http\Request;
@@ -37,9 +38,8 @@ class LogController extends ListController
     public function getListData($team, $filters, $sort): \stdClass
     {
         $path = '/logs/'.$team->guid;
-        //$query = Error::getErrors($team->id, $filters, $sort);
         $query = Log::getLogs($team->id, $filters, $sort);
-        return Paginate::paginate($query, $path, ErrorItemResource::class);
+        return Paginate::paginate($query, $path, LogItemResource::class);
     }
 
     public function columns(): array

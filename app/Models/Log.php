@@ -13,6 +13,7 @@ class Log extends Model
     use HasFactory;
 
     public $timestamps = false;
+    public $incrementing = false;
 
     public static function writeFromText($text): void
     {
