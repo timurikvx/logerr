@@ -31,6 +31,8 @@ class LogItemResource extends JsonResource
             'version'=>$this->version,
             'duration'=>$this->duration,
             'data'=>$this->getData($this->type, $this->data),
+            'query'=>$this->getData($this->query_type, $this->query),
+            'response'=>$this->getData($this->response_type, $this->response),
             'length'=>$this->len
         ];
     }

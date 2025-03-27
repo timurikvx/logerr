@@ -82,7 +82,7 @@ class Generator
 
     }
 
-    public static function logs($user, $count = 10):void
+    public static function logs($user, $count = 500):void
     {
         $start = intval(microtime(true));
 
@@ -118,10 +118,22 @@ class Generator
                 $region = $region['region'];
             }
 
-            $data = self::getValue($errors);
+            $data = self::getValue($errors, true);
             $result = json_decode($data, true);
             if(is_array($result)){
                 $data = $result;
+            }
+
+            $data2 = self::getValue($errors);
+            $result2 = json_decode($data2, true);
+            if(is_array($result2)){
+                $data2 = $result2;
+            }
+
+            $data3 = self::getValue($errors);
+            $result3 = json_decode($data3, true);
+            if(is_array($result3)){
+                $data3 = $result3;
             }
 
             $error = [
@@ -140,7 +152,9 @@ class Generator
                 'region'=>$region,
                 'version'=>self::getValue($versions, true),
                 'duration'=>$duration,
-                'text'=>$data
+                'data'=>$data,
+                'query'=>$data2,
+                'response'=>$data3
             ];
             Log::write($error, $user);
 

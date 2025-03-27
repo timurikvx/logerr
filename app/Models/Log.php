@@ -37,7 +37,7 @@ class Log extends Model
         }
 
         $fields = collect($data);
-        $text = $fields->get('text');
+        $text = $fields->get('data');
         if(is_array($text)){
             $type = 'json';
             $log_text = json_encode($text);
@@ -54,6 +54,24 @@ class Log extends Model
         $guid = $fields->get('guid', '');
         if(empty($guid)){
             $guid = Uuid::uuid4()->toString();
+        }
+
+        $text2 = $fields->get('query');
+        if(is_array($text2)){
+            $type2 = 'json';
+            $log_text2 = json_encode($text2);
+        }else{
+            $type2 = 'text';
+            $log_text2 = $text2;
+        }
+
+        $text3 = $fields->get('response');
+        if(is_array($text3)){
+            $type3 = 'json';
+            $log_text3 = json_encode($text3);
+        }else{
+            $type3 = 'text';
+            $log_text3 = $text3;
         }
 
         $error = new Log();
@@ -75,6 +93,10 @@ class Log extends Model
         $error->data = $log_text;
         $error->duration = $fields->get('duration', 0);
         $error->len = strlen($log_text);
+        $error->query = $log_text2;
+        $error->query_type = $type2;
+        $error->response = $log_text3;
+        $error->response_type = $type3;
         $error->save();
     }
 
