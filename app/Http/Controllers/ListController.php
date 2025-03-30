@@ -74,7 +74,7 @@ class ListController extends Controller
         ];
     }
 
-    public function page(Request $request)
+    public function page(Request $request): array
     {
         $team_guid = $request->get('team');
         $team = Crew::getByGuid($team_guid);

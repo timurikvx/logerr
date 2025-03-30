@@ -2,7 +2,9 @@
 
 namespace App\Actions;
 
+use App\Events\HandleErrorsEvent;
 use App\Http\Resources\Errors\ErrorItemResource;
+use App\Jobs\HandleErrorsJob;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +24,8 @@ class Paginate
         if(!is_null($resource)){
             $data = $resource::collection($data)->toArray($request);
         }
+
+        HandleErrorsEvent::dispatch($data);
 
         $start = max($page - $side, 1);
         $end = $start + ($side * 2) + 1;
