@@ -37,7 +37,7 @@
 <script setup>
 
     import Layout from "@/Layouts/Layout.vue";
-    import {defineProps, onMounted, ref} from "vue";
+    import {defineProps, onMounted, provide, ref} from "vue";
     import {modalStore} from "@/Store/Modal.js";
     import {inviteStore} from "@/Store/Invite.js";
     import CreateTeam from "@/Modal/CreateTeam.vue";
@@ -47,13 +47,19 @@
 
     let teams = ref([]);
 
-    defineProps({
+    const props = defineProps({
         title: String,
         crew: {
             type: Object,
             default: {}
+        },
+        short: {
+            type: Boolean,
+            default: false
         }
-    })
+    });
+
+    provide('short', props.short);
 
     onMounted(() => {
         axios.post('/team/list').then(function(response){

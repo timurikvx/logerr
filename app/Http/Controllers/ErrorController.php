@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Filters;
+use App\Actions\PageOptions;
 use App\Actions\Paginate;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
@@ -84,15 +85,15 @@ class ErrorController extends ListController
 
     public function errors(Request $request): Response
     {
-        $data = ['title'=>'Выбор команды ошибок'];
+        $data = PageOptions::get();
+        $data->put('title', 'Выбор команды ошибок');
         return Inertia::render('Errors/Errors', $data);
     }
 
     public function getListData($team, $filters, $sort): \stdClass
     {
-        $path = '/errors/'.$team->guid;
         $query = Error::getErrors($team->id, $filters, $sort);
-        return Paginate::paginate($query, $path, ErrorItemResource::class);
+        return Paginate::paginate($query, ErrorItemResource::class);
     }
 
 }

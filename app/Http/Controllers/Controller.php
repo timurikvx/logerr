@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Filters;
+use App\Actions\PageOptions;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
 use App\Models\Crew;
 use App\Models\Error;
+use App\Models\UserOption;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -21,7 +23,8 @@ class Controller extends BaseController
 
     public function dashboard(Request $request): Response
     {
-        $data = ['title'=>'Панель управления'];
+        $data = PageOptions::get();
+        $data->put('title', 'Панель управления');
         return Inertia::render('Dashboard', $data);
     }
 
@@ -45,6 +48,5 @@ class Controller extends BaseController
             'list'=>$list->pluck($field)
         ];
     }
-
 
 }

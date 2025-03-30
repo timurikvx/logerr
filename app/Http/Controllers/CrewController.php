@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\PageOptions;
 use App\Http\Resources\Crew\CrewMembersResource;
 use App\Models\Crew;
 use App\Models\CrewMembers;
@@ -52,21 +53,31 @@ class CrewController extends Controller
 
     public function teams(Request $request): Response
     {
-        $data = ['title'=>'Управление командами'];
+        $data = PageOptions::get();
+        $data->put('title', 'Управление командами');
         return Inertia::render('Teams/Teams', $data);
     }
 
     public function team(Request $request, $guid): Response
     {
+        $data = PageOptions::get();
+
         $team = Crew::getByGuid($guid);
         $members = Crew::getMembers($team->id);
-        $data = [
-            'title'=>'Команда '.$team->name,
-            'team'=>(new CrewItemResource($team))->toArray($request),
-            'roles'=>Crew::roles(),
-            'members'=>CrewMembersResource::collection($members)->toArray($request),
-            'user'=>Auth::id()
-        ];
+
+        $data->put('title', 'Команда '.$team->name);
+        $data->put('team', (new CrewItemResource($team))->toArray($request));
+        $data->put('roles', Crew::roles());
+        $data->put('members', CrewMembersResource::collection($members)->toArray($request));
+        $data->put('user', Auth::id());
+        $data->put('title', 'Выбор команды ошибок');
+//        $data = [
+//            'title'=>'Команда '.$team->name,
+//            'team'=>(new CrewItemResource($team))->toArray($request),
+//            'roles'=>Crew::roles(),
+//            'members'=>CrewMembersResource::collection($members)->toArray($request),
+//            'user'=>Auth::id()
+//        ];
         return Inertia::render('Teams/Team', $data);
     }
 

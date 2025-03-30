@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Filters;
+use App\Actions\PageOptions;
 use App\Actions\Paginate;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
@@ -17,9 +17,9 @@ class ListController extends Controller
 {
     public function getListData($team, $filters, $sort): \stdClass
     {
-        $path = '/errors/'.$team->guid;
+        //$path = '/errors/'.$team->guid;
         $query = Error::getErrors($team->id, $filters, $sort);
-        return Paginate::paginate($query, $path, ErrorItemResource::class);
+        return Paginate::paginate($query, ErrorItemResource::class);
     }
 
     public function getList(Request $request, $guid): Response
@@ -42,24 +42,24 @@ class ListController extends Controller
 
         $options = $this->OPTION::getAll($team->id,true);
         $end = microtime(true) * 1000;
-        $data = [
-            'title'=>'Список ошибок',
-            'guid'=>$guid,
-            'crew'=> (new CrewItemResource($team))->toArray($request),
-            'errors'=>$paginate->data,
-            'sort'=>$sort,
-            'filters'=>$filters,
-            'columns'=>$columns,
-            'options'=>$options,
-            'option'=>$option,
-            'paginate'=>$paginate->paginate,
-            'time'=>($end - $start),
-            'head'=>$this->head,
-            'prefix'=>$this->prefix
-        ];
+
+        $data = PageOptions::get();
+        $data->put('title', 'Список ошибок');
+        $data->put('guid', $guid);
+        $data->put('crew', (new CrewItemResource($team))->toArray($request));
+        $data->put('list', $paginate->data);
+        $data->put('sort', $sort);
+        $data->put('filters', $filters);
+        $data->put('columns', $columns);
+        $data->put('options', $options);
+        $data->put('option', $option);
+        $data->put('paginate', $paginate->paginate);
+        $data->put('time', ($end - $start));
+        $data->put('head', $this->head);
+        $data->put('prefix', $this->prefix);
+
         return Inertia::render('Errors/ErrorTeam', $data);
     }
-
 
     public function filter(Request $request): array
     {
@@ -67,10 +67,23 @@ class ListController extends Controller
         $team = Crew::getByGuid($team_guid);
         $filters = $request->get('filter');
         $sort = $request->get('sort');
-        //$errors = Error::getErrors($team->id, $filters, $sort)->limit(20)->get();
         $data = $this->getListData($team, $filters, $sort);
         return [
-            'errors'=>$data->data,//ErrorItemResource::collection($errors)->toArray($request)
+            'list'=>$data->data,
+            'paginate'=>$data->paginate
+        ];
+    }
+
+    public function page(Request $request)
+    {
+        $team_guid = $request->get('team');
+        $team = Crew::getByGuid($team_guid);
+
+        $filters = UserOption::get($this->cache_filters, $team->id, []);
+        $sort = UserOption::get($this->cache_sort, $team->id, []);
+        $data = $this->getListData($team, $filters, $sort);
+        return [
+            'list'=>$data->data,
             'paginate'=>$data->paginate
         ];
     }
@@ -179,7 +192,7 @@ class ListController extends Controller
         return [
             'options'=>$options,
             'option'=>[],
-            'errors'=>$data->data,
+            'list'=>$data->data,
             'paginate'=>$data->paginate,
             'sort'=>[],
             'filters'=>$this->filterFields(),
@@ -211,7 +224,7 @@ class ListController extends Controller
             $option = [];
         }
         $result = $this->getListDataByOption($team, $option);
-        $data['errors'] = $result->data;
+        $data['list'] = $result->data;
         $data['paginate'] = $result->paginate;
         return $data;
     }

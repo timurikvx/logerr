@@ -4,11 +4,12 @@ namespace App\Actions;
 
 use App\Http\Resources\Errors\ErrorItemResource;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 class Paginate
 {
-    public static function paginate(Builder $query, $path, mixed $resource = null): \stdClass
+    public static function paginate(Builder $query, mixed $resource = null): \stdClass
     {
         $request = Route::getCurrentRequest();
         $max = 50;
@@ -21,24 +22,26 @@ class Paginate
         if(!is_null($resource)){
             $data = $resource::collection($data)->toArray($request);
         }
-        //$base = $request->fullUrlWithoutQuery(['page']);
 
         $start = max($page - $side, 1);
         $end = $start + ($side * 2) + 1;
-        $links = array();
-        for($i = $start; $i < $end; $i++){
-            $links[] = ['url'=>$path.'?page='.$i, 'active'=>($i === $page), 'label'=>$i];
+        if(count($data) < $limit){
+            $end = $page + 1;
         }
 
+        $links = array();
+        for($i = $start; $i < $end; $i++){
+            $links[] = ['page'=>$i,'active'=>($i === $page), 'label'=>$i]; //'url'=>$path.'?page='.$i,
+        }
         $answer = new \stdClass();
         $answer->data = $data;
         $answer->paginate = [
             'prev'=>max($page - 1, 1),
             'links'=>$links,
             'current'=>$page,
-            'next'=>$page + 1
+            'next'=>min($page + 1, $end),
+            'count'=>count($data)
         ];
-        //dump($answer);
         return $answer;
     }
 

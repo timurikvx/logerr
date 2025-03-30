@@ -27,7 +27,7 @@
                     </div>
                     <div v-if="error.show" class="p-2 data">
                         <div v-if="error.data" class="flex flex-col">
-                            <div class="mb-2 border-bottom pb-1 mb-4">Данные:</div>
+                            <div class="border-bottom pb-1 mb-4">Данные:</div>
                             <DataPrint :data="error.data"></DataPrint>
                         </div>
                         <div v-if="error.query" class="flex flex-col mb-4">
@@ -43,9 +43,9 @@
                 <div v-if="shade" class="shade"></div>
             </PerfectScrollbar>
             <div class="flex p-2 mt-2 paginate">
-                <a class="button mr-2 px-6" :href="paginate.prev">Пред.</a>
-                <a class="self-center py-2 px-4 mr-2 link" v-for="link in paginate.links" :href="link.url" :class="{active: link.active}">{{ link.label }}</a>
-                <a class="button px-6" :href="paginate.next">След.</a>
+                <button class="button mr-2 px-6" @click="paginating(paginate.prev)">Пред.</button>
+                <button class="self-center py-2 px-4 mr-2 link" v-for="link in paginate.links" @click="paginating(link.page)" :class="{active: link.active}">{{ link.label }}</button>
+                <button class="button px-6" @click="paginating(paginate.next)">След.</button>
             </div>
         </div>
     </Layout>
@@ -59,7 +59,7 @@
 <script setup>
 
     import Layout from "@/Layouts/Layout.vue";
-    import {defineProps, onMounted, ref} from 'vue'
+    import {defineProps, onMounted, provide, ref} from 'vue'
     import Button from "@/Components/Button.vue";
     import Columns from "@/Components/Columns.vue";
     import DataPrint from "@/Components/JSON/DataPrint.vue";
@@ -76,7 +76,7 @@
         title: String,
         guid: String,
         crew: Object,
-        errors: Array,
+        list: Array,
         sort: Array,
         filters: Object,
         columns: Array,
@@ -85,7 +85,11 @@
         paginate: Object,
         time: Number,
         head: String,
-        prefix: String
+        prefix: String,
+        short: {
+            type: Boolean,
+            default: false
+        }
     });
     const modal = modalStore();
     const buttons = useButtons();
@@ -107,7 +111,7 @@
     let paginate = ref({});
 
     onMounted(()=>{
-        list.value = props.errors;
+        list.value = props.list;
         sort.value = props.sort;
         fields.value = props.filters;
         columns.value = props.columns;
@@ -115,6 +119,8 @@
         option.value = props.option;
         paginate.value = props.paginate;
     });
+
+    provide('short', props.short);
 
     buttons.escape(function (){
         if(modal.columns){
@@ -171,8 +177,8 @@
         axios.post('/' + props.prefix + '/filter', {team: props.guid, filter: fields.value, sort: sort.value}).then(function (response){
             shade.value = false;
             scroll.value.$el.scrollTop = 0;
-            if(response.data.errors){
-                list.value = response.data.errors;
+            if(response.data.list){
+                list.value = response.data.list;
             }
             if(response.data.paginate){
                 paginate.value = response.data.paginate;
@@ -255,8 +261,8 @@
             if(data.columns){
                 columns.value = data.columns;
             }
-            if(data.errors){
-                list.value = data.errors;
+            if(data.list){
+                list.value = data.list;
             }
             if(data.paginate){
                 paginate.value = data.paginate;
@@ -283,8 +289,8 @@
             if(response.data.option){
                 option.value = response.data.option;
             }
-            if(response.data.errors){
-                list.value = response.data.errors;
+            if(response.data.list){
+                list.value = response.data.list;
             }
             if(response.data.paginate){
                 paginate.value = response.data.paginate;
@@ -316,6 +322,23 @@
         }
         options.value.forEach((item)=> arr.push(item));
         return arr;
+    }
+
+    function paginating(page){
+        shade.value = true;
+        //, filter: fields.value, sort: sort.value
+        axios.post('/' + props.prefix + '/page', {page: page, team: props.guid}).then(function (response){
+            shade.value = false;
+            scroll.value.$el.scrollTop = 0;
+            if(response.data.list){
+                list.value = response.data.list;
+            }
+            if(response.data.paginate){
+                paginate.value = response.data.paginate;
+            }
+        }).catch(function (error){
+            shade.value = false;
+        });
     }
 
 </script>

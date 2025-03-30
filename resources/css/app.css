@@ -56,16 +56,18 @@ body{
 }
 
 .header > div{
-    /*max-width: 1600px;*/
-    /*width: 70%;*/
-    /*@apply mx-auto;*/
     @apply mx-4;
 }
 
 .sidebar{
-    min-width: 300px;
+    min-width: 250px;
     border-right: 1px solid var(--border);
     background-color: var(--main);
+    transition: 0.3s;
+}
+
+.sidebar.short{
+    min-width: 50px;
 }
 
 .sidebar .menu-item{
@@ -108,6 +110,14 @@ body{
 
 .sidebar .crew:hover{
     background-color: var(--red-light);
+}
+
+.sidebar .icon{
+    width: 28px;
+    height: 28px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 24px;
 }
 
 .button{
@@ -269,6 +279,30 @@ body{
 
 .notification{
     background-image: url("/storage/notification.png");
+}
+
+.teams-icon{
+    background-image: url("/storage/teams.png");
+}
+
+.err-icon{
+    background-image: url("/storage/bug.png");
+}
+
+.log-icon{
+    background-image: url("/storage/log.png");
+}
+
+.dashboard-icon{
+    background-image: url("/storage/dashboard.png");
+}
+
+.expand-panel{
+    background-image: url("/storage/expand-panel.png");
+}
+
+.collapse-panel{
+    background-image: url("/storage/collapse-panel.png");
 }
 
 /******************** icons *************************/
@@ -646,15 +680,6 @@ body{
 .team-item{
 
 }
-
-/*.team-item .member{*/
-/*    transition: 0.3s;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*.team-item .member:hover{*/
-/*    background-color: var(--purple);*/
-/*}*/
 
 .team-item .role{
     transition: 0.3s;

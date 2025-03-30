@@ -7,11 +7,17 @@
 <script setup>
 
     import Layout from "@/Layouts/Layout.vue";
-    import {defineProps} from 'vue'
+    import {defineProps, provide} from 'vue'
 
-    defineProps({
-        title: String
-    })
+    const props = defineProps({
+        title: String,
+        short: {
+            type: Boolean,
+            default: false
+        }
+    });
+
+    provide('short', props.short);
 
 </script>
 

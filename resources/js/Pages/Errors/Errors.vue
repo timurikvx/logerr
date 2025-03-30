@@ -20,14 +20,20 @@
 
     import Layout from "@/Layouts/Layout.vue";
     import { modalStore } from '@/Store/Modal.js';
-    import {defineProps, onMounted, ref} from "vue";
+    import {defineProps, onMounted, provide, ref} from "vue";
     const store = modalStore();
 
     let teams = ref([]);
 
-    defineProps({
-        title: String
-    })
+    const props = defineProps({
+        title: String,
+        short: {
+            type: Boolean,
+            default: false
+        }
+    });
+
+    provide('short', props.short);
 
     onMounted(() => {
         axios.post('/team/list').then(function(response){

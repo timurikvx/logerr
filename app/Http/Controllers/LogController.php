@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\PageOptions;
 use App\Http\Resources\Errors\ErrorItemResource;
 use App\Http\Resources\Log\LogItemResource;
 use App\Models\LogOption;
@@ -31,15 +32,15 @@ class LogController extends ListController
 
     public function logs(Request $request): Response
     {
-        $data = ['title'=>'Выбор команды логов'];
+        $data = PageOptions::get();
+        $data->put('title', 'Выбор команды просмотра логов');
         return Inertia::render('Logs/Logs', $data);
     }
 
     public function getListData($team, $filters, $sort): \stdClass
     {
-        $path = '/logs/'.$team->guid;
         $query = Log::getLogs($team->id, $filters, $sort);
-        return Paginate::paginate($query, $path, LogItemResource::class);
+        return Paginate::paginate($query, LogItemResource::class);
     }
 
     public function columns(): array

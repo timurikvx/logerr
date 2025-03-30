@@ -43,7 +43,7 @@
 <script setup>
 
     import Layout from "@/Layouts/Layout.vue";
-    import {defineProps, onMounted, ref} from 'vue';
+    import {defineProps, onMounted, provide, ref} from 'vue';
     import axios from "axios";
     import Question from "@/Components/JSON/Question.vue";
 
@@ -52,7 +52,11 @@
         team: Object,
         members: Array,
         roles: Object,
-        user: Number
+        user: Number,
+        short: {
+            type: Boolean,
+            default: false
+        }
     });
 
     let change = ref(false);
@@ -68,6 +72,8 @@
     });
     let excludable = ref({});
     let search = ref('');
+
+    provide('short', props.short);
 
     onMounted(()=>{
         name.value = props.team.name;

@@ -8,6 +8,7 @@ use App\Http\Controllers\CrewController;
 use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\UserOptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +68,8 @@ Route::middleware(['auth'])->group(function(){
 
     //Common
     Route::post('/filters/get', [Controller::class, 'filters']);
+    Route::post('/option/set', [UserOptionController::class, 'set']);
+    Route::post('/option/get', [UserOptionController::class, 'get']);
 
     //Errors
     Route::post('/error/options/set', [ErrorController::class, 'optionSet']);
@@ -76,6 +79,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/error/options/change', [ErrorController::class, 'optionChange']);
     Route::post('/error/options/delete', [ErrorController::class, 'optionDelete']);
     Route::post('/error/filter', [ErrorController::class, 'filter']);
+    Route::post('/error/page', [ErrorController::class, 'page']);
 
     //Logs
     Route::post('/log/options/set', [LogController::class, 'optionSet']);
