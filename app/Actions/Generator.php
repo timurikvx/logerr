@@ -14,7 +14,7 @@ use App\Models\User;
 class Generator
 {
 
-    public static function errors($user, $count = 5000):void
+    public static function errors($user, $count = 10000):void
     {
         $start = intval(microtime(true));
 
@@ -59,7 +59,6 @@ class Generator
             $error = [
                 'name'=>self::getValue($names),
                 'team'=>$crew->guid,
-                //'date'=>(new \DateTime())->modify('+3 hours')->format('Y-m-d H:i:s'),
                 'guid'=>$guid,
                 'category'=>self::getValue($categories, true),
                 'sub_category'=>self::getValue($subCategories, true),
@@ -82,7 +81,7 @@ class Generator
 
     }
 
-    public static function logs($user, $count = 500):void
+    public static function logs($user, $count = 10000):void
     {
         $start = intval(microtime(true));
 

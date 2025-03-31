@@ -89,6 +89,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/log/options/change', [LogController::class, 'optionChange']);
     Route::post('/log/options/delete', [LogController::class, 'optionDelete']);
     Route::post('/log/filter', [LogController::class, 'filter']);
+    Route::post('/log/page', [LogController::class, 'page']);
 
 
 });

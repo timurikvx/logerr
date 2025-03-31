@@ -9,10 +9,8 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Database\Eloquent\Collection;
 
-
-class HandleErrorsEvent
+class HandleLogsEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -21,7 +19,7 @@ class HandleErrorsEvent
      */
     public function __construct(public array $list)
     {
-
+        //
     }
 
 //    /**

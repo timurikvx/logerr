@@ -17,15 +17,17 @@ class ListController extends Controller
 {
     public function getListData($team, $filters, $sort): \stdClass
     {
-        //$path = '/errors/'.$team->guid;
-        $query = Error::getErrors($team->id, $filters, $sort);
-        return Paginate::paginate($query, ErrorItemResource::class);
+        $query = Error::getErrors($team->id, [], []); //$filters, $sort
+        return Paginate::paginate($query, $filters, $sort, ErrorItemResource::class);
     }
 
-    public function getList(Request $request, $guid): Response
+    public function getList(Request $request, $guid): mixed
     {
         $start = microtime(true) * 1000;
         $team = Crew::getByGuid($guid);
+        if(is_null($team)){
+            return redirect()->route('dashboard');
+        }
         $guid_option = UserOption::get($this->current_option, $team->id, '');
         $option = $this->OPTION::getByGuid($team->id, $guid_option);
         if(is_null($option)){

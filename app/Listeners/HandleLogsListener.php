@@ -2,16 +2,14 @@
 
 namespace App\Listeners;
 
-use App\Events\HandleErrorsEvent;
+use App\Events\HandleLogsEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class HandleErrorsListener implements ShouldQueue
+class HandleLogsListener
 {
-
     /**
      * Create the event listener.
      */
@@ -23,10 +21,10 @@ class HandleErrorsListener implements ShouldQueue
     /**
      * Handle the event.
      */
-    public function handle(HandleErrorsEvent $event): void
+    public function handle(HandleLogsEvent $event): void
     {
         foreach ($event->list as $error){
-            $hash = Str::of('error'.$error['name'].$error['team'].$error['date'].$error['guid'])->pipe('md5');
+            $hash = Str::of('log'.$error['name'].$error['team'].$error['date'].$error['guid'])->pipe('md5');
             if(Cache::has($hash)){
                 continue;
             }

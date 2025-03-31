@@ -6,6 +6,9 @@ use App\Actions\Filters;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
 class Log extends Model
@@ -73,10 +76,14 @@ class Log extends Model
             $type3 = 'text';
             $log_text3 = $text3;
         }
+        $name = $fields->get('name');
+        //$hash = Hash::make('log'.$name.$team->id.$date.$guid);
+        $hash = Str::of('log'.$name.$team->id.$date.$guid)->pipe('md5');
 
         $error = new Log();
+        $error->hash = $hash;
         $error->team = $team->id;
-        $error->name = $fields->get('name');
+        $error->name = $name;
         $error->date = $date;
         $error->guid = $guid;
         $error->category = $fields->get('category', '');
@@ -98,6 +105,8 @@ class Log extends Model
         $error->response = $log_text3;
         $error->response_type = $type3;
         $error->save();
+
+        Cache::set($hash, $error->toArray(), 200);
     }
 
     public static function getLogs($team, $filters = [], $sort = []): mixed

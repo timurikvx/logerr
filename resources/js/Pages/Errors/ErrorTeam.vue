@@ -27,15 +27,15 @@
                     </div>
                     <div v-if="error.show" class="p-2 data">
                         <div v-if="error.data" class="flex flex-col">
-                            <div class="border-bottom pb-1 mb-4">Данные:</div>
+                            <div class="border-bottom mb-4 head-data">Данные:</div>
                             <DataPrint :data="error.data"></DataPrint>
                         </div>
-                        <div v-if="error.query" class="flex flex-col mb-4">
-                            <div class="mb-2 border-bottom pb-1">Запрос:</div>
+                        <div v-if="error.query" class="flex flex-col my-4">
+                            <div class="mb-2 border-bottom head-data">Запрос:</div>
                             <DataPrint :data="error.query"></DataPrint>
                         </div>
-                        <div v-if="error.response" class="flex flex-col">
-                            <div class="mb-2 border-bottom pb-1">Ответ:</div>
+                        <div v-if="error.response" class="flex flex-col mt-4">
+                            <div class="mb-2 border-bottom head-data">Ответ:</div>
                             <DataPrint :data="error.response"></DataPrint>
                         </div>
                     </div>

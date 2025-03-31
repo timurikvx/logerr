@@ -563,6 +563,11 @@ body{
     top: 0;
 }
 
+.errors .head-data{
+    color: var(--red-light);
+    @apply pb-1;
+}
+
 .question{
     width: 500px;
 }

@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Filters;
+
 use App\Actions\PageOptions;
 use App\Actions\Paginate;
-use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
-use App\Models\Crew;
 use App\Models\Error;
 use App\Models\ErrorOption;
-use App\Models\UserOption;
 use Illuminate\Http\Request;
 use App\Actions\RabbitMQ\LogerrRabbit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Events\HandleErrorsEvent;
 
 class ErrorController extends ListController
 {
@@ -92,8 +90,8 @@ class ErrorController extends ListController
 
     public function getListData($team, $filters, $sort): \stdClass
     {
-        $query = Error::getErrors($team->id, $filters, $sort);
-        return Paginate::paginate($query, ErrorItemResource::class);
+        $query = Error::getErrors($team->id, [], []); //$filters, $sort
+        return Paginate::paginate($query, $filters, $sort, ErrorItemResource::class, HandleErrorsEvent::class);
     }
 
 }

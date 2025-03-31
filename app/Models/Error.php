@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
 class Error extends Model
@@ -14,6 +17,29 @@ class Error extends Model
     use HasFactory;
 
     public $timestamps = false;
+
+    public $incrementing = false;
+
+    protected $fillable = [
+        'hash',
+        'name',
+        'team',
+        'date',
+        'guid',
+        'category',
+        'sub_category',
+        'sender_guid',
+        'sender_name',
+        'type',
+        'code',
+        'user',
+        'device',
+        'city',
+        'region',
+        'version',
+        'duration',
+        'data'
+    ];
 
     public static function writeFromText($text): void
     {
@@ -56,9 +82,14 @@ class Error extends Model
             $guid = Uuid::uuid4()->toString();
         }
 
+        $name = $fields->get('name');
+        //$hash = Hash::make('error'.$name.$team->id.$date.$guid);
+        $hash = Str::of('error'.$name.$team->id.$date.$guid)->pipe('md5');
+
         $error = new Error();
+        $error->hash = $hash;
         $error->team = $team->id;
-        $error->name = $fields->get('name');
+        $error->name = $name;
         $error->date = $date;
         $error->guid = $guid;
         $error->category = $fields->get('category', '');
@@ -76,6 +107,9 @@ class Error extends Model
         $error->duration = $fields->get('duration', 0);
         $error->len = strlen($error_text);
         $error->save();
+
+        Cache::set($hash, $error->toArray(), 200);
+
     }
 
     public static function getErrors($team, $filters = [], $sort = []): Builder
