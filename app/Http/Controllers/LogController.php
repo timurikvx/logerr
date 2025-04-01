@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Actions\PageOptions;
 use App\Actions\RabbitMQ\LogerrRabbit;
 use App\Events\HandleLogsEvent;
-use App\Http\Resources\Errors\ErrorItemResource;
 use App\Http\Resources\Log\LogItemResource;
 use App\Models\LogOption;
 use App\Models\Log;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -30,7 +30,7 @@ class LogController extends ListController
     protected string $prefix = 'log';
     protected string $OPTION = LogOption::class;
 
-    public function apiAdd(Request $request)
+    public function apiAdd(Request|Collection $request): mixed
     {
         if(count($request->all()) == 0){
             return response(['message'=>'Тело запроса должно быть объектом'], '400');
@@ -39,7 +39,6 @@ class LogController extends ListController
         $rules = [
             'team' => 'required|string',
             'name' => 'required|string|max:255',
-            'text' => 'required',
             'date' => 'nullable|date',
             'category' => 'nullable|string|max:255',
             'sub_category' => 'nullable|string|max:255',
@@ -57,18 +56,23 @@ class LogController extends ListController
         ];
         $validator = Validator::make($request->all(), $rules);
         $errors = $validator->errors();
+
         if(count($errors->all()) > 0){
             return response(['errors'=>$errors->all()], '400');
         }
 
         $guid = Uuid::uuid4()->toString();
+        $date = $validator->getValue('date');
+        if(empty($date)){
+            $date = (new \DateTime())->modify('+3 hours')->format('Y-m-d H:i:s');
+        }
 
         $error = [
             'team'=>$validator->getValue('team'),
             'guid'=>$guid,
             'name'=>$validator->getValue('name'),
             'text'=>$validator->getValue('text'),
-            'date'=> $validator->getValue('date'),
+            'date'=> $date,
             'category'=> $validator->getValue('category'),
             'sub_category'=> $validator->getValue('sub_category'),
             'sender_guid'=> $validator->getValue('sender_guid'),
@@ -83,7 +87,6 @@ class LogController extends ListController
             'query'=> $validator->getValue('query'),
             'response'=> $validator->getValue('response'),
         ];
-
         $message = json_encode(['user'=>Auth::id(), 'error'=>$error]);
         LogerrRabbit::publish($message, 'logs');
         return ['result'=>true, 'guid'=>$guid];
@@ -126,6 +129,7 @@ class LogController extends ListController
         return [
             'date'=>['use'=>false, 'name'=>'Дата', 'type'=>'datetime-local', 'equal'=>null, 'value'=>null, 'value2'=>null, 'list'=>null],
             'name'=>['use'=>false, 'name'=>'Имя', 'type'=>'text', 'equal'=>null, 'value'=>null, 'value2'=>null, 'list'=>null],
+            'guid'=>['use'=>false, 'name'=>'Идентификатор', 'type'=>'text', 'equal'=>null, 'value'=>null, 'value2'=>null, 'list'=>null],
             'category'=>['use'=>false, 'name'=>'Категория', 'type'=>'text', 'equal'=>null, 'value'=>null, 'value2'=>null, 'list'=>null],
             'sub_category'=>['use'=>false, 'name'=>'Подкатегория', 'type'=>'text', 'equal'=>null, 'value'=>null, 'value2'=>null, 'list'=>null],
             'user'=>['use'=>false, 'name'=>'Пользователь', 'type'=>'text', 'equal'=>null, 'value'=>null, 'value2'=>null, 'list'=>null],

@@ -38,11 +38,16 @@ class LogerrRabbit
         //$channel->queue_bind($queue_name, $name);
 
         $callback = function ($msg) use ($name) {
+            $result = true;
+            //dump($name.' '.(microtime(true) * 1000));
             if($name == 'errors'){
-                Error::writeFromText($msg->getBody());
+                $result = Error::writeFromText($msg->getBody());
             }
             if($name == 'logs'){
-                Log::writeFromText($msg->getBody());
+                $result = Log::writeFromText($msg->getBody());
+            }
+            if($result){
+                $msg->ack();
             }
         };
 

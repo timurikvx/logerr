@@ -25,6 +25,6 @@ class HandleErrorsJob implements ShouldQueue
      */
     public function handle(): void
     {
-        dump('111');
+
     }
 }

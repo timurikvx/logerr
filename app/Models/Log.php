@@ -18,24 +18,24 @@ class Log extends Error
     public $timestamps = false;
     public $incrementing = false;
 
-    public static function writeFromText($text): void
+    public static function writeFromText($text): bool
     {
         if(empty($text)){
-            return;
+            return false;
         }
         try{
             $data = json_decode($text, true);
         }catch (\Throwable $e){
-            return;
+            return false;
         }
         $error = $data['error'];
         $user = $data['user'];
-        self::write($error, $user);
+        return self::write($error, $user);
     }
 
-    public static function write($data, $user = null): void
+    public static function write($data, $user = null): bool
     {
-        if(!Auth::check() && $user != null){
+        if(!Auth::check() && $user !== null){
             Auth::login(User::find($user));
         }
 
@@ -48,14 +48,11 @@ class Log extends Error
             $type = 'text';
             $log_text = $text;
         }
-        $date = $fields->get('date');
-        if(empty($date)){
-            $date = (new \DateTime())->modify('+3 hours')->format('Y-m-d H:i:s');
-        }
 
+        $date = $fields->get('date');
         $team = Crew::getByGuid($fields->get('team'));
         if($team == null){
-            return;
+            return false;
         }
 
         $query = $fields->get('query');
@@ -79,33 +76,53 @@ class Log extends Error
         $name = $fields->get('name');
         $hash = Str::of('log'.$name.$team->id.$date.$guid)->pipe('md5');
 
-        $error = new Log();
-        $error->hash = $hash;
-        $error->team = $team->id;
-        $error->name = $name;
-        $error->date = $date;
-        $error->guid = $guid;
-        $error->category = $fields->get('category', '');
-        $error->sub_category = $fields->get('sub_category', '');
-        $error->sender_guid = $fields->get('sender_guid', '');
-        $error->sender_name = $fields->get('sender_name', '');
-        $error->type = $type;
-        $error->code = $fields->get('code', 0);
-        $error->user = $fields->get('user', '');
-        $error->device = $fields->get('device', '');
-        $error->city = $fields->get('city', '');
-        $error->region = $fields->get('region', '');
-        $error->version = $fields->get('version', '');
-        $error->data = $log_text;
-        $error->duration = $fields->get('duration', 0);
-        $error->len = strlen($log_text);
-        $error->query = $log_query;
-        $error->query_type = $type_query;
-        $error->response = $log_text3;
-        $error->response_type = $type3;
-        $error->save();
+        if(self::exist($name, $team->id, $date, $guid)){
+            return false;
+        }
 
-        Cache::set($hash, $error->toArray(), 200);
+        $log = new Log();
+        $log->hash = $hash;
+        $log->team = $team->id;
+        $log->name = $name;
+        $log->date = $date;
+        $log->guid = $guid;
+        $log->category = $fields->get('category', '');
+        $log->sub_category = $fields->get('sub_category', '');
+        $log->sender_guid = $fields->get('sender_guid', '');
+        $log->sender_name = $fields->get('sender_name', '');
+        $log->type = $type;
+        $log->code = $fields->get('code', 0);
+        $log->user = $fields->get('user', '');
+        $log->device = $fields->get('device', '');
+        $log->city = $fields->get('city', '');
+        $log->region = $fields->get('region', '');
+        $log->version = $fields->get('version', '');
+        $log->duration = $fields->get('duration', 0);
+        $log->data = $log_text;
+        $log->len = strlen($log_text);
+        $log->query = $log_query;
+        $log->query_type = $type_query;
+        $log->response = $log_text3;
+        $log->response_type = $type3;
+        try{
+            $log->save();
+        }catch (\Throwable $ex){
+            dump(mb_substr($ex->getMessage(), 0, 320));
+            return false;
+        }
+        //Cache::set($hash, $log->toArray(), 200);
+        return true;
+
+    }
+
+    public static function exist($name, $team, $date, $guid): bool
+    {
+        return self::query()
+            ->where('name', '=', $name)
+            ->where('team', '=', $team)
+            ->where('date', '=', $date)
+            ->where('guid', '=', $guid)
+            ->count() > 0;
     }
 
     public static function getLogs($team, $filters = [], $sort = []): mixed

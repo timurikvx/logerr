@@ -2,10 +2,13 @@
 
 namespace App\Actions;
 
+use App\Http\Controllers\ErrorController;
+use App\Http\Controllers\LogController;
 use App\Models\Crew;
 use App\Models\CrewMembers;
 use App\Models\Error;
 use App\Models\Log;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
@@ -14,7 +17,7 @@ use App\Models\User;
 class Generator
 {
 
-    public static function errors($user, $count = 10000):void
+    public static function errors($user, $count = 1000000):void
     {
         $start = intval(microtime(true));
 
@@ -71,9 +74,13 @@ class Generator
                 'region'=>$region,
                 'version'=>self::getValue($versions, true),
                 'duration'=>$duration,
-                'text'=>$data
+                'data'=>$data
             ];
-            Error::write($error, $user);
+            $request = collect($error);
+            $controller = new ErrorController();
+            $result = $controller->apiAdd($request);
+            //dump($result);
+            //Error::write($error, $user);
 
         }
         $end= intval(microtime(true));
@@ -81,7 +88,7 @@ class Generator
 
     }
 
-    public static function logs($user, $count = 10000):void
+    public static function logs($user, $count = 1000000):void
     {
         $start = intval(microtime(true));
 
@@ -135,7 +142,7 @@ class Generator
                 $data3 = $result3;
             }
 
-            $error = [
+            $log = [
                 'name'=>self::getValue($names),
                 'team'=>$crew->guid,
                 'date'=>(new \DateTime())->modify('+3 hours')->format('Y-m-d H:i:s'),
@@ -155,9 +162,13 @@ class Generator
                 'query'=>$data2,
                 'response'=>$data3
             ];
-            Log::write($error, $user);
+            $request = collect($log);
+            $controller = new LogController();
+            $result = $controller->apiAdd($request);
+            //Log::write($log, $user);
 
         }
+
         $end= intval(microtime(true));
         dump($end - $start);
 

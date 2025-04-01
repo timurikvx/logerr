@@ -41,45 +41,43 @@ class Error extends Model
         'data'
     ];
 
-    public static function writeFromText($text): void
+    public static function writeFromText($text): bool
     {
         if(empty($text)){
-            return;
+            return false;
         }
         try{
             $data = json_decode($text, true);
         }catch (\Throwable $e){
-            return;
+            return false;
         }
         $error = $data['error'];
         $user = $data['user'];
-        self::write($error, $user);
+        return self::write($error, $user);
     }
 
-    public static function write($data, $user = null): void
+    public static function write($data, $user = null): bool
     {
         if(!Auth::check() && $user != null){
             Auth::login(User::find($user));
         }
 
         $fields = collect($data);
-        $text = $fields->get('text');
-        if(is_array($text)){
+        $data = $fields->get('data');
+        if(is_array($data)){
             $type = 'json';
-            $error_text = json_encode($text);
+            $error_text = json_encode($data);
         }else{
             $type = 'text';
-            $error_text = $text;
-        }
-        $date = $fields->get('date');
-        if(empty($date)){
-            $date = (new \DateTime())->modify('+3 hours')->format('Y-m-d H:i:s');
+            $error_text = $data;
         }
 
+        $date = $fields->get('date');
         $team = Crew::getByGuid($fields->get('team'));
         if($team == null){
-            return;
+            return false;
         }
+
         $guid = $fields->get('guid', '');
         $name = $fields->get('name');
         $hash = Str::of('error'.$name.$team->id.$date.$guid)->pipe('md5');
@@ -104,9 +102,14 @@ class Error extends Model
         $error->data = $error_text;
         $error->duration = $fields->get('duration', 0);
         $error->len = strlen($error_text);
-        $error->save();
-
-        Cache::set($hash, $error->toArray(), 200);
+        try{
+            $error->save();
+        }catch (\Throwable $ex){
+            //dump($ex->getMessage());
+            return false;
+        }
+        //Cache::set($hash, $error->toArray(), 200);
+        return true;
 
     }
 
