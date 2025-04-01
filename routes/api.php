@@ -23,6 +23,8 @@ Route::middleware('auth:sanctum')->group(function (){
 
     Route::post('/add/error', [ErrorController::class, 'apiAdd']);
     Route::post('/add/log', [LogController::class, 'apiAdd']);
+
+
     Route::post('/error/page', [ErrorController::class, 'page']);
     //Route::post('/read', [ErrorController::class, 'read']);
 });

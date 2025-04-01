@@ -77,13 +77,11 @@ class Error extends Model
         }
 
         $team = Crew::getByGuid($fields->get('team'));
-        $guid = $fields->get('guid', '');
-        if(empty($guid)){
-            $guid = Uuid::uuid4()->toString();
+        if($team == null){
+            return;
         }
-
+        $guid = $fields->get('guid', '');
         $name = $fields->get('name');
-        //$hash = Hash::make('error'.$name.$team->id.$date.$guid);
         $hash = Str::of('error'.$name.$team->id.$date.$guid)->pipe('md5');
 
         $error = new Error();

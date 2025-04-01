@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Actions\PageOptions;
+use App\Actions\RabbitMQ\LogerrRabbit;
 use App\Events\HandleLogsEvent;
 use App\Http\Resources\Errors\ErrorItemResource;
 use App\Http\Resources\Log\LogItemResource;
 use App\Models\LogOption;
 use App\Models\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Actions\Paginate;
+use Ramsey\Uuid\Uuid;
 
 class LogController extends ListController
 {
@@ -28,7 +32,61 @@ class LogController extends ListController
 
     public function apiAdd(Request $request)
     {
+        if(count($request->all()) == 0){
+            return response(['message'=>'Тело запроса должно быть объектом'], '400');
+        }
 
+        $rules = [
+            'team' => 'required|string',
+            'name' => 'required|string|max:255',
+            'text' => 'required',
+            'date' => 'nullable|date',
+            'category' => 'nullable|string|max:255',
+            'sub_category' => 'nullable|string|max:255',
+            'sender_guid' => 'nullable|string|max:255',
+            'sender_name' => 'nullable|string|max:255',
+            'code' => 'nullable|integer|min:0',
+            'user' => 'nullable|string|max:255',
+            'device' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'region' => 'nullable|string|max:255',
+            'version' => 'nullable|string|max:255',
+            'data' => 'nullable',
+            'query' => 'nullable',
+            'response' => 'nullable',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        $errors = $validator->errors();
+        if(count($errors->all()) > 0){
+            return response(['errors'=>$errors->all()], '400');
+        }
+
+        $guid = Uuid::uuid4()->toString();
+
+        $error = [
+            'team'=>$validator->getValue('team'),
+            'guid'=>$guid,
+            'name'=>$validator->getValue('name'),
+            'text'=>$validator->getValue('text'),
+            'date'=> $validator->getValue('date'),
+            'category'=> $validator->getValue('category'),
+            'sub_category'=> $validator->getValue('sub_category'),
+            'sender_guid'=> $validator->getValue('sender_guid'),
+            'sender_name'=> $validator->getValue('sender_name'),
+            'code'=> $validator->getValue('code'),
+            'user'=> $validator->getValue('user'),
+            'device'=> $validator->getValue('device'),
+            'city'=> $validator->getValue('city'),
+            'region'=> $validator->getValue('region'),
+            'version'=> $validator->getValue('version'),
+            'data'=> $validator->getValue('data'),
+            'query'=> $validator->getValue('query'),
+            'response'=> $validator->getValue('response'),
+        ];
+
+        $message = json_encode(['user'=>Auth::id(), 'error'=>$error]);
+        LogerrRabbit::publish($message, 'logs');
+        return ['result'=>true, 'guid'=>$guid];
     }
 
     public function logs(Request $request): Response

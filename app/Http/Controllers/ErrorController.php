@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Events\HandleErrorsEvent;
+use Ramsey\Uuid\Uuid;
 
 class ErrorController extends ListController
 {
@@ -58,8 +59,11 @@ class ErrorController extends ListController
             return response(['errors'=>$errors->all()], '400');
         }
 
+        $guid = Uuid::uuid4()->toString();
+
         $error = [
             'team'=>$validator->getValue('team'),
+            'guid'=>$guid,
             'name'=>$validator->getValue('name'),
             'text'=>$validator->getValue('text'),
             'date'=> $validator->getValue('date'),
@@ -77,7 +81,7 @@ class ErrorController extends ListController
         ];
         $message = json_encode(['user'=>Auth::id(), 'error'=>$error]);
         LogerrRabbit::publish($message, 'errors');
-        return ['result'=>true];
+        return ['result'=>true, 'guid'=>$guid];
 
     }
 

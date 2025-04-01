@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Actions\RabbitMQ\LogerrRabbit;
 use Illuminate\Console\Command;
 
-class receive extends Command
+class ErrorReceive extends Command
 {
     /**
      * The name and signature of the console command.
@@ -19,7 +19,7 @@ class receive extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Shell rabbit MQ error receiving';
 
     /**
      * Execute the console command.

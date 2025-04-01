@@ -3,6 +3,7 @@
 namespace App\Actions\RabbitMQ;
 
 use App\Models\Error;
+use App\Models\Log;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -36,11 +37,13 @@ class LogerrRabbit
 
         //$channel->queue_bind($queue_name, $name);
 
-        $callback = function ($msg) {
-            $time = microtime(true) * 10000;
-            dump('message '.$time);
-            file_put_contents('D:\\logs\\'.$time.'.txt', $msg->getBody());
-            Error::writeFromText($msg->getBody());
+        $callback = function ($msg) use ($name) {
+            if($name == 'errors'){
+                Error::writeFromText($msg->getBody());
+            }
+            if($name == 'logs'){
+                Log::writeFromText($msg->getBody());
+            }
         };
 
         $channel->basic_consume($name, '', false, false, false, false, $callback);

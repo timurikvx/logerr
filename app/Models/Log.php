@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
-class Log extends Model
+class Log extends Error
 {
     use HasFactory;
 
@@ -54,18 +54,17 @@ class Log extends Model
         }
 
         $team = Crew::getByGuid($fields->get('team'));
-        $guid = $fields->get('guid', '');
-        if(empty($guid)){
-            $guid = Uuid::uuid4()->toString();
+        if($team == null){
+            return;
         }
 
-        $text2 = $fields->get('query');
-        if(is_array($text2)){
-            $type2 = 'json';
-            $log_text2 = json_encode($text2);
+        $query = $fields->get('query');
+        if(is_array($query)){
+            $type_query = 'json';
+            $log_query = json_encode($query);
         }else{
-            $type2 = 'text';
-            $log_text2 = $text2;
+            $type_query = 'text';
+            $log_query = $query;
         }
 
         $text3 = $fields->get('response');
@@ -76,8 +75,8 @@ class Log extends Model
             $type3 = 'text';
             $log_text3 = $text3;
         }
+        $guid = $fields->get('guid', '');
         $name = $fields->get('name');
-        //$hash = Hash::make('log'.$name.$team->id.$date.$guid);
         $hash = Str::of('log'.$name.$team->id.$date.$guid)->pipe('md5');
 
         $error = new Log();
@@ -100,8 +99,8 @@ class Log extends Model
         $error->data = $log_text;
         $error->duration = $fields->get('duration', 0);
         $error->len = strlen($log_text);
-        $error->query = $log_text2;
-        $error->query_type = $type2;
+        $error->query = $log_query;
+        $error->query_type = $type_query;
         $error->response = $log_text3;
         $error->response_type = $type3;
         $error->save();
