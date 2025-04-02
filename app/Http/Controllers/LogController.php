@@ -30,6 +30,8 @@ class LogController extends ListController
     protected string $prefix = 'log';
     protected string $OPTION = LogOption::class;
 
+    protected string $title = 'Список логов';
+
     public function apiAdd(Request|Collection $request): mixed
     {
         if(count($request->all()) == 0){

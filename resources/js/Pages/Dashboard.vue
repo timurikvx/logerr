@@ -1,6 +1,6 @@
 <template>
-    <Layout :title="title">
-        <div>dashboard</div>
+    <Layout :title="title" class="">
+        <div class="p-4">dashboard</div>
     </Layout>
 </template>
 

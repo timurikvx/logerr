@@ -1,12 +1,12 @@
 <template>
     <Layout :title="title" class="teams flex flex-col overflow-hidden grow">
-        <div class="flex mb-2">
+        <div class="flex mb-2 px-4 pt-4">
             <div class="p-2 font-bold text-xl uppercase">Список команд</div>
             <div class="grow"></div>
             <button class="button mb-2" @click="modal.createTeams = true">Создать команду</button>
         </div>
-        <div class="flex flex-col grow table-field p-4">
-            <div class="flex flex-wrap">
+        <div class="flex flex-col grow table-field m-4 mt-0">
+            <div class="flex flex-wrap p-4 -mr-4">
                 <div v-for="item in teams" class="flex mb-4 team">
                     <div class="flex grow item" :class="{'active': crew?.guid === item.guid}">
                         <div class="grow self-center text-2xl px-4">{{ item.name }}</div>

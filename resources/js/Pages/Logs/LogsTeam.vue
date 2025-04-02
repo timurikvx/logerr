@@ -1,6 +1,6 @@
 <template>
     <Layout :title="title" :crew="crew" class="errors flex flex-col grow">
-        <div class="flex mb-4">
+        <div class="flex mb-4 px-4 pt-4">
             <div class="p-2 font-bold text-xl uppercase">Список логов</div>
             <div class="grow"></div>
             <div class="self-center mr-4">Настройка списка:</div>
@@ -12,7 +12,7 @@
             <Button icon="filter-pic" class="mr-4" @click="modal.filters = true">Фильтры {{ countFilters() }}</Button>
             <Button icon="sort-pic" @click="modal.sort = true">Сортировка {{ countSort() }}</Button>
         </div>
-        <div class="table-field flex flex-col grow overflow-hidden">
+        <div class="table-field flex flex-col grow overflow-hidden m-4 mt-0">
             <div class="cursor-pointer grid head" :style="getGrid()">
                 <div v-for="column in getColumns()" class="p-2" :class="column.class">{{ column.name }}</div>
                 <div class="p-2"></div>

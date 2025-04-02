@@ -59,6 +59,15 @@ body{
     @apply mx-4;
 }
 
+.logo{
+    background-image: url("/storage/logo.png");
+    width: 48px;
+    height: 30px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 40px;
+}
+
 .sidebar{
     min-width: 250px;
     border-right: 1px solid var(--border);
@@ -701,4 +710,36 @@ body{
 
 .border-bottom{
     border-bottom: 1px solid var(--border);
+}
+
+.auth{
+    background-color: var(--main);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.auth .head{
+    background-color: var(--head-color);
+    border-bottom: 1px solid var(--border);
+}
+
+.index .left{
+    background-color: var(--main);
+}
+
+.index .right{
+
+}
+
+.index .first{
+
+    font-family: monospace;
+    color: var(--green);
+}
+
+.index .second{
+    font-family: monospace;
+    color: var(--red);
 }

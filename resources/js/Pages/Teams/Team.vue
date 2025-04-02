@@ -1,6 +1,6 @@
 <template>
     <Layout :title="title" class="team-item">
-        <div class="flex mb-4">
+        <div class="flex mb-4 px-4 pt-4">
             <input v-if="change" type="text" class="input text-3xl grow" v-model="name">
             <div v-else class="p-2 text-3xl">{{ team.name }}</div>
             <div class="grow"></div>
@@ -10,11 +10,11 @@
             </div>
             <button v-else class="button" @click="change = true">Изменить имя</button>
         </div>
-        <PerfectScrollbar class="flex flex-col">
+        <PerfectScrollbar class="flex flex-col m-4 mt-0">
             <div class="flex border-bottom mb-2">
                 <div class="p-2 text-2xl">Учатники команды</div>
                 <div class="grow"></div>
-                <div class="w-1/4 flex mr-4">
+                <div class="w-1/4 flex mb-2">
                     <input type="text" class="self-center input grow" placeholder="Поиск" v-model="search" @input="searching">
                 </div>
             </div>

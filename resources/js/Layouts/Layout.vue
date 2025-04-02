@@ -6,8 +6,8 @@
     <div class="flex flex-col grow overflow-hidden" :class="getClass()">
         <Header></Header>
         <div class="flex grow overflow-hidden">
-            <Sidebar :crew="crew"></Sidebar>
-            <div class="grow p-4 flex flex-col overflow-hidden">
+            <Sidebar v-if="sidebar" :crew="crew"></Sidebar>
+            <div class="grow flex flex-col overflow-hidden">
                 <slot></slot>
             </div>
         </div>
@@ -41,6 +41,10 @@
         class: {
             type: String,
             default: ''
+        },
+        sidebar: {
+            type: Boolean,
+            default: true
         }
     });
     const notifications = notificationsStore();

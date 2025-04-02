@@ -1,18 +1,23 @@
 <template>
     <div class="header">
         <div class="flex">
-            <div class="font-bold py-4">{{ title }}</div>
+            <a class="flex" href="/dashboard">
+                <div class="logo self-center mr-1"></div>
+                <div class="font-bold py-4">{{ title }}</div>
+            </a>
             <div class="grow self-center">
                 <slot></slot>
             </div>
-            <div class="flex mr-4">
-                <button @click="show" class="self-center square-button notification relative">
-                    <span v-if="notifications.exist" class="exist"></span>
-                </button>
+            <div v-if="$page.props.auth.user" class="flex">
+                <div class="flex mr-4">
+                    <button @click="show" class="self-center square-button notification relative">
+                        <span v-if="notifications.exist" class="exist"></span>
+                    </button>
+                </div>
+                <form method="POST" @submit.prevent="logout" class="self-center">
+                    <button type="submit">Выйти</button>
+                </form>
             </div>
-            <form method="POST" @submit.prevent="logout" class="self-center">
-                <button type="submit">Выйти</button>
-            </form>
         </div>
     </div>
 </template>

@@ -8,6 +8,7 @@ use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
 use App\Models\Crew;
 use App\Models\Error;
+use App\Models\ErrorOption;
 use App\Models\UserOption;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,6 +16,21 @@ use Inertia\Response;
 
 class ListController extends Controller
 {
+
+    protected string $cache_sort = 'error_sort';
+    protected string $cache_filters = 'error_filters';
+    protected string $cache_columns = 'error_columns';
+    protected string $current_option = 'current_option';
+
+    protected string $head = 'Список ошибок';
+
+    protected string $prefix = 'error';
+
+    protected string $title = 'Список ошибок';
+
+    protected string $OPTION = ErrorOption::class;
+
+
     public function getListData($team, $filters, $sort): \stdClass
     {
         $query = Error::getErrors($team->id, [], []); //$filters, $sort
@@ -46,7 +62,7 @@ class ListController extends Controller
         $end = microtime(true) * 1000;
 
         $data = PageOptions::get();
-        $data->put('title', 'Список ошибок');
+        $data->put('title', $this->title);
         $data->put('guid', $guid);
         $data->put('crew', (new CrewItemResource($team))->toArray($request));
         $data->put('list', $paginate->data);
