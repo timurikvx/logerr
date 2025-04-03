@@ -45,15 +45,15 @@ const closeModal = () => {
 <template>
     <ActionSection>
         <template #title>
-            Browser Sessions
+            Активные сессии
         </template>
 
         <template #description>
-            Manage and log out your active sessions on other browsers and devices.
+            Управляйте активными сеансами в других браузерах и на других устройствах и выходите из них.
         </template>
 
         <template #content>
-            <div class="max-w-xl text-sm text-gray-600">
+            <div class="max-w-xl text-sm">
                 If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.
             </div>
 
@@ -71,12 +71,12 @@ const closeModal = () => {
                     </div>
 
                     <div class="ms-3">
-                        <div class="text-sm text-gray-600">
+                        <div class="text-sm">
                             {{ session.agent.platform ? session.agent.platform : 'Unknown' }} - {{ session.agent.browser ? session.agent.browser : 'Unknown' }}
                         </div>
 
                         <div>
-                            <div class="text-xs text-gray-500">
+                            <div class="text-xs">
                                 {{ session.ip_address }},
 
                                 <span v-if="session.is_current_device" class="text-green-500 font-semibold">This device</span>
@@ -88,52 +88,55 @@ const closeModal = () => {
             </div>
 
             <div class="flex items-center mt-5">
-                <PrimaryButton @click="confirmLogout">
-                    Log Out Other Browser Sessions
-                </PrimaryButton>
+                <button class="button red" @click="confirmLogout">Завершить все сессии</button>
+<!--                <PrimaryButton @click="confirmLogout">-->
+<!--                    Log Out Other Browser Sessions-->
+<!--                </PrimaryButton>-->
 
-                <ActionMessage :on="form.recentlySuccessful" class="ms-3">
-                    Done.
-                </ActionMessage>
+<!--                <ActionMessage :on="form.recentlySuccessful" class="ms-3">-->
+<!--                    Done.-->
+<!--                </ActionMessage>-->
             </div>
 
             <!-- Log Out Other Devices Confirmation Modal -->
             <DialogModal :show="confirmingLogout" @close="closeModal">
                 <template #title>
-                    Log Out Other Browser Sessions
+                    Завершить все сессии
                 </template>
 
                 <template #content>
-                    Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.
+                    Введите пароль, чтобы подтвердить, что вы хотите выйти из других сеансов браузера на всех ваших устройствах.
 
                     <div class="mt-4">
-                        <TextInput
-                            ref="passwordInput"
-                            v-model="form.password"
-                            type="password"
-                            class="mt-1 block w-3/4"
-                            placeholder="Password"
-                            autocomplete="current-password"
-                            @keyup.enter="logoutOtherBrowserSessions"
-                        />
+                        <input class="input w-full" type="password" placeholder="Пароль" autocomplete="current-password" @keyup.enter="logoutOtherBrowserSessions">
+<!--                        <TextInput-->
+<!--                            ref="passwordInput"-->
+<!--                            v-model="form.password"-->
+<!--                            type="password"-->
+<!--                            class="mt-1 block w-3/4"-->
+<!--                            placeholder="Password"-->
+<!--                            autocomplete="current-password"-->
+<!--                            @keyup.enter="logoutOtherBrowserSessions"-->
+<!--                        />-->
 
                         <InputError :message="form.errors.password" class="mt-2" />
                     </div>
                 </template>
 
                 <template #footer>
-                    <SecondaryButton @click="closeModal">
-                        Cancel
-                    </SecondaryButton>
+                    <button class="button red" @click="confirmLogout">Завершить все сессии</button>
+<!--                    <SecondaryButton @click="closeModal">-->
+<!--                        Cancel-->
+<!--                    </SecondaryButton>-->
 
-                    <PrimaryButton
-                        class="ms-3"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        @click="logoutOtherBrowserSessions"
-                    >
-                        Log Out Other Browser Sessions
-                    </PrimaryButton>
+<!--                    <PrimaryButton-->
+<!--                        class="ms-3"-->
+<!--                        :class="{ 'opacity-25': form.processing }"-->
+<!--                        :disabled="form.processing"-->
+<!--                        @click="logoutOtherBrowserSessions"-->
+<!--                    >-->
+<!--                        Log Out Other Browser Sessions-->
+<!--                    </PrimaryButton>-->
                 </template>
             </DialogModal>
         </template>

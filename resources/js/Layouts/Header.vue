@@ -14,6 +14,7 @@
                         <span v-if="notifications.exist" class="exist"></span>
                     </button>
                 </div>
+                <a class="self-center mr-4" href="/user/profile">Профиль</a>
                 <form method="POST" @submit.prevent="logout" class="self-center">
                     <button type="submit">Выйти</button>
                 </form>

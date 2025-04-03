@@ -40,22 +40,23 @@ const closeModal = () => {
 <template>
     <ActionSection>
         <template #title>
-            Delete Account
+            Удаление аккаунта
         </template>
 
         <template #description>
-            Permanently delete your account.
+            Полное удаления аккаунта
         </template>
 
         <template #content>
-            <div class="max-w-xl text-sm text-gray-600">
-                Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
+            <div class="max-w-xl text-sm text-gray-300">
+                После удаления вашего аккаунта все его ресурсы и данные будут удалены навсегда. Перед удалением аккаунта загрузите любые данные или информацию, которые вы хотите сохранить.
             </div>
 
             <div class="mt-5">
-                <DangerButton @click="confirmUserDeletion">
-                    Delete Account
-                </DangerButton>
+                <button class="button full-red" @click="confirmUserDeletion">Удалить аккаунт</button>
+<!--                <DangerButton @click="confirmUserDeletion">-->
+<!--                    Delete Account-->
+<!--                </DangerButton>-->
             </div>
 
             <!-- Delete Account Confirmation Modal -->
@@ -65,7 +66,7 @@ const closeModal = () => {
                 </template>
 
                 <template #content>
-                    Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
+                    Вы уверены, что хотите удалить свою учетную запись? После удаления вашей учетной записи все ее ресурсы и данные будут удалены навсегда. Введите пароль, чтобы подтвердить, что вы хотите навсегда удалить свою учетную запись.
 
                     <div class="mt-4">
                         <TextInput

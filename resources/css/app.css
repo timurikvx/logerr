@@ -158,6 +158,18 @@ body{
     color: var(--red-light);
 }
 
+.button.full-red{
+    background-color: var(--red);
+    border: 1px solid var(--red);
+    color: var(--white);
+}
+
+.button.full-red:hover{
+    background-color: var(--red-light);
+}
+
+
+
 .button.green{
     border: 1px solid var(--green);
     color: var(--green);
@@ -742,4 +754,20 @@ body{
 .index .second{
     font-family: monospace;
     color: var(--red);
+}
+
+.form-section{
+    background-color: var(--main);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.form-section .actions{
+    background-color: var(--main-back);
+}
+
+.main-back{
+    background-color: var(--main);
+    border: 1px solid var(--border);
+    color: var(--text-main-color);
 }
