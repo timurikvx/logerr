@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Filters;
 use App\Actions\PageOptions;
+use App\Actions\Report;
 use App\Models\Error;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -54,6 +55,35 @@ class Controller extends BaseController
         return [
             'list'=>$list->pluck($field)
         ];
+    }
+
+    public function test(Request $request): array
+    {
+        $date = (new \DateTime());
+        Report::countErrorsByWeek($date, 'errors_week');
+
+//        $date = (new \DateTime())->modify('-1 day');
+//        Report::countErrorsByDay($date, 'errors_yesterday');
+//
+//        $date = (new \DateTime())->modify('-2 day');
+//        Report::countErrorsByDay($date, 'errors_2days');
+//
+//        $date = (new \DateTime())->modify('-3 day');
+//        Report::countErrorsByDay($date, 'errors_3days');
+//
+//        $date = (new \DateTime())->modify('-4 day');
+//        Report::countErrorsByDay($date, 'errors_4days');
+//
+//        $date = (new \DateTime())->modify('-5 day');
+//        Report::countErrorsByDay($date, 'errors_5days');
+//
+//        $date = (new \DateTime())->modify('-6 day');
+//        Report::countErrorsByDay($date, 'errors_6days');
+//
+//        $date = (new \DateTime())->modify('-7 day');
+//        Report::countErrorsByDay($date, 'errors_7days');
+
+        return ['saad'=>'asdas'];
     }
 
 }

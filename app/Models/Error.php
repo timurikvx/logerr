@@ -137,7 +137,6 @@ class Error extends Model
 
     public static function clearByTeam($team): void
     {
-        //SELECT DISTINCT name, COUNT(guid) as count FROM errors WHERE team = 1 AND date > '2024-04-04' GROUP BY name ORDER BY count DESC
         self::query()->where('team', '=', $team)->limit(10000)->delete();
     }
 

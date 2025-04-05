@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reportings', function (Blueprint $table) {
-            $table->id();
             $table->string('name')->index();
             $table->unsignedBigInteger('team')->index();
             $table->string('category')->nullable();
             $table->string('type');
             $table->longText('value');
             $table->timestamps();
+            $table->primary(['name', 'team', 'category']);
             $table->index(['team', 'name', 'category']);
         });
     }
