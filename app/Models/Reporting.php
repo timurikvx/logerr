@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use function Laravel\Prompts\select;
+use Illuminate\Support\Facades\Cache;
+
 
 class Reporting extends Model
 {
@@ -23,7 +24,11 @@ class Reporting extends Model
         $report->category = $category;
         $report->type = self::type($value);
         $report->value = $value;
-        return $report->save();
+        $result = $report->save();
+        if($result){
+            Cache::set('report_'.$team.$name.$category, $value);
+        }
+        return $result;
     }
 
     private static function type($value): string
@@ -67,7 +72,11 @@ class Reporting extends Model
 
     public static function getByTeam($team, $category = null, $name = null): Collection
     {
-        $query = self::query()->where('team', '=', $team);
+        if(is_array($team)){
+            $query = self::query()->whereIn('team', $team);
+        }else{
+            $query = self::query()->where('team', '=', $team);
+        }
         if($category != null){
             $query->where('category', '=', $category);
         }
