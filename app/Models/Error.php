@@ -82,6 +82,10 @@ class Error extends Model
         $name = $fields->get('name');
         $hash = Str::of('error'.$name.$team->id.$date.$guid)->pipe('md5');
 
+        if(self::exist($name, $team->id, $date, $guid)){
+            return true;
+        }
+
         $error = new Error();
         $error->hash = $hash;
         $error->team = $team->id;
@@ -119,6 +123,27 @@ class Error extends Model
         Filters::setFilters($query, $filters);
         Filters::setSort($query, $sort);
         return $query;
+    }
+
+    public static function exist($name, $team, $date, $guid): bool
+    {
+        return self::query()
+                ->where('name', '=', $name)
+                ->where('team', '=', $team)
+                ->where('date', '=', $date)
+                ->where('guid', '=', $guid)
+                ->count() > 0;
+    }
+
+    public static function clearByTeam($team): void
+    {
+        //SELECT DISTINCT name, COUNT(guid) as count FROM errors WHERE team = 1 AND date > '2024-04-04' GROUP BY name ORDER BY count DESC
+        self::query()->where('team', '=', $team)->limit(10000)->delete();
+    }
+
+    public static function count($team): int
+    {
+        return self::query()->where('team', '=', $team)->count();
     }
 
     public static function columns(): array

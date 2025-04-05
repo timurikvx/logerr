@@ -8,12 +8,12 @@
                 <label class="mb-1">Почта</label>
                 <input class="input" v-model="form.email">
             </div>
-            <div v-if="form.errors.email" class="red mb-4">{{ form.errors.email }}</div>
+            <div v-if="form.errors.email" class="text-red-400 mb-4">{{ form.errors.email }}</div>
             <div class="flex flex-col mb-2">
                 <label class="mb-1">Пароль</label>
                 <input class="input" v-model="form.password">
             </div>
-            <div v-if="form.errors.password" class="red mb-4">{{ form.errors.password }}</div>
+            <div v-if="form.errors.password" class="text-red-400 mb-4">{{ form.errors.password }}</div>
             <div class="flex flex-col mb-2">
                 <label class="flex">
                     <input class="input self-center" type="checkbox" v-model="form.remember">

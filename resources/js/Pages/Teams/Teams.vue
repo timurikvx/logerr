@@ -9,7 +9,10 @@
             <div class="flex flex-wrap p-4 -mr-4">
                 <div v-for="item in teams" class="flex mb-4 team">
                     <div class="flex grow item" :class="{'active': crew?.guid === item.guid}">
-                        <div class="grow self-center text-2xl px-4">{{ item.name }}</div>
+                        <div class="self-center">
+                            <div class="grow mb-2 text-2xl px-4">{{ item.name }}</div>
+                            <div class="px-4 text-purple-300">{{ item.guid }}</div>
+                        </div>
                     </div>
                     <div class="flex flex-col refs">
                         <a v-if="item.roles.includes('admin')" class="grow p-2 text-center btn flex" :href="'/teams/' + item.guid">

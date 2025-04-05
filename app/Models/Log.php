@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Actions\Filters;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -77,7 +78,7 @@ class Log extends Error
         $hash = Str::of('log'.$name.$team->id.$date.$guid)->pipe('md5');
 
         if(self::exist($name, $team->id, $date, $guid)){
-            return false;
+            return true;
         }
 
         $log = new Log();
@@ -125,7 +126,7 @@ class Log extends Error
             ->count() > 0;
     }
 
-    public static function getLogs($team, $filters = [], $sort = []): mixed
+    public static function getLogs($team, $filters = [], $sort = []): Builder
     {
         $query = self::query()->where('team', $team);
         Filters::setFilters($query, $filters);

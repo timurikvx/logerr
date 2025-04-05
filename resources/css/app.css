@@ -16,6 +16,7 @@
     --main-back: #0e0e0e;
     --text-main-color: #eee;
     --main: #1d1d1f;
+    --main-light: #303033;
     --gray: #656565;
     --head-color: #0f0f0f;
     --border: #36383a;
@@ -167,8 +168,6 @@ body{
 .button.full-red:hover{
     background-color: var(--red-light);
 }
-
-
 
 .button.green{
     border: 1px solid var(--green);
@@ -746,7 +745,6 @@ body{
 }
 
 .index .first{
-
     font-family: monospace;
     color: var(--green);
 }
@@ -754,6 +752,11 @@ body{
 .index .second{
     font-family: monospace;
     color: var(--red);
+    transition: 0.5s;
+}
+
+.index .second:hover{
+    transform: rotate(-4grad);
 }
 
 .form-section{
@@ -771,3 +774,41 @@ body{
     border: 1px solid var(--border);
     color: var(--text-main-color);
 }
+
+.json-text{
+    background: var(--main-light);
+    border: 1px solid var(--border);
+}
+
+.json-text .quote{
+    color: #e1d6d6;
+}
+
+.json-text .property{
+    color: var(--red);
+}
+
+.json-text .equal{
+    color: var(--light-blue);
+}
+
+.json-text .value{
+    color: var(--yellow);
+}
+/*--main-back: #0e0e0e;*/
+/*--text-main-color: #eee;*/
+/*--main: #1d1d1f;*/
+/*--gray: #656565;*/
+/*--head-color: #0f0f0f;*/
+/*--border: #36383a;*/
+/*--purple: #8851fa;*/
+/*--red: #d0338c;*/
+/*--red-light: #ff51b4;*/
+/*--yellow: #ecff91;*/
+/*--light-blue: #9aa5f7;*/
+/*--input-dark: #2d2d2f;*/
+/*--white: #fff;*/
+/*--black: #1b1b1b;*/
+/*--green: #52b944;*/
+/*--green-light: #90ff81;*/
+/*--active-list: #3e3e43;*/

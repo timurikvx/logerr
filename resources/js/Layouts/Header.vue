@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <div class="flex">
-            <a class="flex" href="/dashboard">
+            <a class="flex" href="/">
                 <div class="logo self-center mr-1"></div>
                 <div class="font-bold py-4">{{ title }}</div>
             </a>

@@ -10,6 +10,10 @@
             </div>
             <button v-else class="button" @click="change = true">Изменить имя</button>
         </div>
+        <div class="px-6 flex mb-2">
+            <div class="mr-4">Идентификатор команды:</div>
+            <div class="font-bold">{{ team.guid }}</div>
+        </div>
         <PerfectScrollbar class="flex flex-col m-4 mt-0">
             <div class="flex border-bottom mb-2">
                 <div class="p-2 text-2xl">Учатники команды</div>

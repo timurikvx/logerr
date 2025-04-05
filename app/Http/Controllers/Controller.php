@@ -2,24 +2,31 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Actions\Filters;
 use App\Actions\PageOptions;
-use App\Http\Resources\Crew\CrewItemResource;
-use App\Http\Resources\Errors\ErrorItemResource;
-use App\Models\Crew;
 use App\Models\Error;
-use App\Models\UserOption;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+
+    public function index()
+    {
+        if(Auth::check()){
+            return redirect()->route('dashboard');
+        }
+        return Inertia::render('Welcome', [
+            'title'=>'Главная Logerr',
+        ]);
+    }
 
     public function dashboard(Request $request): Response
     {
