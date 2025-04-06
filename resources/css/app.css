@@ -795,6 +795,22 @@ body{
 .json-text .value{
     color: var(--yellow);
 }
+
+.report .wrapper{
+    margin-right: -1%;
+}
+
+.report .field{
+    background-color: var(--main);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-width: 33%;
+    margin-right: 1%;
+    margin-bottom: 1%;
+    box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.3);
+}
+
+
 /*--main-back: #0e0e0e;*/
 /*--text-main-color: #eee;*/
 /*--main: #1d1d1f;*/

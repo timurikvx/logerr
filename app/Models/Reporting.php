@@ -45,8 +45,22 @@ class Reporting extends Model
         if(is_double($value)){
             return 'double';
         }
-        if(is_numeric($value)){
-            return 'numeric';
+        return 'string';
+    }
+
+    private static function getValue($type, $value): float|bool|int|string
+    {
+        if($type === 'bool'){
+            return boolval($value);
+        }
+        if($type === 'float'){
+            return floatval($value);
+        }
+        if($type === 'int'){
+            return intval($value);
+        }
+        if($type === 'double'){
+            return doubleval($value);
         }
         return 'string';
     }
@@ -70,7 +84,7 @@ class Reporting extends Model
             ->delete();
     }
 
-    public static function getByTeam($team, $category = null, $name = null): Collection
+    public static function getByTeam($team, $category = null, $name = null): mixed
     {
         if(is_array($team)){
             $query = self::query()->whereIn('team', $team);
@@ -83,7 +97,13 @@ class Reporting extends Model
         if($name != null){
             $query->where('name', '=', $name);
         }
-        return $query->get();
+        $data = $query->select(['name', 'team', 'category', 'type', 'value'])->get();
+        $list = collect([]);
+        foreach ($data as $row){
+            $value = self::getValue($row->type, $row->value);
+            $list->push(['name'=>$row->name, 'team'=>$row->team, 'value'=>$value]);
+        }
+        return $list;
     }
 
 }

@@ -127,6 +127,7 @@ class Filters
                 ->sortByDesc('date')
                 ->sortBy('name')
                 ->sortBy('guid');
+            $collection = $collection->values();
             return;
         }
         $sorts = [];
@@ -135,6 +136,7 @@ class Filters
             $sorts[] = [$item['field'], $desc];
         }
         $collection->sortBy($sorts);
+        $collection = $collection->values();
     }
 
 }

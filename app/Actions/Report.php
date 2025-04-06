@@ -48,4 +48,11 @@ class Report
         }
     }
 
+    public static function getTodayErrors($team): mixed
+    {
+        $data = Reporting::getByTeam($team, 'errors_today');
+        $data = $data->sortByDesc('value')->take(5);
+        return $data;
+    }
+
 }

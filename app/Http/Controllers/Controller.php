@@ -6,7 +6,9 @@ namespace App\Http\Controllers;
 use App\Actions\Filters;
 use App\Actions\PageOptions;
 use App\Actions\Report;
+use App\Models\Crew;
 use App\Models\Error;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -31,8 +33,21 @@ class Controller extends BaseController
 
     public function dashboard(Request $request): Response
     {
+        $all_data = collect([]);
+        Auth::login(User::find(1));
+        $teams = Crew::list();
+        foreach ($teams as $team){
+            $data_team = Report::getTodayErrors($team->id);
+            $all_data[]= ['data'=>$data_team->pluck('value', 'name'), 'guid'=>$team->guid, 'team'=>$team->name];
+        }
+
+        $reports = [
+            'today'=>$all_data->toArray()
+        ];
+
         $data = PageOptions::get();
         $data->put('title', 'Панель управления');
+        $data->put('reports', $reports);
         return Inertia::render('Dashboard', $data);
     }
 
@@ -59,7 +74,19 @@ class Controller extends BaseController
 
     public function test(Request $request): array
     {
+        $data = collect([]);
+        Auth::login(User::find(1));
+        $teams = Crew::list();
+        foreach ($teams as $team){
+            $data_team = Report::getTodayErrors($team->id);
+            $data[$team->name]= ['series'=>$data_team->pluck('value'), 'columns'=>$data_team->pluck('name')];
+        }
 
+//        $data = Report::getTodayErrors(1);
+//        $data = $data->sortBy('name');
+//        $columns = $data->pluck('name');
+//        dump($columns);
+//        dump($data->pluck('value'));
         return ['result'=>true];
     }
 

@@ -19,7 +19,9 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
+        "apexcharts": "^4.5.0",
         "pinia": "^3.0.1",
+        "vue3-apexcharts": "^1.8.0",
         "vue3-perfect-scrollbar": "^2.0.0"
     }
 }

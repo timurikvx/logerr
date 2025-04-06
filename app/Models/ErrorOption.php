@@ -90,7 +90,9 @@ class ErrorOption extends Model
             $options = self::query()->select(['name', 'guid', 'data'])
                 ->where('user', '=', $user)
                 ->where('team', '=', $team)->get();
-            Cache::set('all_error_option'.$user.'_'.$team, json_encode($options->toArray()), 3600);
+            if($options->count() > 0){
+                Cache::set('all_error_option'.$user.'_'.$team, json_encode($options->toArray()), 3600);
+            }
         }
         $list = [];
         foreach ($options as $option){

@@ -55,7 +55,7 @@ class Crew extends Model
         $user = Auth::id();
         $ids = CrewMembers::query()->select(['crew', 'roles'])->where('user', '=', $user)->get();
         $roles = $ids->pluck('roles', 'crew');
-        $list = self::query()->whereIn('id', $ids->pluck('crew'))->orderBy('name')->get();
+        $list = self::query()->whereIn('id', $ids->pluck('crew'))->orderBy('name')->orderBy('name')->get();
         foreach ($list as $item){
             $item->roles = json_decode($roles->get($item->id));
         }
