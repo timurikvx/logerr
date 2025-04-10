@@ -7,6 +7,7 @@ use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserOptionController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,16 +30,27 @@ Route::get('/', [Controller::class, 'index'])->name('index');
 Route::middleware(['auth'])->group(function(){
 
     //Pages
-    Route::get('/dashboard', [Controller::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::post('/team/change', [DashboardController::class, 'teamChange']);
 
-    Route::get('/errors', [ErrorController::class, 'errors'])->name('errors');
-    Route::get('/errors/{team}', [ErrorController::class, 'getList']);
+    Route::get('/errors', [ErrorController::class, 'getList'])->name('errors');
+    Route::get('/errors/teams/select', [ErrorController::class, 'selectTeamError'])->name('selectTeamError');
+    //Route::get('/errors', [ErrorController::class, 'errors'])->name('errors');
+    //Route::get('/errors/{team}', [ErrorController::class, 'getList']);
+
 
     Route::get('/teams', [CrewController::class, 'teams'])->name('teams');
+
     Route::get('/teams/{team}', [CrewController::class, 'team']);
 
     Route::get('/logs', [LogController::class, 'logs'])->name('logs');
     Route::get('/logs/{team}', [LogController::class, 'getList']);
+
+    Route::get('/notifications', [NotificationController::class, 'notifications']);
+    Route::get('/notifications/telegram', [NotificationController::class, 'telegram']);
+
+    //Route::get('/notifications', [LogController::class, 'getList']);
+
 
     //Teams
     Route::post('/team/create', [CrewController::class, 'create']);
@@ -49,7 +61,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/team/exclude', [CrewController::class, 'exclude']);
 
     //Choice
-    Route::post('/choice', [Controller::class, 'choice']);
+    Route::post('/choice', [DashboardController::class, 'choice']);
 
     //Notifications
     Route::post('/notifications/get', [NotificationController::class, 'get']);
@@ -57,7 +69,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/notifications/end', [NotificationController::class, 'end']);
 
     //Common
-    Route::post('/filters/get', [Controller::class, 'filters']);
+    Route::post('/filters/get', [DashboardController::class, 'filters']);
     Route::post('/option/set', [UserOptionController::class, 'set']);
     Route::post('/option/get', [UserOptionController::class, 'get']);
 
@@ -68,6 +80,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/error/options/clear', [ErrorController::class, 'optionClear']);
     Route::post('/error/options/change', [ErrorController::class, 'optionChange']);
     Route::post('/error/options/delete', [ErrorController::class, 'optionDelete']);
+    Route::post('/error/team/change', [ErrorController::class, 'teamChange']);
     Route::post('/error/filter', [ErrorController::class, 'filter']);
     Route::post('/error/page', [ErrorController::class, 'page']);
 

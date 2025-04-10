@@ -8,6 +8,7 @@ use App\Models\Crew;
 use App\Models\CrewMembers;
 use App\Models\Notification;
 use App\Models\User;
+use App\Models\UserOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -42,7 +43,8 @@ class CrewController extends Controller
             return response(['errors'=>['Команда с таким идентификатором уже существует']], '200');
         }
 
-        Crew::create($name, $guid);
+        $team = Crew::create($name, $guid);
+        UserOption::set('current_team', 0, $team);
         return ['list'=>CrewItemResource::collection(Crew::list())->toArray($request)];
     }
 

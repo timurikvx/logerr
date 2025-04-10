@@ -1,9 +1,9 @@
 <template>
     <div class="select-list flex flex-col relative">
-        <input v-if="input" ref="item" type="text" :placeholder="placeholder" :style="getInputStyle()" :value="value.name" class="value input grow cursor-pointer">
-        <div v-else ref="item" class="value input p-2 grow content-center cursor-pointer" :style="getInputStyle()">
+        <input v-if="input" ref="item" type="text" :placeholder="placeholder" :style="getInputStyle()" :value="value.name" class="value grow cursor-pointer">
+        <div v-else ref="item" class="value p-2 grow content-center cursor-pointer" :style="getInputStyle()">
             <div v-if="value?.name">{{ value.name }}</div>
-            <div v-else>{{ placeholder }}</div>
+            <div v-else class="placeholder">{{ placeholder }}</div>
         </div>
         <div class="fixed listing z-10 flex flex-col overflow-hidden" :style="style" :key="key" v-show="list_visible"  @mouseleave="mouseleave" @mouseover="mouseover">
             <PerfectScrollbar>
@@ -62,7 +62,7 @@
     }
 
     function click(e){
-        let element = e.target.closest('.value.input');
+        let element = e.target.closest('.value');
         if(item.value === element){
             list_visible.value = !list_visible.value;
             return;

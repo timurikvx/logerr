@@ -20,6 +20,10 @@
             <div class="log-icon icon" title="Просмотр логов"></div>
             <div v-if="!short" class="self-center ml-4">Просмотр логов</div>
         </a>
+        <a class="p-3 menu-item flex" :class="{active: url.startsWith('/notifications')}" href="/notifications">
+            <div class="notifications-icon icon" title="Оповещения"></div>
+            <div v-if="!short" class="self-center ml-4">Оповещения</div>
+        </a>
         <div class="grow"></div>
         <div class="icon m-3" :class="{'expand-panel': short, 'collapse-panel': !short}" title="Свернуть/развернуть" @click="changeShort()"></div>
     </div>

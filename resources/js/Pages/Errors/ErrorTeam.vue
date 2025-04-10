@@ -3,6 +3,8 @@
         <div class="flex mb-4 px-4 pt-4">
             <div class="p-2 font-bold text-xl uppercase">{{ head }}</div>
             <div class="grow"></div>
+            <div class="self-center mr-4">Команда:</div>
+            <SelectList :input="false" v-model:value="team" :minWidth="300" :list="props.teams" @select="selectTeam" class="mr-4"></SelectList>
             <div class="self-center mr-4">Настройка списка:</div>
             <SelectList placeholder="Нет настройки" :input="false" v-model:value="option" :minWidth="220" :list="getOptions()" @select="selectOption"></SelectList>
             <button class="square-button add" title="Сохранить текущие фильтры, колонки и сортировку в новую настройку" @click="createOptionBegin"></button>
@@ -89,7 +91,9 @@
         short: {
             type: Boolean,
             default: false
-        }
+        },
+        teams: Array,
+        team: Object
     });
     const modal = modalStore();
     const buttons = useButtons();
@@ -109,6 +113,7 @@
     });
     let shade = ref(false);
     let paginate = ref({});
+    let team = ref({});
 
     onMounted(()=>{
         list.value = props.list;
@@ -118,6 +123,8 @@
         options.value = props.options;
         option.value = props.option;
         paginate.value = props.paginate;
+        team.value = props.team;
+        console.log(props.team);
     });
 
     provide('short', props.short);
@@ -336,6 +343,16 @@
             if(response.data.paginate){
                 paginate.value = response.data.paginate;
             }
+        }).catch(function (error){
+            shade.value = false;
+        });
+    }
+
+    function selectTeam(team){
+        axios.post('/' + props.prefix + '/team/change', {team: team.guid}).then(function (response){
+            shade.value = false;
+            scroll.value.$el.scrollTop = 0;
+            console.log(response.data);
         }).catch(function (error){
             shade.value = false;
         });

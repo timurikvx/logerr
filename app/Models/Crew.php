@@ -12,7 +12,7 @@ class Crew extends Model
 {
     use HasFactory;
 
-    public static function create($name, $guid = null):void
+    public static function create($name, $guid = null): int
     {
         $user = Auth::id();
         if($guid === null){
@@ -30,6 +30,8 @@ class Crew extends Model
         $crewMember->crew = $crew->id;
         $crewMember->roles = json_encode(['admin']);
         $crewMember->save();
+
+        return $crew->id;
     }
 
     public static function check($name):bool
@@ -68,6 +70,19 @@ class Crew extends Model
         $ids = CrewMembers::query()->select(['crew', 'roles'])->where('user', '=', $user)->get();
         $roles = $ids->pluck('roles', 'crew');
         $crew = self::query()->whereIn('id', $ids->pluck('crew'))->where('guid', '=', $guid)->first();
+        if(is_null($crew)){
+            return null;
+        }
+        $crew->roles = json_decode($roles->get($crew->id));
+        return $crew;
+    }
+
+    public static function getByID($id): Model|null
+    {
+        $user = Auth::id();
+        $ids = CrewMembers::query()->select(['crew', 'roles'])->where('user', '=', $user)->get();
+        $roles = $ids->pluck('roles', 'crew');
+        $crew = self::query()->whereIn('id', $ids->pluck('crew'))->where('id', '=', $id)->first();
         if(is_null($crew)){
             return null;
         }

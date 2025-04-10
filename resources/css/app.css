@@ -317,6 +317,10 @@ body{
     background-image: url("/storage/dashboard.png");
 }
 
+.notifications-icon{
+    background-image: url("/storage/notifications.png");
+}
+
 .expand-panel{
     background-image: url("/storage/expand-panel.png");
 }
@@ -324,6 +328,8 @@ body{
 .collapse-panel{
     background-image: url("/storage/collapse-panel.png");
 }
+
+
 
 /******************** icons *************************/
 
@@ -552,6 +558,22 @@ body{
     width: 100%;
     top: 42px;
     max-height: 250px;
+}
+
+.select-list .value{
+    background-color: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: 0.3s;
+    min-height: 42px;
+}
+
+.select-list .value:hover{
+    background-color: var(--main-light);
+}
+
+.select-list .placeholder{
+    color: var(--gray);
 }
 
 .listing .item{
@@ -808,6 +830,14 @@ body{
     margin-right: 1%;
     margin-bottom: 1%;
     box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.3);
+}
+
+.notifications-page .content{
+    background-color: var(--main);
+}
+
+.notifications-page .active{
+    background-color: var(--main);
 }
 
 

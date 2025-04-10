@@ -7,6 +7,8 @@ use App\Models\Crew;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class NotificationController extends Controller
 {
@@ -45,5 +47,16 @@ class NotificationController extends Controller
         $notification->save();
         return $this->get($request);
     }
+
+    public function notifications(Request $request): Response
+    {
+        return Inertia::render('Notifications/Main');
+    }
+
+    public function telegram(Request $request)
+    {
+
+    }
+
 
 }

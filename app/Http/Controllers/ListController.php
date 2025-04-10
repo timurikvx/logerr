@@ -11,8 +11,8 @@ use App\Models\Error;
 use App\Models\ErrorOption;
 use App\Models\UserOption;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class ListController extends Controller
 {
@@ -37,13 +37,30 @@ class ListController extends Controller
         return Paginate::paginate($query, $filters, $sort, ErrorItemResource::class);
     }
 
-    public function getList(Request $request, $guid): mixed
+    public function getList(Request $request): mixed
+    {
+        $setTeam = $request->get('set-team');
+        if(!empty($setTeam)){
+            $team = Crew::getByGuid($setTeam);
+            if(is_null($team)){
+                return redirect()->route('dashboard');
+            }else{
+                UserOption::set('current_team', 0, $team->id);
+            }
+        }else{
+            $team_id = UserOption::get('current_team', 0);
+            $team = Crew::getByID($team_id);
+        }
+        if(is_null($team)){
+            return redirect()->route('selectTeamError');
+        }
+        $data = $this->getData($request, $team);
+        return Inertia::render('Errors/ErrorTeam', $data);
+    }
+
+    public function getData(Request $request, $team): Collection
     {
         $start = microtime(true) * 1000;
-        $team = Crew::getByGuid($guid);
-        if(is_null($team)){
-            return redirect()->route('dashboard');
-        }
         $guid_option = UserOption::get($this->current_option, $team->id, '');
         $option = $this->OPTION::getByGuid($team->id, $guid_option);
         if(is_null($option)){
@@ -57,13 +74,12 @@ class ListController extends Controller
         }
 
         $paginate = $this->getListData($team, $filters, $sort);
-
         $options = $this->OPTION::getAll($team->id,true);
         $end = microtime(true) * 1000;
 
         $data = PageOptions::get();
         $data->put('title', $this->title);
-        $data->put('guid', $guid);
+        $data->put('guid', $team->guid);
         $data->put('crew', (new CrewItemResource($team))->toArray($request));
         $data->put('list', $paginate->data);
         $data->put('sort', $sort);
@@ -75,8 +91,9 @@ class ListController extends Controller
         $data->put('time', ($end - $start));
         $data->put('head', $this->head);
         $data->put('prefix', $this->prefix);
-
-        return Inertia::render('Errors/ErrorTeam', $data);
+        $data->put('teams', CrewItemResource::collection(Crew::list())->toArray($request));
+        $data->put('team', (new CrewItemResource($team))->toArray($request));
+        return $data;
     }
 
     public function filter(Request $request): array
@@ -245,6 +262,16 @@ class ListController extends Controller
         $data['list'] = $result->data;
         $data['paginate'] = $result->paginate;
         return $data;
+    }
+
+    public function teamChange(Request $request): mixed
+    {
+        $guid = $request->get('team');
+        $team = Crew::getByGuid($guid);
+        if($team == null){
+            return collect([]);
+        }
+        return $this->getData($request, $team);
     }
 
     private function getListDataByOption($team, $option): \stdClass

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 
 use App\Actions\PageOptions;
 use App\Actions\Paginate;
+use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
+use App\Models\Crew;
 use App\Models\Error;
 use App\Models\ErrorOption;
 use Illuminate\Http\Request;
@@ -99,6 +101,14 @@ class ErrorController extends ListController
     {
         $query = Error::getErrors($team->id, [], []); //$filters, $sort
         return Paginate::paginate($query, $filters, $sort, ErrorItemResource::class, HandleErrorsEvent::class);
+    }
+
+    public function selectTeamError(Request $request): Response
+    {
+        $data = PageOptions::get();
+        $data->put('title', 'Выбор команды ошибок');
+        $data->put('teams', CrewItemResource::collection(Crew::list())->toArray($request));
+        return Inertia::render('Teams/SelectTeamError', $data);
     }
 
 }
