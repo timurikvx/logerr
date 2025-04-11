@@ -9,6 +9,7 @@ use App\Http\Resources\Errors\ErrorItemResource;
 use App\Models\Crew;
 use App\Models\Error;
 use App\Models\ErrorOption;
+use App\Models\Option;
 use App\Models\UserOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -28,7 +29,7 @@ class ListController extends Controller
 
     protected string $title = 'Список ошибок';
 
-    protected string $OPTION = ErrorOption::class;
+    //protected string $OPTION = ErrorOption::class;
 
 
     public function getListData($team, $filters, $sort): \stdClass
@@ -55,14 +56,14 @@ class ListController extends Controller
             return redirect()->route('selectTeamError');
         }
         $data = $this->getData($request, $team);
-        return Inertia::render('Errors/ErrorTeam', $data);
+        return Inertia::render('MainList', $data);
     }
 
     public function getData(Request $request, $team): Collection
     {
         $start = microtime(true) * 1000;
         $guid_option = UserOption::get($this->current_option, $team->id, '');
-        $option = $this->OPTION::getByGuid($team->id, $guid_option);
+        $option = Option::getByGuid($team->id, $guid_option, $this->prefix);
         if(is_null($option)){
             $sort = UserOption::get($this->cache_sort, $team->id, []);
             $filters = UserOption::get($this->cache_filters, $team->id, $this->filterFields());
@@ -74,7 +75,7 @@ class ListController extends Controller
         }
 
         $paginate = $this->getListData($team, $filters, $sort);
-        $options = $this->OPTION::getAll($team->id,true);
+        $options = Option::getAll($team->id, $this->prefix, true);
         $end = microtime(true) * 1000;
 
         $data = PageOptions::get();
@@ -165,15 +166,15 @@ class ListController extends Controller
         $name = $request->get('name');
 
         $data = $this->getOptionData($request);
-        $guid = $this->OPTION::set($team->id, $name, $data);
+        $guid = Option::set($team->id, $name, $data, $this->prefix);
 
         UserOption::remove($this->cache_sort, $team->id);
         UserOption::remove($this->cache_filters, $team->id);
         UserOption::remove($this->cache_columns, $team->id);
         UserOption::set($this->current_option, $team->id, $guid);
 
-        $option = $this->OPTION::getByGuid($team->id, $guid, true);
-        $options = $this->OPTION::getAll($team->id, true);
+        $option = Option::getByGuid($team->id, $guid, $this->prefix, true);
+        $options = Option::getAll($team->id, $this->prefix, true);
 
         return ['result'=>true, 'options'=>$options, 'option'=>$option];
     }
@@ -186,24 +187,24 @@ class ListController extends Controller
         $guid = $request->get('guid');
 
         $data = $this->getOptionData($request);
-        $this->OPTION::updateByGuid($team->id, $guid, $data);
+        Option::updateByGuid($team->id, $guid, $data, $this->prefix);
 
-        $this->OPTION::remove($this->cache_sort, $team->id);
-        $this->OPTION::remove($this->cache_filters, $team->id);
-        $this->OPTION::remove($this->cache_columns, $team->id);
-        $this->OPTION::set($this->current_option, $team->id, $guid);
+        UserOption::remove($this->cache_sort, $team->id);
+        UserOption::remove($this->cache_filters, $team->id);
+        UserOption::remove($this->cache_columns, $team->id);
+        UserOption::set($this->current_option, $team->id, $guid);
 
-        $option = $this->OPTION::getByGuid($team->id, $guid, true);
-        $options = $this->OPTION::getAll($team->id, true);
+        $option = Option::getByGuid($team->id, $guid, $this->prefix, true);
+        $options = Option::getAll($team->id, $this->prefix, true);
         return ['result'=>true, 'options'=>$options, 'option'=>$option];
     }
 
     private function getOptionData(Request $request): array
     {
         return [
-            'filters'=>$request->get('filters'),
-            'sort'=>$request->get('sort'),
-            'columns'=>$request->get('columns')
+            'filters'=>$request->get('filters', []),
+            'sort'=>$request->get('sort', []),
+            'columns'=>$request->get('columns', [])
         ];
     }
 
@@ -213,9 +214,9 @@ class ListController extends Controller
         $team = Crew::getByGuid($team_guid);
 
         $guid = $request->get('guid');
-        ($this->OPTION)::removeByGuid($team->id, $guid);
+        Option::removeByGuid($team->id, $guid);
 
-        $options = ($this->OPTION)::getAll($team->id);
+        $options = Option::getAll($team->id, $this->prefix);
 
         UserOption::remove($this->current_option, $team->id);
         UserOption::remove($this->cache_sort, $team->id);
@@ -223,7 +224,7 @@ class ListController extends Controller
         UserOption::remove($this->cache_columns, $team->id);
 
         $data = $this->getListDataByOption($team, []);
-        ($this->OPTION)::clearData($options);
+        Option::clearData($options);
         return [
             'options'=>$options,
             'option'=>[],
@@ -241,7 +242,7 @@ class ListController extends Controller
         $team = Crew::getByGuid($team_guid);
 
         $guid = $request->get('guid');
-        $option = ($this->OPTION)::getByGuid($team->id, $guid);
+        $option = Option::getByGuid($team->id, $guid, $this->prefix);
         if(is_null($option)){
             UserOption::remove($this->current_option, $team->id);
         }else{

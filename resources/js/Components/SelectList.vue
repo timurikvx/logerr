@@ -5,7 +5,7 @@
             <div v-if="value?.name">{{ value.name }}</div>
             <div v-else class="placeholder">{{ placeholder }}</div>
         </div>
-        <div class="fixed listing z-10 flex flex-col overflow-hidden" :style="style" :key="key" v-show="list_visible"  @mouseleave="mouseleave" @mouseover="mouseover">
+        <div class="fixed listing z-10 flex flex-col overflow-hidden" v-if="list.length > 0" :style="style" :key="key" v-show="list_visible"  @mouseleave="mouseleave" @mouseover="mouseover">
             <PerfectScrollbar>
                 <div v-for="item in list" class="p-2 item cursor-pointer" @click="select(item)">
                     <div>{{ item.name }}</div>

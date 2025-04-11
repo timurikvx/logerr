@@ -156,4 +156,12 @@ class CrewController extends Controller
         ];
     }
 
+    public function selectTeam(Request $request): Response
+    {
+        $data = PageOptions::get();
+        $data->put('title', 'Выбор команды логов');
+        $data->put('teams', CrewItemResource::collection(Crew::list())->toArray($request));
+        return Inertia::render('Teams/SelectTeamLog', $data);
+    }
+
 }

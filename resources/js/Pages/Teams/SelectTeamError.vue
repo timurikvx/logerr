@@ -4,7 +4,7 @@
             <div class="p-2 font-bold text-xl uppercase">Выбор команды просмотра ошибок</div>
             <div class="grow"></div>
         </div>
-        <div class="flex flex-col grow table-field p-4 m-4 mt-0">
+        <div v-if="props.teams.length > 0" class="flex flex-col grow table-field p-4 m-4 mt-0">
             <div class="flex flex-wrap">
                 <a v-for="item in props.teams" class="flex mb-4 team" :href="'/errors?set-team=' + item.guid">
                     <div class="flex grow item">
@@ -12,6 +12,10 @@
                     </div>
                 </a>
             </div>
+
+        </div>
+        <div class="flex grow">
+            <div class="m-auto text-4xl">Вы не состоите ни в одной команде</div>
         </div>
     </Layout>
 </template>

@@ -6,7 +6,10 @@
             <div class="self-center uppercase font-bold mr-4">Команда:</div>
             <SelectList placeholder="Выберите команду" :input="false" v-model:value="team" :minWidth="320" :list="props.teams" @select="selectTeam" class="p-2 self-center"></SelectList>
         </div>
-        <div v-if="!team.guid" class="grow flex">
+        <div v-if="props.teams.length === 0" class="grow flex">
+            <div class="m-auto text-4xl">Вы не состоите ни в одной команде</div>
+        </div>
+        <div v-else-if="!team.guid" class="grow flex">
             <div class="m-auto text-4xl">Выберите команду для просмотра</div>
         </div>
         <perfect-scrollbar v-if="team.guid" class="grow p-4 report">
@@ -50,8 +53,6 @@
     provide('short', props.short);
 
     onMounted(()=>{
-        //setTimeout(chart_all.value.refresh, 330);
-       // console.log(props.reports);
         team.value = props.team;
     });
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Actions\PageOptions;
 use App\Actions\Paginate;
 use App\Http\Resources\Crew\CrewItemResource;
@@ -31,7 +30,9 @@ class ErrorController extends ListController
     protected string $head = 'Список ошибок';
 
     protected string $prefix = 'error';
-    protected string $OPTION = ErrorOption::class;
+    //protected string $OPTION = ErrorOption::class;
+
+    protected string $title = 'Список ошибок';
 
     public function apiAdd(Request|Collection $request): mixed
     {
@@ -103,7 +104,7 @@ class ErrorController extends ListController
         return Paginate::paginate($query, $filters, $sort, ErrorItemResource::class, HandleErrorsEvent::class);
     }
 
-    public function selectTeamError(Request $request): Response
+    public function selectTeam(Request $request): Response
     {
         $data = PageOptions::get();
         $data->put('title', 'Выбор команды ошибок');

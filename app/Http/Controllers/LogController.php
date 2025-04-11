@@ -28,7 +28,7 @@ class LogController extends ListController
     protected string $head = 'Список логов';
 
     protected string $prefix = 'log';
-    protected string $OPTION = LogOption::class;
+    //protected string $OPTION = LogOption::class;
 
     protected string $title = 'Список логов';
 
