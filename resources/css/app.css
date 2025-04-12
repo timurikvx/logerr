@@ -840,6 +840,10 @@ body{
     background-color: var(--main);
 }
 
+.telegram-form{
+    width: 50%;
+    min-width: 650px;
+}
 
 /*--main-back: #0e0e0e;*/
 /*--text-main-color: #eee;*/

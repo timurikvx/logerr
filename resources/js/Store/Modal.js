@@ -10,6 +10,7 @@ export const modalStore = defineStore('modal', () => {
     const setName = ref(false);
     const notifications = ref(false);
     const invite = ref(false);
+    const telegramChat = ref(false);
     //errors
     const errors = ref(false);
     const error = ref('');
@@ -42,6 +43,7 @@ export const modalStore = defineStore('modal', () => {
         errors,
         error,
         notice,
+        telegramChat,
         //functions
         setError,
         setNotice

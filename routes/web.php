@@ -8,6 +8,7 @@ use App\Http\Controllers\LogController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserOptionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TelegramChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,8 +94,12 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/log/options/save', [LogController::class, 'optionSave']);
     Route::post('/log/options/change', [LogController::class, 'optionChange']);
     Route::post('/log/options/delete', [LogController::class, 'optionDelete']);
+    Route::post('/log/team/change', [LogController::class, 'teamChange']);
     Route::post('/log/filter', [LogController::class, 'filter']);
     Route::post('/log/page', [LogController::class, 'page']);
+
+    Route::post('/telegram/chat/save', [TelegramChatController::class, 'save']);
+    Route::post('/telegram/chat/remove', [TelegramChatController::class, 'remove']);
 
 
 });

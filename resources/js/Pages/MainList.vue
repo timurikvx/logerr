@@ -55,7 +55,7 @@
     <Filters :team="team.guid" v-model:filters="fields" type="error" @filter="filtering"></Filters>
     <Sort :team="team.guid" v-model:sort="sort" :fields="fields" type="error" @confirm="filtering"></Sort>
     <SetName title="Введите наименование настройки" @complete="createOption"></SetName>
-    <Question :title="question.title" :question="question.question" :type="question.type" v-model:visible="question.visible" @confirm="questionEnd"></Question>
+    <Question :question="question" v-model:visible="question.visible" @confirm="questionEnd"></Question>
 </template>
 
 <script setup>
@@ -71,7 +71,7 @@
     import Sort from "@/Components/Sort.vue";
     import {useButtons} from '@/Packs/Buttons';
     import SelectList from "@/Components/SelectList.vue";
-    import Question from "@/Components/JSON/Question.vue";
+    import Question from "@/Components/Question.vue";
     import axios from "axios";
 
     const props = defineProps({
@@ -315,8 +315,8 @@
         });
     }
 
-    function questionEnd(type){
-        if(type === 'remove option'){
+    function questionEnd(question){
+        if(question.type === 'remove option'){
             removeOption();
         }
     }

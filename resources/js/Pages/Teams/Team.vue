@@ -49,7 +49,7 @@
     import Layout from "@/Layouts/Layout.vue";
     import {defineProps, onMounted, provide, ref} from 'vue';
     import axios from "axios";
-    import Question from "@/Components/JSON/Question.vue";
+    import Question from "@/Components/Question.vue";
 
     const props = defineProps({
         title: String,

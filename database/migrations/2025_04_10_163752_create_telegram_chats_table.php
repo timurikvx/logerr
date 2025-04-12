@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('telegram_chats', function (Blueprint $table) {
             $table->id();
+            $table->string('guid');
             $table->unsignedBigInteger('team')->index();
             $table->string('name');
             $table->string('token');
             $table->string('chat_id');
             $table->unsignedBigInteger('creator');
             $table->timestamps();
+            $table->index('guid');
+            $table->index(['team', 'name']);
         });
     }
 

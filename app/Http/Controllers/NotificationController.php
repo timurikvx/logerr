@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Notifications\NotificationResource;
+use App\Http\Resources\Telegram\TelegramChatResource;
 use App\Models\Crew;
 use App\Models\Notification;
+use App\Models\TelegramChat;
+use App\Models\UserOption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -50,7 +53,12 @@ class NotificationController extends Controller
 
     public function notifications(Request $request): Response
     {
-        return Inertia::render('Notifications/Main');
+        $team = UserOption::get('current_team');
+        $chats = TelegramChat::getChats($team);
+        $data = [
+            'chats'=>(TelegramChatResource::collection($chats))->toArray($request)
+        ];
+        return Inertia::render('Notifications/Main', $data);
     }
 
     public function telegram(Request $request)

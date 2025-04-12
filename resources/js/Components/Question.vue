@@ -1,6 +1,6 @@
 <template>
-    <Modal class="question" :title="title" v-model:visible="visible">
-        <div class="p-2 mb-4">{{ question }}</div>
+    <Modal class="question" :title="question.title" v-model:visible="visible">
+        <div class="p-2 mb-4">{{ question.question }}</div>
         <div class="p-2 flex">
             <button class="button red w-1/3 text-center uppercase font-bold" @click="close">
                 <span class="m-auto">Нет</span>
@@ -20,12 +20,7 @@
 
     const props = defineProps({
         visible: Boolean,
-        type: String,
-        title: {
-            type: String,
-            default: 'Подтверждение действия'
-        },
-        question: String
+        question: Object
     })
     const emits = defineEmits(['update:visible', 'confirm']);
 
@@ -44,7 +39,7 @@
 
     function confirm(){
         visible.value = false;
-        emits('confirm', props.type);
+        emits('confirm', props.question);
     }
 
 </script>

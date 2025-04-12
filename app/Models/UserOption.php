@@ -30,7 +30,7 @@ class UserOption extends Model
         Cache::set('user_option'.$user.$team.$name, json_encode($value), 3600);
     }
 
-    public static function get(string $name, int $team, $default = null): array|string|null
+    public static function get(string $name, int $team = 0, $default = null): array|string|null
     {
         $user = Auth::id();
         $data = Cache::get('user_option'.$user.$team.$name);
