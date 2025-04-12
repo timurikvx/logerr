@@ -1,8 +1,8 @@
 <template>
     <div class="select-list flex flex-col relative">
-        <input v-if="input" ref="item" type="text" :placeholder="placeholder" :style="getInputStyle()" :value="value.name" class="value grow cursor-pointer">
+        <input v-if="input" ref="item" type="text" :placeholder="placeholder" :style="getInputStyle()" :value="value.name" :title="value.name" class="value grow cursor-pointer">
         <div v-else ref="item" class="value p-2 grow content-center cursor-pointer" :style="getInputStyle()">
-            <div v-if="value?.name">{{ value.name }}</div>
+            <div v-if="value?.name" :title="value.name">{{ value.name }}</div>
             <div v-else class="placeholder">{{ placeholder }}</div>
         </div>
         <div class="fixed listing z-10 flex flex-col overflow-hidden" v-if="list.length > 0" :style="style" :key="key" v-show="list_visible"  @mouseleave="mouseleave" @mouseover="mouseover">
@@ -74,7 +74,7 @@
 
     function show(){
         const rect = item.value.getBoundingClientRect();
-        let top = rect.top + rect.height;
+        let top = rect.top + 44;//rect.height;
         style.value = 'width: ' + rect.width + 'px; top: ' + top + 'px';
     }
 

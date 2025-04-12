@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -10,20 +11,39 @@ use Ramsey\Uuid\Uuid;
 
 class Option extends Model
 {
-    use HasFactory;
+    //use HasFactory;
+    use HasUuids;
 
     public $incrementing = false;
     public $timestamps = false;
+    protected $keyType = 'string';
+    protected $primaryKey = 'guid';
+
+    public function newUniqueId(): string
+    {
+        return (string) Uuid::uuid4();
+    }
+
+    /**
+     * Get the columns that should receive a unique identifier.
+     *
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['user', 'team', 'name', 'category'];
+    }
 
     public static function set($team, $name, $value, $category = null): string
     {
+
         $user = Auth::id();
         $option = self::query()
             ->where('user', '=', $user)
             ->where('team', '=', $team)
             ->where('name', '=', $name)
             ->where('category', '=', $category)
-            ->delete();
+            ->first();
 
         if(is_null($option)){
             $option = new Option();
@@ -33,7 +53,9 @@ class Option extends Model
             $option->category = $category;
             $option->guid = Uuid::uuid4()->toString();
         }
+
         $option->data = json_encode($value);
+
         $option->save();
         return $option->guid;
     }
@@ -58,6 +80,9 @@ class Option extends Model
 
     public static function getByGuid($team, $guid, $category = null, $without_data = false): mixed
     {
+        if(empty($guid)){
+            return null;
+        }
         $user = Auth::id();
         $option = self::query()
             ->where('user', '=', $user)
@@ -82,7 +107,7 @@ class Option extends Model
             ->where('user', '=', $user)
             ->where('team', '=', $team)
             ->where('category', '=', $category)
-            ->where('guid', '=', $guid)
+            ->where('guid', '=', Uuid::fromString($guid))
             ->first();
         if(is_null($option)){
             return null;

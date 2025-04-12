@@ -80,7 +80,7 @@ class ListController extends Controller
 
         $data = PageOptions::get();
         $data->put('title', $this->title);
-        $data->put('guid', $team->guid);
+        //$data->put('guid', $team->guid);
         $data->put('crew', (new CrewItemResource($team))->toArray($request));
         $data->put('list', $paginate->data);
         $data->put('sort', $sort);
@@ -153,7 +153,7 @@ class ListController extends Controller
         $team = Crew::getByGuid($team_guid);
 
         $field = $request->get('field');
-        $name = 'error_'.$field;
+        $name = $this->prefix.'_'.$field;
         UserOption::remove($name, $team->id);
         return ['result'=>true];
     }
@@ -272,6 +272,7 @@ class ListController extends Controller
         if($team == null){
             return collect([]);
         }
+        UserOption::set('current_team', 0, $team->id);
         return $this->getData($request, $team);
     }
 

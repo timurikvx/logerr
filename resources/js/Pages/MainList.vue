@@ -51,9 +51,9 @@
             </div>
         </div>
     </Layout>
-    <Columns :team="guid" v-model:columns="columns" type="error"></Columns>
-    <Filters :team="guid" v-model:filters="fields" type="error" @filter="filtering"></Filters>
-    <Sort :team="guid" v-model:sort="sort" :fields="fields" type="error" @confirm="filtering"></Sort>
+    <Columns :team="team.guid" v-model:columns="columns" type="error"></Columns>
+    <Filters :team="team.guid" v-model:filters="fields" type="error" @filter="filtering"></Filters>
+    <Sort :team="team.guid" v-model:sort="sort" :fields="fields" type="error" @confirm="filtering"></Sort>
     <SetName title="Введите наименование настройки" @complete="createOption"></SetName>
     <Question :title="question.title" :question="question.question" :type="question.type" v-model:visible="question.visible" @confirm="questionEnd"></Question>
 </template>
@@ -76,7 +76,6 @@
 
     const props = defineProps({
         title: String,
-        guid: String,
         crew: Object,
         list: Array,
         sort: Array,
@@ -124,7 +123,7 @@
         option.value = props.option;
         paginate.value = props.paginate;
         team.value = props.team;
-        console.log(props.team);
+        console.log(team.value);
     });
 
     provide('short', props.short);
@@ -181,7 +180,7 @@
 
     function filtering(){
         shade.value = true;
-        axios.post('/' + props.prefix + '/filter', {team: props.guid, filter: fields.value, sort: sort.value}).then(function (response){
+        axios.post('/' + props.prefix + '/filter', {team: team.value.guid, filter: fields.value, sort: sort.value}).then(function (response){
             shade.value = false;
             scroll.value.$el.scrollTop = 0;
             if(response.data.list){
@@ -223,7 +222,7 @@
 
     function createOption(name){
         shade.value = true;
-        axios.post('/' + props.prefix + '/options/create', {team: props.guid, name: name, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
+        axios.post('/' + props.prefix + '/options/create', {team: team.value.guid, name: name, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
             shade.value = false;
             if(response.data.options){
                 options.value = response.data.options;
@@ -239,7 +238,7 @@
     function saveOption(){
         let data = option.value;
         shade.value = true;
-        axios.post('/' + props.prefix + '/options/save', {team: props.guid, guid: data.guid, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
+        axios.post('/' + props.prefix + '/options/save', {team: team.value.guid, guid: data.guid, filters: fields.value, sort: sort.value, columns: columns.value}).then(function (response){
             shade.value = false;
             if(response.data.options){
                 options.value = response.data.options;
@@ -253,7 +252,7 @@
     }
 
     function selectOption(item){
-        let data = Object.assign({team: props.guid, guid: item.guid});
+        let data = Object.assign({team: team.value.guid, guid: item.guid});
         shade.value = true;
         axios.post('/' + props.prefix + '/options/change', data).then(function (response){
             shade.value = false;
@@ -288,7 +287,7 @@
 
     function removeOption(){
         shade.value = true;
-        axios.post('/' + props.prefix + '/options/delete', {team: props.guid, guid: option.value.guid}).then(function (response){
+        axios.post('/' + props.prefix + '/options/delete', {team: team.value.guid, guid: option.value.guid}).then(function (response){
             shade.value = false;
             if(response.data.options){
                 options.value = response.data.options;
@@ -334,7 +333,7 @@
     function paginating(page){
         shade.value = true;
         //, filter: fields.value, sort: sort.value
-        axios.post('/' + props.prefix + '/page', {page: page, team: props.guid}).then(function (response){
+        axios.post('/' + props.prefix + '/page', {page: page, team: team.value.guid}).then(function (response){
             shade.value = false;
             scroll.value.$el.scrollTop = 0;
             if(response.data.list){
@@ -348,11 +347,19 @@
         });
     }
 
-    function selectTeam(team){
-        axios.post('/' + props.prefix + '/team/change', {team: team.guid}).then(function (response){
+    function selectTeam(item){
+        axios.post('/' + props.prefix + '/team/change', {team: item.guid}).then(function (response){
             shade.value = false;
+            let data = response.data;
+            list.value = data.list;
+            sort.value = data.sort;
+            fields.value = data.filters;
+            columns.value = data.columns;
+            options.value = data.options;
+            option.value = data.option;
+            paginate.value = data.paginate;
             scroll.value.$el.scrollTop = 0;
-            console.log(response.data);
+            //console.log(response.data);
         }).catch(function (error){
             shade.value = false;
         });

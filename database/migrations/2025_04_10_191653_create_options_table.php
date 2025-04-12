@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('options', function (Blueprint $table) {
             //$table->id();
+            $table->uuid('guid')->primary();
             $table->unsignedBigInteger('user');
             $table->unsignedBigInteger('team');
             $table->string('name');
-            $table->string('guid')->index();
             $table->string('category')->nullable()->index();
             $table->json('data')->nullable();
-            //$table->timestamps();
+            $table->timestamps();
             $table->foreign('user')->references('id')->on('users');
-            $table->primary(['user', 'team', 'name', 'category']);
+            //$table->primary(['user', 'team', 'name', 'category']);
             $table->index(['user', 'team', 'name', 'category']);
         });
     }

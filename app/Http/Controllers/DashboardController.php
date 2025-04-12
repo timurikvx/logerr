@@ -26,12 +26,13 @@ class DashboardController extends Controller
         $report = [];
         if(!is_null($team)){
             $data_team = Report::getTodayErrors($team->id);
-            $report = ['data'=>$data_team->pluck('value', 'name'), 'guid'=>$team->guid, 'team'=>$team->name];
+            $report = $data_team->pluck('value', 'name');
         }
 
         $reports = [
             'today'=>$report
         ];
+        dump($reports);
 
         $data = PageOptions::get();
         $data->put('title', 'Панель управления');
@@ -66,23 +67,23 @@ class DashboardController extends Controller
         ];
     }
 
-    public function test(Request $request): array
-    {
-        $data = collect([]);
-        Auth::login(User::find(1));
-        $teams = Crew::list();
-        foreach ($teams as $team){
-            $data_team = Report::getTodayErrors($team->id);
-            $data[$team->name]= ['series'=>$data_team->pluck('value'), 'columns'=>$data_team->pluck('name')];
-        }
-
-//        $data = Report::getTodayErrors(1);
-//        $data = $data->sortBy('name');
-//        $columns = $data->pluck('name');
-//        dump($columns);
-//        dump($data->pluck('value'));
-        return ['result'=>true];
-    }
+//    public function test(Request $request): array
+//    {
+//        $data = collect([]);
+//        Auth::login(User::find(1));
+//        $teams = Crew::list();
+//        foreach ($teams as $team){
+//            $data_team = Report::getTodayErrors($team->id);
+//            $data[$team->name]= ['series'=>$data_team->pluck('value'), 'columns'=>$data_team->pluck('name')];
+//        }
+//
+////        $data = Report::getTodayErrors(1);
+////        $data = $data->sortBy('name');
+////        $columns = $data->pluck('name');
+////        dump($columns);
+////        dump($data->pluck('value'));
+//        return ['result'=>true];
+//    }
 
     public function teamChange(Request $request): array
     {
