@@ -13,44 +13,45 @@
                 </div>
                 <div class="flex flex-col grow overflow-hidden" v-if="tab === 'chats'">
                     <div class="flex mb-4">
-                        <button class="button mr-4" @click="modal.telegramChat = true">Новый телеграм чат</button>
-                        <button class="button">Добавить из другой команды</button>
+                        <button class="button mr-4" @click="createChat()">Новый телеграм чат</button>
+                        <button class="button" @click="getChatToCopy()">Добавить из другой команды</button>
                     </div>
                     <perfect-scrollbar class="flex flex-col grow pr-4">
                         <div v-for="chat in chats" class="flex mb-4">
                             <div class="p-2 grow">{{ chat.name }}</div>
                             <div class="p-2 mr-4">{{ chat.guid }}</div>
                             <div class="p-2 mr-4">{{ chat.chat_id }}</div>
-                            <button class="button mr-4">Изменить</button>
+                            <button class="button mr-4" @click="change(chat)">Изменить</button>
                             <button class="button red" @click="removeChatBegin(chat)">Удалить</button>
                         </div>
                     </perfect-scrollbar>
                 </div>
             </div>
-
         </div>
     </Layout>
-    <TelegramChatEdit :chat="chat" @save="saveChat"></TelegramChatEdit>
+    <TelegramChatEdit ref="telegramChats" :create="create" @save="saveChat"></TelegramChatEdit>
+    <CopyTelegramChat ref="telegramChatsCopy"></CopyTelegramChat>
     <Question :question="question" v-model:visible="question.visible" @confirm="questionEnd"></Question>
 </template>
 
 <script setup>
 
-//:title="question.title" :question="question.question" :type="question.type"
     import Layout from "@/Layouts/Layout.vue";
     import {ref, defineProps, onMounted} from 'vue'
     import {modalStore} from "@/Store/Modal.js";
     import TelegramChatEdit from "@/Components/TelegramChatEdit.vue";
     import Question from "@/Components/Question.vue";
     import axios from "axios";
+    import CopyTelegramChat from "@/Pages/Notifications/CopyTelegramChat.vue";
 
     const modal = modalStore();
     const props = defineProps({
         chats: Array
     });
+    const telegramChats = ref(null);
+    const telegramChatsCopy = ref(null);
 
     let tab = ref('chats');
-    let chat = ref({});
     let chats = ref([]);
     let question = ref({
         type: '',
@@ -59,10 +60,16 @@
         visible: false,
         valur: null
     });
+    let create = ref(true);
 
     onMounted(()=>{
         chats.value = props.chats;
     })
+
+    function createChat(){
+        modal.telegramChat = true;
+        create.value = true;
+    }
 
     function saveChat(list){
         chats.value = list;
@@ -86,6 +93,17 @@
         axios.post('/telegram/chat/remove', {guid: chat.guid}).then(function (response){
             chats.value = response.data.list;
         })
+    }
+
+    function change(item){
+        create.value = false;
+        modal.telegramChat = true;
+        telegramChats.value.update(item);
+    }
+
+    function getChatToCopy(){
+        modal.telegramChatCopy = true;
+        telegramChatsCopy.value.update();
     }
 
 </script>

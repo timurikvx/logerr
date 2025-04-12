@@ -39,7 +39,7 @@ class TelegramChat extends Model
 
     public static function getChats($team): Collection
     {
-        return self::query()->where('team', '=', $team)->get();
+        return self::query()->where('team', '=', $team)->orderBy('name')->get();
     }
 
     public static function getByGuid($guid): Model|null

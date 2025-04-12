@@ -1,5 +1,5 @@
 <template>
-    <Modal :title="title" class="telegram-form" v-model:visible="modal.telegramChat">
+    <Modal :title="title" class="telegram-form" v-model:visible="modal.telegramChat" @close="close()">
         <form @submit.prevent="save" class="flex flex-col">
             <div class="flex flex-col mb-2">
                 <div class="mb-1">Имя</div>
@@ -25,30 +25,34 @@
 
     import Modal from "@/Components/Modal.vue";
     import {modalStore} from "@/Store/Modal.js";
-    import {defineProps, defineEmits, ref, computed} from 'vue'
+    import {defineProps, defineEmits, computed, defineExpose} from 'vue'
     import {useForm} from "@inertiajs/vue3";
     import axios from "axios";
-
-    let form = useForm({
-        name: '',
-        token: '',
-        chat_id: ''
-    })
 
     const modal = modalStore();
     const emits = defineEmits(['save']);
     const props = defineProps({
-        chat: Object,
+        //chat: Object,
         create: {
             type: Boolean,
-            default: false
+            default: true
         }
     });
+
+    defineExpose({
+        update
+    })
 
     let title = computed({
         get(){
             return props.create? 'Создание чата': 'Изменение чата';
         }
+    });
+    let form = useForm({
+        name: '',
+        token: '',
+        chat_id: '',
+        guid: ''
     });
 
     function save(){
@@ -59,7 +63,16 @@
         });
     }
 
+    function update(item){
+        form.name = item.name;
+        form.token = item.token;
+        form.chat_id = item.chat_id;
+        form.guid = item.guid;
+    }
 
+    function close(){
+        form.reset();
+    }
 
 </script>
 

@@ -845,6 +845,11 @@ body{
     min-width: 650px;
 }
 
+.telegram-form-copy{
+    width: 90%;
+    max-width: 900px;
+}
+
 /*--main-back: #0e0e0e;*/
 /*--text-main-color: #eee;*/
 /*--main: #1d1d1f;*/
