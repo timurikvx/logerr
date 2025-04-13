@@ -4,10 +4,8 @@
         <div class="flex flex-col grow overflow-hidden mb-4">
             <div v-for="item in chats" class="flex p-2">
                 <input type="checkbox" class="self-center mr-4" v-model="item.select">
-                <div class="grow">{{ item.name }}</div>
-                <div class="mr-4">{{ item.team?.name }}</div>
-                <div class="mr-4">{{ item.token }}</div>
-                <div class="">{{ item.chat_id }}</div>
+                <div class="grow mr-4">{{ item.name }}</div>
+                <div>{{ item.team?.name }}</div>
             </div>
         </div>
         <div class="flex">
@@ -21,10 +19,11 @@
 
     import Modal from "@/Components/Modal.vue";
     import {modalStore} from "@/Store/Modal.js";
-    import {ref, defineExpose} from 'vue'
+    import {ref, defineExpose, defineEmits} from 'vue'
     import axios from "axios";
 
     const modal = modalStore();
+    const emits = defineEmits('copied');
 
     defineExpose({
         update
@@ -39,7 +38,13 @@
     }
 
     function copy(){
-        console.log(chats.value.filter((item)=> item.select));
+        let data = {
+            'chats': chats.value.filter((item)=> item.select)
+        }
+        axios.post('/telegram/chat/teams/copy', data).then(function (response){
+            modal.telegramChatCopy = false;
+            emits('copied', response.data.list);
+        });
     }
 
 

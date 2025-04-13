@@ -30,7 +30,7 @@
         </div>
     </Layout>
     <TelegramChatEdit ref="telegramChats" :create="create" @save="saveChat"></TelegramChatEdit>
-    <CopyTelegramChat ref="telegramChatsCopy"></CopyTelegramChat>
+    <CopyTelegramChat ref="telegramChatsCopy" @copied="copied"></CopyTelegramChat>
     <Question :question="question" v-model:visible="question.visible" @confirm="questionEnd"></Question>
 </template>
 
@@ -104,6 +104,10 @@
     function getChatToCopy(){
         modal.telegramChatCopy = true;
         telegramChatsCopy.value.update();
+    }
+
+    function copied(list){
+        chats.value = list;
     }
 
 </script>

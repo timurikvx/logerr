@@ -32,7 +32,7 @@ class DashboardController extends Controller
         $reports = [
             'today'=>$report
         ];
-        dump($reports);
+        //dump($reports);
 
         $data = PageOptions::get();
         $data->put('title', 'Панель управления');

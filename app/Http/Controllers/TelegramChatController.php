@@ -58,4 +58,21 @@ class TelegramChatController extends Controller
         ];
     }
 
+    public function copyTeams(Request $request)
+    {
+        $team = intval(UserOption::get('current_team'));
+        $list = $request->get('chats');
+        if(is_array($list)){
+            foreach ($list as $item){
+                $chat = TelegramChat::getByGuid($item['guid']);
+                TelegramChat::create($chat['name'], $chat['token'], $chat['chat_id'], $team);
+            }
+        }
+
+        $chats = TelegramChat::getChats($team);
+        return [
+            'list'=>(TelegramChatResource::collection($chats))->toArray($request)
+        ];
+    }
+
 }

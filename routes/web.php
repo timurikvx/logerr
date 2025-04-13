@@ -101,6 +101,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/telegram/chat/save', [TelegramChatController::class, 'save']);
     Route::post('/telegram/chat/remove', [TelegramChatController::class, 'remove']);
     Route::post('/telegram/chat/teams/get', [TelegramChatController::class, 'getFromTeams']);
+    Route::post('/telegram/chat/teams/copy', [TelegramChatController::class, 'copyTeams']);
 
 
 });
