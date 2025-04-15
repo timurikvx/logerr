@@ -15,8 +15,9 @@ class TelegramChatResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $team = Crew::query()->select(['guid', 'name'])->first();
         return [
-            'team'=>Crew::query()->select(['guid', 'name'])->first()->toArray(),
+            'team'=>(is_null($team))? ['guid'=>'', 'name'=>'']: $team->toArray(),
             'name'=> $this->name,
             'token'=>$this->token,
             'chat_id'=>$this->chat_id,

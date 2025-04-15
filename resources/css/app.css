@@ -832,6 +832,26 @@ body{
     box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.3);
 }
 
+.report .item-0{
+    background-color: var(--purple);
+}
+
+.report .item-1{
+    background-color: var(--gray);
+}
+
+.report .item-2{
+    background-color: var(--red);
+}
+
+.report .item-3{
+    background-color: var(--light-blue);
+}
+
+.report .item-4{
+    background-color: var(--green);
+}
+
 .notifications-page .content{
     background-color: var(--main);
 }
@@ -849,21 +869,3 @@ body{
     width: 90%;
     max-width: 900px;
 }
-
-/*--main-back: #0e0e0e;*/
-/*--text-main-color: #eee;*/
-/*--main: #1d1d1f;*/
-/*--gray: #656565;*/
-/*--head-color: #0f0f0f;*/
-/*--border: #36383a;*/
-/*--purple: #8851fa;*/
-/*--red: #d0338c;*/
-/*--red-light: #ff51b4;*/
-/*--yellow: #ecff91;*/
-/*--light-blue: #9aa5f7;*/
-/*--input-dark: #2d2d2f;*/
-/*--white: #fff;*/
-/*--black: #1b1b1b;*/
-/*--green: #52b944;*/
-/*--green-light: #90ff81;*/
-/*--active-list: #3e3e43;*/

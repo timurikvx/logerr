@@ -14,14 +14,11 @@ return new class extends Migration
         Schema::create('notifications_options', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('property')->nullable();
-            $table->string('value')->nullable();
             $table->string('type');
             $table->unsignedInteger('minutes')->default(0);
             $table->unsignedInteger('count')->default(0);
             $table->json('option')->nullable();
             $table->timestamps();
-            $table->primary(['name', 'target', 'type']);
         });
     }
 

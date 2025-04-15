@@ -48,11 +48,58 @@ class Report
         }
     }
 
-    public static function getTodayErrors($team): mixed
+    public static function getTop5TodayErrors($team): mixed
     {
         $data = Reporting::getByTeam($team, 'errors_today');
         $data = $data->sortByDesc('value')->take(5);
         return $data;
+    }
+
+    public static function get5daysErrors($team): array
+    {
+        $all_keys = collect([]);
+        $days = collect([]);
+
+        $data = Reporting::getByTeam($team, 'errors_today');
+        $day0 = $data->sortBy('name')->pluck('value', 'name');
+        $days->put(0, $day0);
+
+        $data = Reporting::getByTeam($team, 'errors_2days');
+        $day1 = $data->sortBy('name')->pluck('value', 'name');
+        $days->put(1, $day1);
+
+        $data = Reporting::getByTeam($team, 'errors_3days');
+        $day2 = $data->sortBy('name')->pluck('value', 'name');
+        $days->put(2, $day2);
+
+        $data = Reporting::getByTeam($team, 'errors_4days');
+        $day3 = $data->sortBy('name')->pluck('value', 'name');
+        $days->put(3, $day3);
+
+        $data = Reporting::getByTeam($team, 'errors_5days');
+        $day4 = $data->sortBy('name')->pluck('value', 'name');
+        $days->put(4, $day4);
+
+        $all_keys = $all_keys->merge($day0->keys());
+        $all_keys = $all_keys->merge($day1->keys());
+        $all_keys = $all_keys->merge($day2->keys());
+        $all_keys = $all_keys->merge($day3->keys());
+        $all_keys = $all_keys->merge($day4->keys());
+        $all_keys = $all_keys->unique()->sort();
+
+        $list = collect([]);
+        foreach ($days->reverse() as $number => $day){
+            $values = collect([]);
+            foreach ($all_keys as $key){
+                $values[] = $day->get($key, 0);
+            }
+            $list->push(['name'=>'-'.$number.' day', 'data'=>$values->toArray()]);
+        }
+
+        return [
+            'series'=>$list->toArray(),
+            'categories'=>$all_keys->toArray()
+        ];
     }
 
 }

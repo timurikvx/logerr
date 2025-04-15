@@ -24,15 +24,17 @@ class DashboardController extends Controller
         $team = Crew::getByID($team_id);
 
         $report = [];
+        $to5days = [];
         if(!is_null($team)){
-            $data_team = Report::getTodayErrors($team->id);
+            $data_team = Report::getTop5TodayErrors($team->id);
             $report = $data_team->pluck('value', 'name');
+            $to5days = Report::get5daysErrors($team->id);
         }
 
         $reports = [
-            'today'=>$report
+            'today'=>$report,
+            'five_days'=>$to5days
         ];
-        //dump($reports);
 
         $data = PageOptions::get();
         $data->put('title', 'Панель управления');
