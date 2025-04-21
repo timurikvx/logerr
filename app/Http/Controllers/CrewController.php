@@ -119,10 +119,11 @@ class CrewController extends Controller
     public function save(Request $request): array
     {
         $name = $request->get('name');
-        $id = $request->get('id');
+        $guid = $request->get('guid');
 
-        $team = Crew::find($id);
+        $team = Crew::getByGuid($guid);
         $team->name = $name;
+        unset($team->roles);
         $team->save();
 
         return ['result'=>true];

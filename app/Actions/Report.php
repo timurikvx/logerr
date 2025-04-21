@@ -86,6 +86,7 @@ class Report
         $all_keys = $all_keys->merge($day3->keys());
         $all_keys = $all_keys->merge($day4->keys());
         $all_keys = $all_keys->unique()->sort();
+        //dump($all_keys);
 
         $list = collect([]);
         foreach ($days->reverse() as $number => $day){
@@ -93,12 +94,13 @@ class Report
             foreach ($all_keys as $key){
                 $values[] = $day->get($key, 0);
             }
-            $list->push(['name'=>'-'.$number.' day', 'data'=>$values->toArray()]);
+            $name = (new \DateTime())->modify('-'.$number.' days')->format('d-m-Y');
+            $list->push(['name'=>$name, 'data'=>$values->toArray()]);
         }
 
         return [
-            'series'=>$list->toArray(),
-            'categories'=>$all_keys->toArray()
+            'series'=>$list->values(),
+            'categories'=>$all_keys->values()
         ];
     }
 

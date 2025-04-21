@@ -87,7 +87,7 @@
     });
 
     function save(){
-        axios.post('/team/save', {name: name.value, id: team.value.id}).then(function(){
+        axios.post('/team/save', {name: name.value, guid: team.value.guid}).then(function(){
             team.value.name = name.value;
             change.value = false;
         })

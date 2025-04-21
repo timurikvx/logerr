@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="text-2xl mb-4">Топ ошибок за 5 дней</div>
-            <VueApexCharts ref="five_days_report" :series="five_days.series" :options="five_days.options"></VueApexCharts>
+            <VueApexCharts ref="five_days_report" :height="1500" :series="five_days.series" :options="five_days.options"></VueApexCharts>
         </perfect-scrollbar>
     </Layout>
 </template>
@@ -80,15 +80,17 @@
         options: {
             chart: {
                 type: 'bar',
-                height: 350,
+                //height: 750,
                 stacked: true,
+                height: '100%'
             },
             plotOptions: {
                 bar: {
                     horizontal: true,
+                    barHeight: '90%',
+
                     dataLabels: {
                         total: {
-                            enabled: false,
                             //offsetX: 0,
                             // style: {
                             //     fontSize: '15px',
@@ -110,9 +112,9 @@
             },
             xaxis: {
                 categories: [],
-                //min: 100,
+                min: 3,
                 labels: {
-                    minHeight: '300px',
+                    //minHeight: 400,
                 }
                 //categories: [2008, 2009, 2010, 2011, 2012, 2013, 2014],
                 // labels: {
@@ -122,9 +124,17 @@
                 // }
             },
             yaxis: {
-                title: {
-                    //text: 'ss'
-                },
+                show: true,
+                opposite: false,
+                labels: {
+                    show: true,
+                    maxWidth: 300,
+                    align: 'left',
+                    style:{
+                        fontSize: '14px'
+                    },
+                    rotate: 0
+                }
             },
             tooltip: {
                 // y: {

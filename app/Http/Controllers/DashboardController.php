@@ -36,6 +36,7 @@ class DashboardController extends Controller
             'five_days'=>$to5days
         ];
 
+
         $data = PageOptions::get();
         $data->put('title', 'Панель управления');
         $data->put('reports', $reports);

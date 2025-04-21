@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('type');
             $table->unsignedInteger('minutes')->default(0);
             $table->unsignedInteger('count')->default(0);
+            $table->unsignedInteger('every')->default(30);
             $table->json('option')->nullable();
             $table->timestamps();
         });
