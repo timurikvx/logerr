@@ -9,7 +9,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserOptionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TelegramChatController;
-
+use App\Http\Controllers\ListController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/notifications', [NotificationController::class, 'notifications']);
     Route::get('/notifications/telegram', [NotificationController::class, 'telegram']);
 
+
     ///////////////////////////////// POST //////////////////////////////////////
 
     //Teams
@@ -70,6 +71,8 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/notifications/get', [NotificationController::class, 'get']);
     Route::post('/notifications/confirm', [NotificationController::class, 'confirm']);
     Route::post('/notifications/end', [NotificationController::class, 'end']);
+    Route::post('/notifications/columns', [NotificationController::class, 'columns']);
+    Route::post('/notifications/save', [NotificationController::class, 'save']);
 
     //Common
     Route::post('/filters/get', [DashboardController::class, 'filters']);

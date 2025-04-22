@@ -1,7 +1,7 @@
 <template>
     <div class="select-list flex flex-col relative">
         <input v-if="input" ref="item" type="text" :placeholder="placeholder" :style="getInputStyle()" :value="value.name" :title="value.name" class="value grow cursor-pointer">
-        <div v-else ref="item" class="value p-2 grow content-center cursor-pointer" :style="getInputStyle()">
+        <div v-else ref="item" class="value p-2 grow content-center cursor-pointer" :class="{'light': theme === 'light'}" :style="getInputStyle()">
             <div v-if="value?.name" :title="value.name">{{ value.name }}</div>
             <div v-else class="placeholder">{{ placeholder }}</div>
         </div>
@@ -30,6 +30,10 @@
         placeholder: {
             type: String,
             default: ''
+        },
+        theme: {
+            type: String,
+            default: 'dark'
         }
     });
     const emits = defineEmits(['update:value', 'select']);
@@ -65,6 +69,7 @@
         let element = e.target.closest('.value');
         if(item.value === element){
             list_visible.value = !list_visible.value;
+            show();
             return;
         }
         if(!into.value){

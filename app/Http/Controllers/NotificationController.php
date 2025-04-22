@@ -66,5 +66,21 @@ class NotificationController extends Controller
 
     }
 
+    public function columns(Request $request): array
+    {
+        //$type = $request->get('type');
+        $list = new ListController();
+        $columns = collect($list->columns())->map(function ($item){
+            return ['name'=>$item['name'], 'value'=>$item['column']];
+        });
+        return [
+            'columns'=>$columns->toArray()
+        ];
+    }
+
+    function save(Request $request): array
+    {
+        return $request->all();
+    }
 
 }

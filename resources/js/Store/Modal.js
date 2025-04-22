@@ -12,6 +12,7 @@ export const modalStore = defineStore('modal', () => {
     const invite = ref(false);
     const telegramChat = ref(false);
     const telegramChatCopy = ref(false);
+    const newNotification = ref(false);
     //errors
     const errors = ref(false);
     const error = ref('');

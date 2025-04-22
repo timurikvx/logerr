@@ -491,7 +491,7 @@ body{
     border-bottom: 1px solid var(--border);
 }
 
-.filters .add-to-list{
+.add-to-list{
     min-width: 42px;
     height: 42px;
     background-position: center;
@@ -570,6 +570,16 @@ body{
 
 .select-list .value:hover{
     background-color: var(--main-light);
+}
+
+.select-list .value.light{
+    background-color: var(--text-main-color);
+    border-radius: 0;
+    color: var(--main);
+}
+
+.select-list .value:hover{
+    background-color: var(--text-main-color);
 }
 
 .select-list .placeholder{
@@ -869,3 +879,22 @@ body{
     width: 90%;
     max-width: 900px;
 }
+
+.create-notification{
+    width: 80%;
+    max-width: 1600px;
+    max-height: 90%;
+    height: 800px;
+}
+
+.create-notification .description{
+    color: var(--light-blue);
+    @apply text-sm mt-2;
+}
+
+/*.create-notification .select{*/
+/*    background-color: #fff;*/
+/*    border-radius: 0;*/
+/*    border: none;*/
+/*}*/
+

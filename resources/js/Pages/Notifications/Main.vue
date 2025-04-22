@@ -7,8 +7,8 @@
             </div>
             <div class="flex p-4 mx-2 mb-2 content grow overflow-hidden">
                 <div class="flex flex-col grow" v-if="tab === 'options'">
-                    <div>
-
+                    <div class="flex mb-4">
+                        <button class="button mr-4" @click="modal.newNotification = true">Новое оповещение</button>
                     </div>
                 </div>
                 <div class="flex flex-col grow overflow-hidden" v-if="tab === 'chats'">
@@ -32,6 +32,7 @@
     <TelegramChatEdit ref="telegramChats" :create="create" @save="saveChat"></TelegramChatEdit>
     <CopyTelegramChat ref="telegramChatsCopy" @copied="copied"></CopyTelegramChat>
     <Question :question="question" v-model:visible="question.visible" @confirm="questionEnd"></Question>
+    <CreateNotification></CreateNotification>
 </template>
 
 <script setup>
@@ -43,6 +44,7 @@
     import Question from "@/Components/Question.vue";
     import axios from "axios";
     import CopyTelegramChat from "@/Pages/Notifications/CopyTelegramChat.vue";
+    import CreateNotification from "@/Pages/Notifications/CreateNotification.vue";
 
     const modal = modalStore();
     const props = defineProps({
@@ -51,7 +53,7 @@
     const telegramChats = ref(null);
     const telegramChatsCopy = ref(null);
 
-    let tab = ref('chats');
+    let tab = ref('options');
     let chats = ref([]);
     let question = ref({
         type: '',
