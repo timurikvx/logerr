@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class NotificationsFields extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
+    public $incrementing = false;
+
 }

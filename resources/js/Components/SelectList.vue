@@ -78,6 +78,9 @@
     }
 
     function show(){
+        if(!item.value){
+            return;
+        }
         const rect = item.value.getBoundingClientRect();
         let top = rect.top + 44;//rect.height;
         style.value = 'width: ' + rect.width + 'px; top: ' + top + 'px';

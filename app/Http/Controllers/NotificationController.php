@@ -6,6 +6,8 @@ use App\Http\Resources\Notifications\NotificationResource;
 use App\Http\Resources\Telegram\TelegramChatResource;
 use App\Models\Crew;
 use App\Models\Notification;
+use App\Models\NotificationsFields;
+use App\Models\NotificationsOption;
 use App\Models\TelegramChat;
 use App\Models\UserOption;
 use Illuminate\Http\Request;
@@ -80,6 +82,26 @@ class NotificationController extends Controller
 
     function save(Request $request): array
     {
+        $item = collect($request->get('notification'));
+        $chat = TelegramChat::getByGuid($item['chat']['guid']);
+
+        $notification = new NotificationsOption();
+        $notification->name = $item['name'];
+        $notification->type = $request->get('type');
+        $notification->chat = $chat->id;
+        $notification->minutes = max(0, intval($item['minutes']));
+        $notification->count = max(0, intval($item['count']));
+        $notification->every = max(0, intval($item['every']));
+        $notification->save();
+
+        $fields = $request->get('fields', []);
+        foreach ($fields as $field){
+            $option_field = new NotificationsFields();
+            $option_field->option = $notification->id;
+            $option_field->field = $field['field']['value'];
+            $option_field->value = $field['value'];
+            $option_field->save();
+        }
         return $request->all();
     }
 

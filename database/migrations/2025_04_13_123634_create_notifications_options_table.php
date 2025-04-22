@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('type');
+            $table->unsignedBigInteger('chat');
             $table->unsignedInteger('minutes')->default(0);
             $table->unsignedInteger('count')->default(0);
             $table->unsignedInteger('every')->default(30);
             $table->json('option')->nullable();
             $table->timestamps();
+            $table->foreign('chat')->references('id')->on('telegram_chats');
         });
     }
 

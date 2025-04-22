@@ -881,10 +881,10 @@ body{
 }
 
 .create-notification{
-    width: 80%;
-    max-width: 1600px;
-    max-height: 90%;
-    height: 800px;
+    /*width: 80%;*/
+    /*max-width: 1600px;*/
+    /*max-height: 90%;*/
+    /*height: 800px;*/
 }
 
 .create-notification .description{

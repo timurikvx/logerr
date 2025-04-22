@@ -22,7 +22,6 @@ class Report
         $start = $date->modify('today')->format('Y-m-d H:i:s');
         $end = $date->format('Y-m-d').' 23:59:59';
         $data = Error::query()->select(['name', 'team', DB::raw('COUNT(guid) as count')])->whereBetween('date', [$start, $end])->groupBy(['team', 'name'])->get();
-        //dump($data->toArray());
         foreach ($data as $row){
             Reporting::write($row->team, $row->name, $category, $row->count);
         }
@@ -64,19 +63,19 @@ class Report
         $day0 = $data->sortBy('name')->pluck('value', 'name');
         $days->put(0, $day0);
 
-        $data = Reporting::getByTeam($team, 'errors_2days');
+        $data = Reporting::getByTeam($team, 'errors_yesterday');
         $day1 = $data->sortBy('name')->pluck('value', 'name');
         $days->put(1, $day1);
 
-        $data = Reporting::getByTeam($team, 'errors_3days');
+        $data = Reporting::getByTeam($team, 'errors_2days');
         $day2 = $data->sortBy('name')->pluck('value', 'name');
         $days->put(2, $day2);
 
-        $data = Reporting::getByTeam($team, 'errors_4days');
+        $data = Reporting::getByTeam($team, 'errors_3days');
         $day3 = $data->sortBy('name')->pluck('value', 'name');
         $days->put(3, $day3);
 
-        $data = Reporting::getByTeam($team, 'errors_5days');
+        $data = Reporting::getByTeam($team, 'errors_4days');
         $day4 = $data->sortBy('name')->pluck('value', 'name');
         $days->put(4, $day4);
 

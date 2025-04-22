@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('field');
             $table->string('value');
             $table->foreign('option')->references('id')->on('notifications_options');
-            $table->primary(['option', 'field']);
-            $table->index(['option', 'field']);
+            $table->primary(['option', 'field', 'value']);
+            $table->index(['option', 'field', 'value']);
         });
     }
 

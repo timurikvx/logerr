@@ -7,9 +7,10 @@
             </div>
             <div class="flex p-4 mx-2 mb-2 content grow overflow-hidden">
                 <div class="flex flex-col grow" v-if="tab === 'options'">
-                    <div class="flex mb-4">
+                    <div class="flex mb-4" v-if="!modal.newNotification">
                         <button class="button mr-4" @click="modal.newNotification = true">Новое оповещение</button>
                     </div>
+                    <CreateNotification :chats="chats" v-else></CreateNotification>
                 </div>
                 <div class="flex flex-col grow overflow-hidden" v-if="tab === 'chats'">
                     <div class="flex mb-4">
@@ -32,7 +33,7 @@
     <TelegramChatEdit ref="telegramChats" :create="create" @save="saveChat"></TelegramChatEdit>
     <CopyTelegramChat ref="telegramChatsCopy" @copied="copied"></CopyTelegramChat>
     <Question :question="question" v-model:visible="question.visible" @confirm="questionEnd"></Question>
-    <CreateNotification></CreateNotification>
+
 </template>
 
 <script setup>
