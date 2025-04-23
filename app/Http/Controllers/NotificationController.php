@@ -58,7 +58,8 @@ class NotificationController extends Controller
         $team = UserOption::get('current_team');
         $chats = TelegramChat::getChats($team);
         $data = [
-            'chats'=>(TelegramChatResource::collection($chats))->toArray($request)
+            'chats'=>(TelegramChatResource::collection($chats))->toArray($request),
+            'notifications'=>[]
         ];
         return Inertia::render('Notifications/Main', $data);
     }

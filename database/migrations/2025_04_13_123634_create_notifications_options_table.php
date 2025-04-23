@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('notifications_options', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('team');
             $table->string('name');
             $table->string('type');
             $table->unsignedBigInteger('chat');
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->json('option')->nullable();
             $table->timestamps();
             $table->foreign('chat')->references('id')->on('telegram_chats');
+            $table->index(['team', 'type']);
         });
     }
 
