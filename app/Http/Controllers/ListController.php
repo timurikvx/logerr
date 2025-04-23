@@ -22,15 +22,9 @@ class ListController extends Controller
     protected string $cache_filters = 'error_filters';
     protected string $cache_columns = 'error_columns';
     protected string $current_option = 'current_option';
-
     protected string $head = 'Список ошибок';
-
     protected string $prefix = 'error';
-
     protected string $title = 'Список ошибок';
-
-    //protected string $OPTION = ErrorOption::class;
-
 
     public function getListData($team, $filters, $sort): \stdClass
     {

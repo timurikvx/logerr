@@ -32,7 +32,6 @@
     const modal = modalStore();
     const emits = defineEmits(['save']);
     const props = defineProps({
-        //chat: Object,
         create: {
             type: Boolean,
             default: true

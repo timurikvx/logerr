@@ -870,6 +870,24 @@ body{
     background-color: var(--main);
 }
 
+.notifications-page .options-grid{
+    @apply grid;
+    grid-template-columns: 1fr 130px 320px 120px 120px 120px;
+}
+
+.notifications-page .options-grid .counts{
+    background-color: var(--gray);
+}
+
+.notifications-page .options-grid.line{
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.notifications-page .options-grid.line:hover{
+    background-color: var(--purple);
+}
+
 .telegram-form{
     width: 50%;
     min-width: 650px;

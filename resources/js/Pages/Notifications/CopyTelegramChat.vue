@@ -23,7 +23,7 @@
     import axios from "axios";
 
     const modal = modalStore();
-    const emits = defineEmits('copied');
+    const emits = defineEmits(['copied']);
 
     defineExpose({
         update

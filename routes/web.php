@@ -9,7 +9,6 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserOptionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TelegramChatController;
-use App\Http\Controllers\ListController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,12 +33,9 @@ Route::middleware(['auth'])->group(function(){
     ///
     //Pages
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
-    Route::post('/team/change', [DashboardController::class, 'teamChange']);
 
     Route::get('/errors', [ErrorController::class, 'getList'])->name('errors');
     Route::get('/errors/teams/select', [ErrorController::class, 'selectTeam'])->name('selectTeamError');
-    //Route::get('/errors', [ErrorController::class, 'errors'])->name('errors');
-    //Route::get('/errors/{team}', [ErrorController::class, 'getList']);
 
     Route::get('/teams', [CrewController::class, 'teams'])->name('teams');
     Route::get('/errors/teams/select', [CrewController::class, 'selectTeam'])->name('selectTeamLog');
@@ -47,16 +43,15 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/teams/{team}', [CrewController::class, 'team']);
 
     Route::get('/logs', [LogController::class, 'getList'])->name('logs');
-    //Route::get('/logs', [LogController::class, 'logs'])->name('logs');
-    //Route::get('/logs/{team}', [LogController::class, 'getList']);
 
     Route::get('/notifications', [NotificationController::class, 'notifications']);
     Route::get('/notifications/telegram', [NotificationController::class, 'telegram']);
-
+    Route::get('/notifications/{item}', [NotificationController::class, 'notificationOption']);
 
     ///////////////////////////////// POST //////////////////////////////////////
 
     //Teams
+    Route::post('/team/change', [DashboardController::class, 'teamChange']);
     Route::post('/team/create', [CrewController::class, 'create']);
     Route::post('/team/list', [CrewController::class, 'list']);
     Route::post('/team/invite', [CrewController::class, 'invite']);

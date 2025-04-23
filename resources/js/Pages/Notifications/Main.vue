@@ -7,8 +7,28 @@
             </div>
             <div class="flex p-4 mx-2 mb-2 content grow overflow-hidden">
                 <div class="flex flex-col grow" v-if="tab === 'options'">
-                    <div class="flex mb-4" v-if="!modal.newNotification">
-                        <button class="button mr-4" @click="modal.newNotification = true">Новое оповещение</button>
+                    <div class="flex flex-col grow" v-if="!modal.newNotification">
+                        <div class="flex mb-4">
+                            <button class="button mr-4" @click="modal.newNotification = true">Новое оповещение</button>
+                        </div>
+                        <div class="flex flex-col grow">
+                            <div class="options-grid">
+                                <div class="p-2">Наименование</div>
+                                <div class="p-2">Тип</div>
+                                <div class="p-2">Чат</div>
+                                <div class="p-2 counts text-center">Количество</div>
+                                <div class="p-2 counts text-center">Минут</div>
+                                <div class="p-2 counts text-center">Частота</div>
+                            </div>
+                            <a v-for="option in props.options" class="options-grid line" target="_blank" :href="'notifications/' + option.guid">
+                                <div class="p-2">{{ option.name }}</div>
+                                <div class="p-2">{{ types[option.type] }}</div>
+                                <div class="p-2">{{ option.chat.name }}</div>
+                                <div class="p-2 text-center">{{ option.count }}</div>
+                                <div class="p-2 text-center">{{ option.minutes }}</div>
+                                <div class="p-2 text-center">{{ option.every }}</div>
+                            </a>
+                        </div>
                     </div>
                     <CreateNotification :chats="chats" v-else></CreateNotification>
                 </div>
@@ -49,10 +69,15 @@
 
     const modal = modalStore();
     const props = defineProps({
-        chats: Array
+        chats: Array,
+        options: Array
     });
     const telegramChats = ref(null);
     const telegramChatsCopy = ref(null);
+    const types = {
+        'errors':'Ошибки',
+        'logs':'Логи'
+    }
 
     let tab = ref('options');
     let chats = ref([]);
