@@ -21,11 +21,13 @@ return new class extends Migration
             $table->unsignedInteger('minutes')->default(0);
             $table->unsignedInteger('count')->default(0);
             $table->unsignedInteger('every')->default(30);
+            $table->boolean('disable')->default(false);
             $table->json('option')->nullable();
             $table->timestamps();
             $table->foreign('chat')->references('id')->on('telegram_chats');
             $table->index(['team', 'type']);
             $table->index(['team', 'guid']);
+            $table->index(['team', 'disable']);
         });
     }
 

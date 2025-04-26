@@ -153,7 +153,7 @@
     }
 
     function addField(){
-        fields.value.push({'name': '','field': '', 'value': ''});
+        fields.value.push({'field': '', 'value': ''});
     }
 
     function removeField(index){

@@ -24,13 +24,17 @@ class NotificationOptionResource extends JsonResource
 
         $chat = TelegramChat::find($this->chat);
         $fields_list = NotificationsFields::query()->select(['field', 'value'])->where('option', '=', $this->id)->get()->toArray();
-        $fields = [];
+        $fields = collect([]);
         foreach ($fields_list as $field){
-            $fields[] = [
-                'field'=>['name'=>$columns->get($field['field']), 'value'=>$field],
+            $fields->push([
+                'field'=>['name'=>$columns->get($field['field']), 'value'=>$field['field']],
                 'value'=>$field['value']
-            ];
+            ]);
         }
+//        dump($fields);
+//        $fields = $fields->sortBy([
+//            fn (array $a, array $b) => $a['field']['name'] <=> $b['field']['name']
+//        ]);
 
         $types = ['errors'=>'Ошибки', 'logs'=>'Логи'];
         return [
@@ -41,7 +45,7 @@ class NotificationOptionResource extends JsonResource
             'minutes'=>$this->minutes,
             'count'=>$this->count,
             'every'=>$this->every,
-            'fields'=>$fields
+            'fields'=>$fields->toArray()
         ];
     }
 }

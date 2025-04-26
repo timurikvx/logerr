@@ -124,7 +124,7 @@ class NotificationController extends Controller
         ];
     }
 
-    public function notificationOption(Request $request, $guid)
+    public function notificationOption(Request $request, $guid): Response
     {
         $team = UserOption::get('current_team');
         $chats = TelegramChat::getChats($team);

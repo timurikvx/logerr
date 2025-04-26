@@ -8,7 +8,6 @@ use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
 use App\Models\Crew;
 use App\Models\Error;
-use App\Models\ErrorOption;
 use Illuminate\Http\Request;
 use App\Actions\RabbitMQ\LogerrRabbit;
 use Illuminate\Support\Collection;
@@ -30,7 +29,6 @@ class ErrorController extends ListController
     protected string $head = 'Список ошибок';
 
     protected string $prefix = 'error';
-    //protected string $OPTION = ErrorOption::class;
 
     protected string $title = 'Список ошибок';
 

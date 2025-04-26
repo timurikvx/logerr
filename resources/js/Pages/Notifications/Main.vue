@@ -12,7 +12,7 @@
                             <button class="button mr-4" @click="modal.newNotification = true">Новое оповещение</button>
                         </div>
                         <div class="flex flex-col grow">
-                            <div class="options-grid">
+                            <div class="options-grid border-bottom">
                                 <div class="p-2">Наименование</div>
                                 <div class="p-2">Тип</div>
                                 <div class="p-2">Чат</div>
