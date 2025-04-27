@@ -31,10 +31,6 @@ class NotificationOptionResource extends JsonResource
                 'value'=>$field['value']
             ]);
         }
-//        dump($fields);
-//        $fields = $fields->sortBy([
-//            fn (array $a, array $b) => $a['field']['name'] <=> $b['field']['name']
-//        ]);
 
         $types = ['errors'=>'Ошибки', 'logs'=>'Логи'];
         return [
@@ -45,6 +41,7 @@ class NotificationOptionResource extends JsonResource
             'minutes'=>$this->minutes,
             'count'=>$this->count,
             'every'=>$this->every,
+            'disabled'=>$this->disabled,
             'fields'=>$fields->toArray()
         ];
     }

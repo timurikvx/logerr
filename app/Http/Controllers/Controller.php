@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Report as Reporting;
+use App\Models\NotificationMessage;
 use App\Models\NotificationsOption;
 use App\Models\Option;
 //use Illuminate\Http\Request;
@@ -33,7 +34,10 @@ class Controller extends BaseController
 
     public function test(): void
     {
-        NotificationsOption::notification();
+        //$option = NotificationsOption::find(1);
+        //NotificationMessage::canSendMessage($option);
+        NotificationsOption::notification(2);
+        NotificationMessage::handle();
     }
 
 }

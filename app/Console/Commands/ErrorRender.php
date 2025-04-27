@@ -29,7 +29,7 @@ class ErrorRender extends Command
      */
     public function handle()
     {
-        $user = User::find(1);
+        $user = User::find(19);
         Generator::errors($user);
     }
 }

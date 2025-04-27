@@ -51,9 +51,11 @@ class TelegramChat extends Model
     {
         $data = [
             'text'=>$text,
-            'chat_id'=>$this->chat_id
+            'chat_id'=>$this->chat_id,
+            'parse_mode'=>'Markdown'
         ];
         Http::post('https://api.telegram.org/bot'.$this->token.'/sendMessage', $data);
+        //dump($response);
     }
 
 }

@@ -32,43 +32,90 @@ class NotificationsOption extends Model
         return $query->get();
     }
 
-    public static function notification(): void
+    public static function notification($team): void
     {
-        $team = 2; //intval(UserOption::get('current_team'));
         $notifications = self::getByTeam($team);
         $now = now()->modify('+3 hours');
-        $list = collect([]);
+        $all = collect([]);
         foreach ($notifications as $notification){
 
-            //dump($notification->toArray());
+            $columns = self::getColumns($notification->type);
             $fields = NotificationsFields::getByOption($notification->id);
             $start = now()->modify('+3 hours')->modify('-'.$notification->minutes.' minutes');
             $amount = $notification->count;
+
+            $query = Error::query()
+                ->where('team', '=', $team)
+                ->whereBetween('date', [$start->format('Y-m-d H:i:s'), $now->format('Y-m-d H:i:s')]);
+            $field_names = [];
             foreach ($fields as $field){
-
-                $count = Error::query()->where($field->field, '=', $field->value)
-                    ->where('team', '=', $team)
-                    ->whereBetween('date', [$start->format('Y-m-d H:i:s'), $now->format('Y-m-d H:i:s')])
-                    ->count();
-                //dump('ddd');
-                //dump($start->format('Y-m-d H:i:s').' '.$now->format('Y-m-d H:i:s'));
-//                dump($field->field.' = '.$field->value);
-//                dump($count);
-//                dump($amount);
-                if($count > $amount){
-                    $text = 'За последние '.$notification->minutes.' минут '.$field->value.' найдено '.$count.' ошибок';
-                    dump($text);
-                }
-//                if($count < $amount){
-//                    continue;
-//                }
-                $list->push([
-
-                ]);
+                $name = $columns[$field->field];
+                $field_names[$name] = $field->value;
+                $query->where($field->field, '=', $field->value);
             }
+            $count = $query->count();
+            if($count < $amount){
+                continue;
+            }
+            $record = $query->select(['type', 'data', 'len'])->orderByDesc('date')->first();
+            $message = 'За последние '.$notification->minutes.' минут загружено '.$count.' ошибок';
 
+            $data = $record->data;
+            $limit = 500;
+            if($record->len > $limit){
+                $data = substr($data, 0, $limit);
+            }
+            $message = [
+                'id'=>$notification->id,
+                'notification'=>$notification,
+                'name'=>$notification->name,
+                'fields'=>$field_names,
+                'message'=>$message,
+                'data'=>$data
+            ];
+            $all->put($notification->guid, $message);
+        }
 
+        foreach ($all as $notification){
 
+            $option = $notification['notification'];
+            if(!NotificationMessage::canSendMessage($option)){
+                continue;
+            }
+            $fields = '*Поля отбора:*'."\n\n\r";
+            foreach ($notification['fields'] as $name => $value){
+                $fields .= $name.' = '.$value."\n\r";
+            }
+            $text = '*'.$notification['name'].'*'."\n\n\r".$fields."\n\r".$notification['message']."\n\n\r".'*Текст последней ошибки:*'."\n\n\r";
+
+            $message = new NotificationMessage();
+            $message->team = $team;
+            $message->option = $option->id;
+            $message->date = (new \DateTime())->modify('+3 hours')->format('Y-m-d H:i:s');
+            $message->fields = $fields;
+            $message->message = $text;
+            $message->data = $notification['data'];
+            $message->save();
         }
     }
+
+    private static function getColumns($type):array
+    {
+        if($type === 'errors'){
+            $columns = Error::columns();
+        }else{
+            $columns = Log::columns();
+        }
+        $list = [];
+        collect($columns)->each(function ($item) use (&$list){
+            $list[$item['column']] = $item['name'];
+        });
+        return $list;
+    }
+
+    public static function sendMessage()
+    {
+
+    }
+
 }
