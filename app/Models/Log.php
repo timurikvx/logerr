@@ -111,6 +111,7 @@ class Log extends Error
             dump(mb_substr($ex->getMessage(), 0, 320));
             return false;
         }
+        self::saveNames($log, 'logs');
         //Cache::set($hash, $log->toArray(), 200);
         return true;
 
@@ -133,6 +134,7 @@ class Log extends Error
         Filters::setSort($query, $sort);
         return $query;
     }
+
 
 
 }

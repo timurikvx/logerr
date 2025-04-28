@@ -8,6 +8,7 @@ use App\Actions\Report;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Models\Crew;
 use App\Models\Error;
+use App\Models\LogerrNames;
 use App\Models\User;
 use App\Models\UserOption;
 use Illuminate\Http\Request;
@@ -62,31 +63,20 @@ class DashboardController extends Controller
 
         $list = [];
         if($type === 'error'){
-            $list = Error::query()->select([$field])->where($field, 'ILIKE', $value.'%')->limit(20)->distinct()->orderBy($field)->get();
+            $list = LogerrNames::query()
+                ->select('value')
+                ->where('type', '=', 'errors')
+                ->where('field', '=', $field)
+                ->where('value', 'ILIKE', $value.'%')
+                ->limit(20)->orderBy('value')->get();
+            //$list = Error::query()->select([$field])->where($field, 'ILIKE', $value.'%')->limit(20)->distinct()->orderBy($field)->get();
 
         }
         return [
-            'list'=>$list->pluck($field)
+            'list'=>$list->pluck('value')
+            //'list'=>$list->pluck($field)
         ];
     }
-
-//    public function test(Request $request): array
-//    {
-//        $data = collect([]);
-//        Auth::login(User::find(1));
-//        $teams = Crew::list();
-//        foreach ($teams as $team){
-//            $data_team = Report::getTodayErrors($team->id);
-//            $data[$team->name]= ['series'=>$data_team->pluck('value'), 'columns'=>$data_team->pluck('name')];
-//        }
-//
-////        $data = Report::getTodayErrors(1);
-////        $data = $data->sortBy('name');
-////        $columns = $data->pluck('name');
-////        dump($columns);
-////        dump($data->pluck('value'));
-//        return ['result'=>true];
-//    }
 
     public function teamChange(Request $request): array
     {

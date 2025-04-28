@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
@@ -112,6 +113,7 @@ class Error extends Model
             //dump($ex->getMessage());
             return false;
         }
+        self::saveNames($error);
         //Cache::set($hash, $error->toArray(), 200);
         return true;
 
@@ -178,6 +180,37 @@ class Error extends Model
             'version'=>['use'=>false, 'name'=>'Версия', 'type'=>'text', 'equal'=>null, 'value'=>null, 'value2'=>null, 'list'=>null],
             'duration'=>['use'=>false, 'name'=>'Длительность', 'type'=>'number', 'equal'=>null, 'value'=>null, 'value2'=>null, 'list'=>null],
         ];
+    }
+
+    protected static function saveNames($error, $type = 'errors'):void
+    {
+        $fields = [
+            'name',
+            'category',
+            'sub_category',
+            'sender_name',
+            'code',
+            'user',
+            'device',
+            'city',
+            'region',
+        ];
+        foreach ($fields as $field){
+            $value = $error->$field;
+            if(empty($value)){
+                continue;
+            }
+            LogerrNames::query()
+                ->where('type', '=', $type)
+                ->where('field', '=', $field)
+                ->where('value', '=', $value)
+                ->delete();
+            DB::table('logerr_names')->insert([
+                'type'=>$type,
+                'field'=>$field,
+                'value'=>$value
+            ]);
+        }
     }
 
 }
