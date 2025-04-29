@@ -200,11 +200,18 @@ class Error extends Model
             if(empty($value)){
                 continue;
             }
-            LogerrNames::query()
+            $exist = LogerrNames::query()
                 ->where('type', '=', $type)
                 ->where('field', '=', $field)
-                ->where('value', '=', $value)
-                ->delete();
+                ->where('value', '=', $value)->exists();
+            if($exist){
+                continue;
+            }
+//            LogerrNames::query()
+//                ->where('type', '=', $type)
+//                ->where('field', '=', $field)
+//                ->where('value', '=', $value)
+//                ->delete();
             DB::table('logerr_names')->insert([
                 'type'=>$type,
                 'field'=>$field,
