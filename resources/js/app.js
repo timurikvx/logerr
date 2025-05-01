@@ -5,7 +5,7 @@ import { createApp, h } from 'vue';
 import { createPinia } from 'pinia'
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+//import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
 //const appName = import.meta.env.VITE_APP_NAME || 'Laravel';  - ${appName}
 const pinia = createPinia();
@@ -19,7 +19,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(pinia)
-            .use(ZiggyVue)
+            //.use(ZiggyVue)
             .use(PerfectScrollbarPlugin)
             .mount(el);
     },
