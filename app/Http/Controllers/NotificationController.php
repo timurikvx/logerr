@@ -20,7 +20,7 @@ use Ramsey\Uuid\Guid\Guid;
 class NotificationController extends Controller
 {
 
-    public function get(Request $request)
+    public function get(Request $request): array
     {
         $list = Notification::get();
         return [
