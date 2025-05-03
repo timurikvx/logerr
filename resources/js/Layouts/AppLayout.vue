@@ -14,8 +14,9 @@ defineProps({
 
 const showingNavigationDropdown = ref(false);
 
+//route('current-team.update')
 const switchToTeam = (team) => {
-    router.put(route('current-team.update'), {
+    router.put('/teams/update', {
         team_id: team.id,
     }, {
         preserveState: false,
@@ -130,11 +131,11 @@ const logout = () => {
                                             Manage Account
                                         </div>
 
-                                        <DropdownLink :href="route('profile.show')">
+                                        <DropdownLink href="/user/profile">
                                             Profile
                                         </DropdownLink>
 
-                                        <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
+                                        <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" href="/user/api-tokens">
                                             API Tokens
                                         </DropdownLink>
 
@@ -206,11 +207,11 @@ const logout = () => {
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.show')" :active="route().current('profile.show')">
+                            <ResponsiveNavLink href="/user/profile" :active="false">
                                 Profile
                             </ResponsiveNavLink>
 
-                            <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')" :active="route().current('api-tokens.index')">
+                            <ResponsiveNavLink v-if="$page.props.jetstream.hasApiFeatures" href="/user/api-tokens" :active="false">
                                 API Tokens
                             </ResponsiveNavLink>
 
@@ -230,13 +231,13 @@ const logout = () => {
                                 </div>
 
                                 <!-- Team Settings -->
-                                <ResponsiveNavLink :href="route('teams.show', $page.props.auth.user.current_team)" :active="route().current('teams.show')">
-                                    Team Settings
-                                </ResponsiveNavLink>
+<!--                                <ResponsiveNavLink :href="route('teams.show', $page.props.auth.user.current_team)" :active="route().current('teams.show')">-->
+<!--                                    Team Settings-->
+<!--                                </ResponsiveNavLink>-->
 
-                                <ResponsiveNavLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')" :active="route().current('teams.create')">
-                                    Create New Team
-                                </ResponsiveNavLink>
+<!--                                <ResponsiveNavLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')" :active="route().current('teams.create')">-->
+<!--                                    Create New Team-->
+<!--                                </ResponsiveNavLink>-->
 
                                 <!-- Team Switcher -->
                                 <template v-if="$page.props.auth.user.all_teams.length > 1">

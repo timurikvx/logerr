@@ -37,7 +37,7 @@ const managingPermissionsFor = ref(null);
 const apiTokenBeingDeleted = ref(null);
 
 const createApiToken = () => {
-    createApiTokenForm.post(route('api-tokens.store'), {
+    createApiTokenForm.post('/user/api-tokens', {
         preserveScroll: true,
         onSuccess: () => {
             displayingToken.value = true;
@@ -52,7 +52,7 @@ const manageApiTokenPermissions = (token) => {
 };
 
 const updateApiToken = () => {
-    updateApiTokenForm.put(route('api-tokens.update', managingPermissionsFor.value), {
+    updateApiTokenForm.put('/user/api-tokens/'.managingPermissionsFor.value, {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => (managingPermissionsFor.value = null),
@@ -64,12 +64,13 @@ const confirmApiTokenDeletion = (token) => {
 };
 
 const deleteApiToken = () => {
-    deleteApiTokenForm.delete(route('api-tokens.destroy', apiTokenBeingDeleted.value), {
+    deleteApiTokenForm.delete('/user/api-tokens/'.apiTokenBeingDeleted.value, {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => (apiTokenBeingDeleted.value = null),
     });
 };
+
 </script>
 
 <template>
