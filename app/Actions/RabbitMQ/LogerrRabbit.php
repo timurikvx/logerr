@@ -11,7 +11,9 @@ class LogerrRabbit
 {
     public static function publish(string $message, $channel):void
     {
-        $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+        $host = env('RABBIT_HOST');
+        $port = env('RABBIT_PORT');
+        $connection = new AMQPStreamConnection($host, $port, 'guest', 'guest');
         $channel_object = $connection->channel();
 
         //$channel_object->exchange_declare('errors_exchange', 'fanout', false, true);
@@ -28,7 +30,9 @@ class LogerrRabbit
 
     public static function receive($name):void
     {
-        $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+        $host = env('RABBIT_HOST');
+        $port = env('RABBIT_PORT');
+        $connection = new AMQPStreamConnection($host, $port, 'guest', 'guest');
         $channel = $connection->channel();
 
         //$channel->exchange_declare($name, 'fanout', false, true, true);
