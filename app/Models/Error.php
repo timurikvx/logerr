@@ -122,8 +122,8 @@ class Error extends Model
     public static function getErrors($team, $filters = [], $sort = []): Builder
     {
         $query = self::query()->where('team', $team);
-        Filters::setFilters($query, $filters);
-        Filters::setSort($query, $sort);
+//        Filters::setFilters($query, $filters);
+//        Filters::setSort($query, $sort);
         return $query;
     }
 

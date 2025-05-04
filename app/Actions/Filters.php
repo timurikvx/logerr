@@ -123,10 +123,11 @@ class Filters
     public static function setSortCollection(Collection &$collection, $sort): void
     {
         if(count($sort) === 0){
-            $collection = $collection
-                ->sortByDesc('date')
-                ->sortBy('name')
-                ->sortBy('guid');
+            $collection = $collection->sortBy([
+                ['date', 'desc'],
+                ['name', 'asc'],
+                ['guid', 'asc']
+            ]);
             $collection = $collection->values();
             return;
         }
