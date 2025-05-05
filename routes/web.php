@@ -35,10 +35,10 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     Route::get('/errors', [ErrorController::class, 'getList'])->name('errors');
-    Route::get('/errors/teams/select', [ErrorController::class, 'selectTeam'])->name('selectTeamError');
+    //Route::get('/errors/teams/select', [ErrorController::class, 'selectTeam'])->name('selectTeamError');
 
     Route::get('/teams', [CrewController::class, 'teams'])->name('teams');
-    Route::get('/errors/teams/select', [CrewController::class, 'selectTeam'])->name('selectTeamLog');
+    //Route::get('/errors/teams/select', [CrewController::class, 'selectTeam'])->name('selectTeamLog');
 
     Route::get('/teams/{team}', [CrewController::class, 'team']);
 

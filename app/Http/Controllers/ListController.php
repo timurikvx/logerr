@@ -46,7 +46,7 @@ class ListController extends Controller
             $team = Crew::getByID($team_id);
         }
         if(is_null($team)){
-            return redirect()->route('selectTeamError');
+            return redirect()->route('teams');
         }
         $data = $this->getData($request, $team);
         return Inertia::render('MainList', $data);
