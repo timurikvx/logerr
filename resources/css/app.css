@@ -578,9 +578,9 @@ body{
     color: var(--main);
 }
 
-.select-list .value:hover{
-    background-color: var(--text-main-color);
-}
+/*.select-list .value:hover{*/
+/*    background-color: var(--text-main-color);*/
+/*}*/
 
 .select-list .placeholder{
     color: var(--gray);
