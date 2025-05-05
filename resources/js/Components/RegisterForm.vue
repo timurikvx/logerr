@@ -36,6 +36,7 @@
             </div>
             <div class="flex">
                 <div class="grow"></div>
+                <a class="underline self-center mr-4" href="/login">Уже зарегистрированы?</a>
                 <button class="button" :disabled="form.processing">Зарегистрироваться</button>
             </div>
         </div>

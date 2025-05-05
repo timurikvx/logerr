@@ -21,8 +21,9 @@
                 </label>
             </div>
             <div class="flex">
+                <a class="underline self-center mr-4" href="/register">Нет аккаунта?</a>
                 <div class="grow"></div>
-                <a class="underline self-center mr-4" href="/forgot-password">Забыли пароль?</a>
+<!--                <a class="underline self-center mr-4" href="/forgot-password">Забыли пароль?</a>-->
                 <button class="button" :disabled="form.processing">Войти</button>
             </div>
         </div>

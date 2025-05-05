@@ -1,0 +1,19 @@
+FROM php:8.2-fpm
+
+RUN apt-get update -y && apt-get install -y curl git libssl-dev zlib1g-dev && pecl install redis && apt-get clean -y
+RUN apt-get install -y libpq-dev
+RUN apt install -y $PHPIZE_DEPS
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
+RUN docker-php-ext-install pdo_pgsql
+RUN docker-php-ext-enable pdo_pgsql
+RUN docker-php-ext-install sockets
+RUN docker-php-ext-enable sockets
+RUN docker-php-ext-enable redis
+
+
+RUN apt purge -y $PHPIZE_DEPS
+RUN apt clean
+
+ADD ./php.ini /usr/local/etc/php/
+
+WORKDIR /var/www/logerr
