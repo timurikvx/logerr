@@ -52,7 +52,7 @@ const manageApiTokenPermissions = (token) => {
 };
 
 const updateApiToken = () => {
-    updateApiTokenForm.put('/user/api-tokens/'.managingPermissionsFor.value, {
+    updateApiTokenForm.put('/user/api-tokens/' + managingPermissionsFor.value.id, {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => (managingPermissionsFor.value = null),
@@ -64,7 +64,8 @@ const confirmApiTokenDeletion = (token) => {
 };
 
 const deleteApiToken = () => {
-    deleteApiTokenForm.delete('/user/api-tokens/'.apiTokenBeingDeleted.value, {
+    console.log(apiTokenBeingDeleted.value.id);
+    deleteApiTokenForm.delete('/user/api-tokens/' + apiTokenBeingDeleted.value.id, {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => (apiTokenBeingDeleted.value = null),
@@ -74,34 +75,36 @@ const deleteApiToken = () => {
 </script>
 
 <template>
+
     <div>
         <!-- Generate API Token -->
         <FormSection @submitted="createApiToken">
             <template #title>
-                Create API Token
+                Создание API токена
             </template>
 
             <template #description>
-                API tokens allow third-party services to authenticate with our application on your behalf.
+                API-токены позволяют сторонним сервисам проходить аутентификацию в нашем приложении от вашего имени
             </template>
 
             <template #form>
                 <!-- Token Name -->
                 <div class="col-span-6 sm:col-span-4">
-                    <InputLabel for="name" value="Name" />
-                    <TextInput
-                        id="name"
-                        v-model="createApiTokenForm.name"
-                        type="text"
-                        class="mt-1 block w-full"
-                        autofocus
-                    />
+                    <InputLabel for="name" value="Имя токена" />
+                    <input id="name" v-model="createApiTokenForm.name" type="text" class="mt-1 input w-full" autofocus>
+<!--                    <TextInput-->
+<!--                        id="name"-->
+<!--                        v-model="createApiTokenForm.name"-->
+<!--                        type="text"-->
+<!--                        class="mt-1 block w-full"-->
+<!--                        autofocus-->
+<!--                    />-->
                     <InputError :message="createApiTokenForm.errors.name" class="mt-2" />
                 </div>
 
                 <!-- Token Permissions -->
                 <div v-if="availablePermissions.length > 0" class="col-span-6">
-                    <InputLabel for="permissions" value="Permissions" />
+                    <InputLabel for="permissions" value="Права" />
 
                     <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div v-for="permission in availablePermissions" :key="permission">
@@ -115,13 +118,13 @@ const deleteApiToken = () => {
             </template>
 
             <template #actions>
-                <ActionMessage :on="createApiTokenForm.recentlySuccessful" class="me-3">
-                    Created.
-                </ActionMessage>
-
-                <PrimaryButton :class="{ 'opacity-25': createApiTokenForm.processing }" :disabled="createApiTokenForm.processing">
-                    Create
-                </PrimaryButton>
+<!--                <ActionMessage :on="createApiTokenForm.recentlySuccessful" class="me-3">-->
+<!--                    Создан.-->
+<!--                </ActionMessage>-->
+                <button class="button" :disabled="createApiTokenForm.processing">Создать</button>
+<!--                <PrimaryButton :class="{ 'opacity-25': createApiTokenForm.processing }" :disabled="createApiTokenForm.processing">-->
+<!--                    Создать-->
+<!--                </PrimaryButton>-->
             </template>
         </FormSection>
 
@@ -132,11 +135,11 @@ const deleteApiToken = () => {
             <div class="mt-10 sm:mt-0">
                 <ActionSection>
                     <template #title>
-                        Manage API Tokens
+                        Управление API токенами
                     </template>
 
                     <template #description>
-                        You may delete any of your existing tokens if they are no longer needed.
+                        Вы можете удалить любой из существующих токенов, если он больше не нужен.
                     </template>
 
                     <!-- API Token List -->
@@ -157,11 +160,11 @@ const deleteApiToken = () => {
                                         class="cursor-pointer ms-6 text-sm text-gray-400 underline"
                                         @click="manageApiTokenPermissions(token)"
                                     >
-                                        Permissions
+                                        Права
                                     </button>
 
                                     <button class="cursor-pointer ms-6 text-sm text-red-500" @click="confirmApiTokenDeletion(token)">
-                                        Delete
+                                        Удалить
                                     </button>
                                 </div>
                             </div>
@@ -174,12 +177,12 @@ const deleteApiToken = () => {
         <!-- Token Value Modal -->
         <DialogModal :show="displayingToken" @close="displayingToken = false">
             <template #title>
-                API Token
+                API токен
             </template>
 
             <template #content>
                 <div>
-                    Please copy your new API token. For your security, it won't be shown again.
+                    Пожалуйста, скопируйте ваш новый API-токен. Для вашей безопасности он больше не будет показан.
                 </div>
 
                 <div v-if="$page.props.jetstream.flash.token" class="mt-4 bg-gray-100 px-4 py-2 rounded font-mono text-sm text-gray-500 break-all">
@@ -188,16 +191,17 @@ const deleteApiToken = () => {
             </template>
 
             <template #footer>
-                <SecondaryButton @click="displayingToken = false">
-                    Close
-                </SecondaryButton>
+                <button class="button" :disabled="createApiTokenForm.processing" @click="displayingToken = false">Закрыть</button>
+<!--                <SecondaryButton @click="displayingToken = false">-->
+<!--                    Close-->
+<!--                </SecondaryButton>-->
             </template>
         </DialogModal>
 
         <!-- API Token Permissions Modal -->
         <DialogModal :show="managingPermissionsFor != null" @close="managingPermissionsFor = null">
             <template #title>
-                API Token Permissions
+                Права API токена
             </template>
 
             <template #content>
@@ -212,44 +216,46 @@ const deleteApiToken = () => {
             </template>
 
             <template #footer>
-                <SecondaryButton @click="managingPermissionsFor = null">
-                    Cancel
-                </SecondaryButton>
-
-                <PrimaryButton
-                    class="ms-3"
-                    :class="{ 'opacity-25': updateApiTokenForm.processing }"
-                    :disabled="updateApiTokenForm.processing"
-                    @click="updateApiToken"
-                >
-                    Save
-                </PrimaryButton>
+                <button class="button mr-4" :disabled="createApiTokenForm.processing" @click="managingPermissionsFor = null">Отмена</button>
+<!--                <SecondaryButton @click="managingPermissionsFor = null">-->
+<!--                    Cancel-->
+<!--                </SecondaryButton>-->
+                <button class="button" type="submit" :disabled="createApiTokenForm.processing" @click="updateApiToken">Сохранить</button>
+<!--                <PrimaryButton-->
+<!--                    class="ms-3"-->
+<!--                    :class="{ 'opacity-25': updateApiTokenForm.processing }"-->
+<!--                    :disabled="updateApiTokenForm.processing"-->
+<!--                    @click="updateApiToken"-->
+<!--                >-->
+<!--                    Save-->
+<!--                </PrimaryButton>-->
             </template>
         </DialogModal>
 
         <!-- Delete Token Confirmation Modal -->
         <ConfirmationModal :show="apiTokenBeingDeleted != null" @close="apiTokenBeingDeleted = null">
             <template #title>
-                Delete API Token
+                Удаление API токена
             </template>
 
             <template #content>
-                Are you sure you would like to delete this API token?
+                Вы уверены, что хотите удалить этот токен API?
             </template>
 
             <template #footer>
-                <SecondaryButton @click="apiTokenBeingDeleted = null">
-                    Cancel
-                </SecondaryButton>
-
-                <DangerButton
-                    class="ms-3"
-                    :class="{ 'opacity-25': deleteApiTokenForm.processing }"
-                    :disabled="deleteApiTokenForm.processing"
-                    @click="deleteApiToken"
-                >
-                    Delete
-                </DangerButton>
+                <button class="button mr-4" :disabled="createApiTokenForm.processing" @click="apiTokenBeingDeleted = null">Отмена</button>
+<!--                <SecondaryButton @click="apiTokenBeingDeleted = null">-->
+<!--                    Cancel-->
+<!--                </SecondaryButton>-->
+                <button class="button red" :disabled="createApiTokenForm.processing" @click="deleteApiToken">Удалить</button>
+<!--                <DangerButton-->
+<!--                    class="ms-3"-->
+<!--                    :class="{ 'opacity-25': deleteApiTokenForm.processing }"-->
+<!--                    :disabled="deleteApiTokenForm.processing"-->
+<!--                    @click="deleteApiToken"-->
+<!--                >-->
+<!--                    Delete-->
+<!--                </DangerButton>-->
             </template>
         </ConfirmationModal>
     </div>

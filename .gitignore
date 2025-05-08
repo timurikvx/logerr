@@ -5,6 +5,9 @@
 /public/storage
 /storage/*.key
 /vendor
+/app/Actions/Generator.php
+/app/Console/Commands/ErrorRender.php
+/app/Console/Commands/LogRender.php
 .env
 .env.backup
 .env.production

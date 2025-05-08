@@ -52,7 +52,8 @@ const closeModal = () => {
                 После удаления вашего аккаунта все его ресурсы и данные будут удалены навсегда. Перед удалением аккаунта загрузите любые данные или информацию, которые вы хотите сохранить.
             </div>
 
-            <div class="mt-5">
+            <div class="mt-5 flex">
+                <div class="grow"></div>
                 <button class="button full-red" @click="confirmUserDeletion">Удалить аккаунт</button>
 <!--                <DangerButton @click="confirmUserDeletion">-->
 <!--                    Delete Account-->
@@ -62,19 +63,19 @@ const closeModal = () => {
             <!-- Delete Account Confirmation Modal -->
             <DialogModal :show="confirmingUserDeletion" @close="closeModal">
                 <template #title>
-                    Delete Account
+                    Удаление аккаунта
                 </template>
 
                 <template #content>
                     Вы уверены, что хотите удалить свою учетную запись? После удаления вашей учетной записи все ее ресурсы и данные будут удалены навсегда. Введите пароль, чтобы подтвердить, что вы хотите навсегда удалить свою учетную запись.
 
                     <div class="mt-4">
-                        <TextInput
+                        <input
                             ref="passwordInput"
                             v-model="form.password"
                             type="password"
-                            class="mt-1 block w-3/4"
-                            placeholder="Password"
+                            class="mt-1 input w-3/4"
+                            placeholder="Пароль"
                             autocomplete="current-password"
                             @keyup.enter="deleteUser"
                         />
@@ -84,18 +85,18 @@ const closeModal = () => {
                 </template>
 
                 <template #footer>
-                    <SecondaryButton @click="closeModal">
-                        Cancel
-                    </SecondaryButton>
-
-                    <DangerButton
-                        class="ms-3"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        @click="deleteUser"
-                    >
-                        Delete Account
-                    </DangerButton>
+                    <button class="button full-red" :disabled="form.processing" @click="deleteUser">Удалить аккаунт</button>
+<!--                    <SecondaryButton @click="closeModal">-->
+<!--                        Cancel-->
+<!--                    </SecondaryButton>-->
+<!--                    -->
+<!--                    <DangerButton-->
+<!--                        class="ms-3"-->
+<!--                        :class="{ 'opacity-25': form.processing }"-->
+<!--                        :disabled="form.processing"-->
+<!--                        @click="deleteUser">-->
+<!--                        Удалить аккаунт-->
+<!--                    </DangerButton>-->
                 </template>
             </DialogModal>
         </template>

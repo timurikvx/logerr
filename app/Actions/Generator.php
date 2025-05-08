@@ -17,7 +17,7 @@ use App\Models\User;
 class Generator
 {
 
-    public static function errors($user, $count = 1000000):void
+    public static function errors($user, $count = 100000):void
     {
         $start = intval(microtime(true));
 
@@ -88,7 +88,7 @@ class Generator
 
     }
 
-    public static function logs($user, $count = 1000000):void
+    public static function logs($user, $count = 100000):void
     {
         $start = intval(microtime(true));
 

@@ -54,7 +54,7 @@ const closeModal = () => {
 
         <template #content>
             <div class="max-w-xl text-sm">
-                If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.
+                При необходимости вы можете выйти из всех других сеансов браузера на всех ваших устройствах. Некоторые из ваших последних сеансов перечислены ниже; однако этот список может быть неполным. Если вы считаете, что ваш аккаунт был скомпрометирован, вам также следует обновить свой пароль.
             </div>
 
             <!-- Other Browser Sessions -->
@@ -88,14 +88,8 @@ const closeModal = () => {
             </div>
 
             <div class="flex items-center mt-5">
+                <div class="grow"></div>
                 <button class="button red" @click="confirmLogout">Завершить все сессии</button>
-<!--                <PrimaryButton @click="confirmLogout">-->
-<!--                    Log Out Other Browser Sessions-->
-<!--                </PrimaryButton>-->
-
-<!--                <ActionMessage :on="form.recentlySuccessful" class="ms-3">-->
-<!--                    Done.-->
-<!--                </ActionMessage>-->
             </div>
 
             <!-- Log Out Other Devices Confirmation Modal -->
@@ -108,7 +102,7 @@ const closeModal = () => {
                     Введите пароль, чтобы подтвердить, что вы хотите выйти из других сеансов браузера на всех ваших устройствах.
 
                     <div class="mt-4">
-                        <input class="input w-full" type="password" placeholder="Пароль" autocomplete="current-password" @keyup.enter="logoutOtherBrowserSessions">
+                        <input class="input w-full" type="password" v-model="form.password" placeholder="Пароль" autocomplete="current-password" @keyup.enter="logoutOtherBrowserSessions">
 <!--                        <TextInput-->
 <!--                            ref="passwordInput"-->
 <!--                            v-model="form.password"-->
@@ -124,7 +118,7 @@ const closeModal = () => {
                 </template>
 
                 <template #footer>
-                    <button class="button red" @click="confirmLogout">Завершить все сессии</button>
+                    <button class="button red" :disabled="form.processing" @click="logoutOtherBrowserSessions">Завершить все сессии</button>
 <!--                    <SecondaryButton @click="closeModal">-->
 <!--                        Cancel-->
 <!--                    </SecondaryButton>-->

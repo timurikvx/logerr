@@ -7,10 +7,14 @@ import TwoFactorAuthenticationForm from '@/Pages/Profile/Partials/TwoFactorAuthe
 import UpdatePasswordForm from '@/Pages/Profile/Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from '@/Pages/Profile/Partials/UpdateProfileInformationForm.vue';
 import Layout from "@/Layouts/Layout.vue";
+import ApiTokenManager from "@/Pages/API/Partials/ApiTokenManager.vue";
 
 defineProps({
     confirmsTwoFactorAuthentication: Boolean,
     sessions: Array,
+    tokens: Array,
+    availablePermissions: Array,
+    defaultPermissions: Array,
 });
 </script>
 
@@ -45,11 +49,24 @@ defineProps({
 
                     <LogoutOtherBrowserSessionsForm :sessions="sessions" class="mt-10 sm:mt-0" />
 
+
+
+                    <div>
+                        <SectionBorder />
+                        <ApiTokenManager
+                            :tokens="tokens"
+                            :available-permissions="availablePermissions"
+                            :default-permissions="defaultPermissions"
+                        />
+                    </div>
+
                     <template v-if="$page.props.jetstream.hasAccountDeletionFeatures">
                         <SectionBorder />
 
                         <DeleteUserForm class="mt-10 sm:mt-0" />
                     </template>
+
+
                 </div>
             </perfect-scrollbar>
         </div>
