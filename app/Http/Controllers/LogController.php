@@ -32,7 +32,7 @@ class LogController extends ListController
 
     protected string $title = 'Список логов';
 
-    public function apiAdd(Request|Collection $request): mixed
+    public function apiAdd(Request $request): mixed
     {
         if(count($request->all()) == 0){
             return response(['message'=>'Тело запроса должно быть объектом'], '400');
