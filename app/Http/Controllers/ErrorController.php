@@ -32,7 +32,6 @@ class ErrorController extends ListController
 
     protected string $title = 'Список ошибок';
 
-    //Collection
     public function apiAdd(Request $request): mixed
     {
         if(count($request->all()) == 0){

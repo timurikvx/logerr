@@ -130,11 +130,7 @@ class Log extends Error
     public static function getLogs($team, $filters = [], $sort = []): Builder
     {
         $query = self::query()->where('team', $team);
-//        Filters::setFilters($query, $filters);
-//        Filters::setSort($query, $sort);
         return $query;
     }
-
-
 
 }

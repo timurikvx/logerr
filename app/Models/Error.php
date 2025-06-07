@@ -110,11 +110,9 @@ class Error extends Model
         try{
             $error->save();
         }catch (\Throwable $ex){
-            //dump($ex->getMessage());
             return false;
         }
         self::saveNames($error);
-        //Cache::set($hash, $error->toArray(), 200);
         return true;
 
     }
@@ -122,8 +120,6 @@ class Error extends Model
     public static function getErrors($team, $filters = [], $sort = []): Builder
     {
         $query = self::query()->where('team', $team);
-//        Filters::setFilters($query, $filters);
-//        Filters::setSort($query, $sort);
         return $query;
     }
 
@@ -207,11 +203,6 @@ class Error extends Model
             if($exist){
                 continue;
             }
-//            LogerrNames::query()
-//                ->where('type', '=', $type)
-//                ->where('field', '=', $field)
-//                ->where('value', '=', $value)
-//                ->delete();
             DB::table('logerr_names')->insert([
                 'type'=>$type,
                 'field'=>$field,
