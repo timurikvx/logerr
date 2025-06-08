@@ -80,10 +80,10 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/option/get', [UserOptionController::class, 'get']);
 
     //Errors
-    Route::post('/error/options/set', [ErrorController::class, 'optionSet']);
+    //Route::post('/error/options/set', [ErrorController::class, 'optionSet']);
     //Route::post('/error/options/create', [ErrorController::class, 'optionCreate']);
     //Route::post('/error/options/save', [ErrorController::class, 'optionSave']);
-    Route::post('/error/options/clear', [ErrorController::class, 'optionClear']);
+    //Route::post('/error/options/clear', [ErrorController::class, 'optionClear']);
     //Route::post('/error/options/change', [ErrorController::class, 'optionChange']);
     //Route::post('/error/options/delete', [ErrorController::class, 'optionDelete']);
 
@@ -92,10 +92,10 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/error/page', [ErrorController::class, 'page']);
 
     //Logs
-    Route::post('/log/options/set', [LogController::class, 'optionSet']);
+    //Route::post('/log/options/set', [LogController::class, 'optionSet']);
     //Route::post('/log/options/create', [LogController::class, 'optionCreate']);
 
-    Route::post('/log/options/clear', [LogController::class, 'optionClear']);
+    //Route::post('/log/options/clear', [LogController::class, 'optionClear']);
     //Route::post('/log/options/save', [LogController::class, 'optionSave']);
     //Route::post('/log/options/change', [LogController::class, 'optionChange']);
     //Route::post('/log/options/delete', [LogController::class, 'optionDelete']);
@@ -115,12 +115,16 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/error/options/change', [NewErrorController::class, 'changeSetting']);
     Route::post('/error/options/delete', [NewErrorController::class, 'removeSetting']);
     Route::post('/error/options/save', [NewErrorController::class, 'saveSetting']);
+
     Route::post('/error/options/set', [NewErrorController::class, 'setPreferences']);
+    Route::post('/error/options/clear', [NewErrorController::class, 'clearPreferences']);
 
     Route::post('/log/options/create', [NewLogsController::class, 'createSetting']);
     Route::post('/log/options/change', [NewLogsController::class, 'changeSetting']);
     Route::post('/log/options/delete', [NewLogsController::class, 'removeSetting']);
     Route::post('/log/options/save', [NewLogsController::class, 'saveSetting']);
+
     Route::post('/log/options/set', [NewLogsController::class, 'setPreferences']);
+    Route::post('/log/options/clear', [NewLogsController::class, 'clearPreferences']);
 
 });

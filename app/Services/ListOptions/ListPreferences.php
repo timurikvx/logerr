@@ -8,8 +8,6 @@ use App\Interfaces\IListSettingsService;
 use App\Interfaces\ILogerrCache;
 use App\Interfaces\ITeamService;
 use App\Interfaces\IUserSettingsService;
-use App\Models\Option;
-use Illuminate\Database\Eloquent\Model;
 
 class ListPreferences implements IListPreferences
 {
@@ -98,6 +96,12 @@ class ListPreferences implements IListPreferences
     {
         $team = $this->teamService->current();
         $this->userSettingsService->remove($provider->prefix().'_current_option', $team->id);
+    }
+
+    public function clear(IListModel $provider, $field): void
+    {
+        $team = $this->teamService->current();
+        $this->userSettingsService->remove($provider->prefix().'_'.$field, $team->id);
     }
 
 }

@@ -12,12 +12,6 @@ interface IListPreferences
 
     function filters($provider): array;
 
-    //function setting($provider);
-
-    //function current($provider, $option = null);
-
-    //function get($provider, string|null $guid): Model|null;
-
     function remove($provider): void;
 
     function saveFilters(IListModel $provider, $data): void;
@@ -26,6 +20,6 @@ interface IListPreferences
 
     function saveColumns(IListModel $provider, $data): void;
 
-
+    function clear(IListModel $provider, $field): void;
 
 }

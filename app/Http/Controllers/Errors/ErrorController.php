@@ -47,7 +47,6 @@ class ErrorController extends Controller
         $title = 'Список ошибок';
         $provider = new Error();
         $data = $this->listProvider->list($provider, $team, $title, $request);
-        //dump($data);
         return Inertia::render('MainList', $data);
     }
 
@@ -97,6 +96,14 @@ class ErrorController extends Controller
         $this->listPreferences->saveSort($provider, $sort);
         $this->listPreferences->saveColumns($provider, $columns);
 
+        return ['result'=>true];
+    }
+
+    public function clearPreferences(Request $request): array
+    {
+        $provider = new Error();
+        $field = $request->get('field');
+        $this->listPreferences->clear($provider, $field);
         return ['result'=>true];
     }
 
