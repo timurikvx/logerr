@@ -11,7 +11,6 @@ use Ramsey\Uuid\Uuid;
 
 class Option extends Model
 {
-    //use HasFactory;
     use HasUuids;
 
     public $incrementing = false;
@@ -78,7 +77,19 @@ class Option extends Model
         return $option->guid;
     }
 
-    public static function getByGuid($team, $guid, $category = null, $without_data = false): mixed
+    public static function get($team, $guid, $category = null): Model|null
+    {
+        if(empty($guid)){
+            return null;
+        }
+        $user = Auth::id();
+        return self::query()->where('user', '=', $user)->where('team', '=', $team)
+            ->where('category', '=', $category)
+            ->where('guid', '=', $guid)
+            ->first();
+    }
+
+    public static function getByGuid($team, $guid, $category = null, $without_data = false): array|null
     {
         if(empty($guid)){
             return null;

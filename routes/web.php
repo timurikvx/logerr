@@ -9,6 +9,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserOptionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TelegramChatController;
+use App\Http\Controllers\Errors\ErrorController as NewErrorController;
+use App\Http\Controllers\Logs\LogsController as NewLogsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,7 +36,9 @@ Route::middleware(['auth'])->group(function(){
     //Pages
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    Route::get('/errors', [ErrorController::class, 'getList'])->name('errors');
+    Route::get('/errors', [NewErrorController::class, 'errors'])->name('errors');
+    //Route::get('/errors', [ErrorController::class, 'getList'])->name('errors');
+
     //Route::get('/errors/teams/select', [ErrorController::class, 'selectTeam'])->name('selectTeamError');
 
     Route::get('/teams', [CrewController::class, 'teams'])->name('teams');
@@ -42,7 +46,8 @@ Route::middleware(['auth'])->group(function(){
 
     Route::get('/teams/{team}', [CrewController::class, 'team']);
 
-    Route::get('/logs', [LogController::class, 'getList'])->name('logs');
+    //Route::get('/logs', [LogController::class, 'getList'])->name('logs');
+    Route::get('/logs', [NewLogsController::class, 'logs'])->name('logs');
 
     Route::get('/notifications', [NotificationController::class, 'notifications']);
     Route::get('/notifications/telegram', [NotificationController::class, 'telegram']);
@@ -76,22 +81,25 @@ Route::middleware(['auth'])->group(function(){
 
     //Errors
     Route::post('/error/options/set', [ErrorController::class, 'optionSet']);
-    Route::post('/error/options/create', [ErrorController::class, 'optionCreate']);
-    Route::post('/error/options/save', [ErrorController::class, 'optionSave']);
+    //Route::post('/error/options/create', [ErrorController::class, 'optionCreate']);
+    //Route::post('/error/options/save', [ErrorController::class, 'optionSave']);
     Route::post('/error/options/clear', [ErrorController::class, 'optionClear']);
-    Route::post('/error/options/change', [ErrorController::class, 'optionChange']);
-    Route::post('/error/options/delete', [ErrorController::class, 'optionDelete']);
+    //Route::post('/error/options/change', [ErrorController::class, 'optionChange']);
+    //Route::post('/error/options/delete', [ErrorController::class, 'optionDelete']);
+
     Route::post('/error/team/change', [ErrorController::class, 'teamChange']);
     Route::post('/error/filter', [ErrorController::class, 'filter']);
     Route::post('/error/page', [ErrorController::class, 'page']);
 
     //Logs
     Route::post('/log/options/set', [LogController::class, 'optionSet']);
-    Route::post('/log/options/create', [LogController::class, 'optionCreate']);
+    //Route::post('/log/options/create', [LogController::class, 'optionCreate']);
+
     Route::post('/log/options/clear', [LogController::class, 'optionClear']);
-    Route::post('/log/options/save', [LogController::class, 'optionSave']);
-    Route::post('/log/options/change', [LogController::class, 'optionChange']);
-    Route::post('/log/options/delete', [LogController::class, 'optionDelete']);
+    //Route::post('/log/options/save', [LogController::class, 'optionSave']);
+    //Route::post('/log/options/change', [LogController::class, 'optionChange']);
+    //Route::post('/log/options/delete', [LogController::class, 'optionDelete']);
+
     Route::post('/log/team/change', [LogController::class, 'teamChange']);
     Route::post('/log/filter', [LogController::class, 'filter']);
     Route::post('/log/page', [LogController::class, 'page']);
@@ -101,5 +109,18 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/telegram/chat/teams/get', [TelegramChatController::class, 'getFromTeams']);
     Route::post('/telegram/chat/teams/copy', [TelegramChatController::class, 'copyTeams']);
 
+    //New
+
+    Route::post('/error/options/create', [NewErrorController::class, 'createSetting']);
+    Route::post('/error/options/change', [NewErrorController::class, 'changeSetting']);
+    Route::post('/error/options/delete', [NewErrorController::class, 'removeSetting']);
+    Route::post('/error/options/save', [NewErrorController::class, 'saveSetting']);
+    Route::post('/error/options/set', [NewErrorController::class, 'setPreferences']);
+
+    Route::post('/log/options/create', [NewLogsController::class, 'createSetting']);
+    Route::post('/log/options/change', [NewLogsController::class, 'changeSetting']);
+    Route::post('/log/options/delete', [NewLogsController::class, 'removeSetting']);
+    Route::post('/log/options/save', [NewLogsController::class, 'saveSetting']);
+    Route::post('/log/options/set', [NewLogsController::class, 'setPreferences']);
 
 });

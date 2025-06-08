@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Report as Reporting;
+use App\Interfaces\ITeamService;
 use App\Models\Crew;
 use App\Models\NotificationMessage;
 use App\Models\NotificationsOption;
 use App\Models\Option;
-//use Illuminate\Http\Request;
+use App\Services\Teams\TeamService;
+use Illuminate\Http\Request;
 use App\Models\TelegramChat;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -23,6 +25,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    public function __construct()
+    {
+
+    }
+
     public function index(): mixed
     {
         if(Auth::check()){
@@ -33,9 +40,10 @@ class Controller extends BaseController
         ]);
     }
 
-    public function test(): void
+    public function test(Request $request,): void
     {
-
+        //dump($this->service->roles());
+        //dump($service->roles());
     }
 
 }

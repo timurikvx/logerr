@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Actions\Filters;
+use App\Interfaces\IListModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
-class Log extends Error
+class Log extends Error implements IListModel
 {
     use HasFactory;
 
@@ -132,5 +133,47 @@ class Log extends Error
         $query = self::query()->where('team', $team);
         return $query;
     }
+
+    //////////////////////////////////////////////////////////////////////////////////
+
+    public function availableColumns(): array
+    {
+        return [
+            ['class'=>'column1', 'name'=>'Дата', 'type'=>'date', 'column'=>'date', 'width'=>1],
+            ['class'=>'column2', 'name'=>'Имя', 'type'=>'text', 'column'=>'name', 'width'=>1],
+            ['class'=>'column3', 'name'=>'ID', 'type'=>'text', 'column'=>'guid', 'width'=>1],
+            ['class'=>'column4', 'name'=>'Категория', 'type'=>'text', 'column'=>'category', 'width'=>1],
+            ['class'=>'column5', 'name'=>'Подкатегория', 'type'=>'text', 'column'=>'sub_category', 'width'=>1],
+            ['class'=>'column6', 'name'=>'Отправитель', 'type'=>'text', 'column'=>'sender_name', 'width'=>1],
+            ['class'=>'column7', 'name'=>'Код', 'type'=>'text', 'column'=>'code', 'width'=>1],
+            ['class'=>'column8', 'name'=>'Пользователь', 'type'=>'text', 'column'=>'user', 'width'=>1],
+            ['class'=>'column9', 'name'=>'Устройство', 'type'=>'text', 'column'=>'device', 'width'=>1],
+            ['class'=>'column10', 'name'=>'Город', 'type'=>'text', 'column'=>'city', 'width'=>1],
+            ['class'=>'column11', 'name'=>'Регион', 'type'=>'text', 'column'=>'region', 'width'=>1],
+            ['class'=>'column12', 'name'=>'Версия', 'type'=>'text', 'column'=>'version', 'width'=>1],
+            ['class'=>'column13', 'name'=>'Длительность', 'type'=>'text', 'column'=>'duration', 'width'=>1],
+        ];
+    }
+
+    public function cacheSort(): string
+    {
+        return 'log_sort';
+    }
+
+    public function cacheFilters(): string
+    {
+        return 'log_filters';
+    }
+
+    public function cacheColumns(): string
+    {
+        return 'log_columns';
+    }
+
+    public function prefix(): string
+    {
+        return 'log';
+    }
+
 
 }

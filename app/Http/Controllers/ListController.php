@@ -27,7 +27,7 @@ class ListController extends Controller
 
     public function getListData($team, $filters, $sort): \stdClass
     {
-        $query = Error::getErrors($team->id, [], []); //$filters, $sort
+        $query = Error::getErrors($team->id);
         return Paginate::paginate($query, $filters, $sort, ErrorItemResource::class);
     }
 

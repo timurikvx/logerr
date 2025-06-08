@@ -32,7 +32,7 @@ class LogController extends ListController
 
     protected string $title = 'Список логов';
 
-    public function apiAdd(Request $request): mixed
+    public function apiAdd($request): mixed
     {
         if(count($request->all()) == 0){
             return response(['message'=>'Тело запроса должно быть объектом'], '400');
@@ -103,7 +103,7 @@ class LogController extends ListController
 
     public function getListData($team, $filters, $sort): \stdClass
     {
-        $query = Log::getLogs($team->id, [], []); //$filters, $sort
+        $query = Log::getLogs($team->id);
         return Paginate::paginate($query, $filters, $sort, LogItemResource::class, HandleLogsEvent::class);
     }
 

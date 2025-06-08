@@ -27,16 +27,16 @@ class UserOption extends Model
         }
         $option->data = json_encode($value);
         $option->save();
-        Cache::set('user_option'.$user.$team.$name, json_encode($value), 3600);
+        //Cache::set('user_option'.$user.$team.$name, json_encode($value), 3600);
     }
 
-    public static function get(string $name, int $team = 0, $default = null): array|string|null
+    public static function get(string $name, int $team = 0, $default = null): mixed
     {
         $user = Auth::id();
-        $data = Cache::get('user_option'.$user.$team.$name);
-        if(!is_null($data)){
-            return json_decode($data, true);
-        }
+//        $data = Cache::get('user_option'.$user.$team.$name);
+//        if(!is_null($data)){
+//            return json_decode($data, true);
+//        }
         $option = self::query()
             ->where('user', '=', $user)
             ->where('team', '=', $team)
@@ -57,7 +57,7 @@ class UserOption extends Model
             ->where('team', '=', $team)
             ->where('name', '=', $name)
             ->delete();
-        Cache::delete('user_option'.$user.$team.$name);
+        //Cache::delete('user_option'.$user.$team.$name);
     }
 
 }

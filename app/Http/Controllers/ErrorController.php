@@ -32,7 +32,7 @@ class ErrorController extends ListController
 
     protected string $title = 'Список ошибок';
 
-    public function apiAdd(Request $request): mixed
+    public function apiAdd($request): mixed
     {
         if(count($request->all()) == 0){
             return response(['message'=>'Тело запроса должно быть объектом'], '400');
