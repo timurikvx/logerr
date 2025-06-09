@@ -29,8 +29,11 @@ class ListSettings implements IListSettings
     public function current(IListModel $provider, $option = null)
     {
         $team = $this->teamService->current();
+        if(is_null($team)){
+            return null;
+        }
         if(!is_null($option)){
-            $this->userSettingsService->set($provider->prefix().'_current_option', $team, $option->guid);
+            $this->userSettingsService->set($provider->prefix().'_current_option', $team->id, $option->guid);
         }
         $guid = $this->userSettingsService->get($provider->prefix().'_current_option', $team->id);
         return $this->listSettingsService->getByGuid($team, $guid, $provider->prefix());
@@ -102,4 +105,5 @@ class ListSettings implements IListSettings
         $this->userSettingsService->remove($provider->cacheFilters(), $team->id);
         $this->userSettingsService->remove($provider->cacheColumns(), $team->id);
     }
+
 }

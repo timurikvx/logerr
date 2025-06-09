@@ -12,7 +12,7 @@ class Crew extends Model
 {
     use HasFactory;
 
-    public static function create($name, $guid = null): int
+    public static function create($name, $guid = null): string
     {
         $user = Auth::id();
         if($guid === null){
@@ -31,7 +31,7 @@ class Crew extends Model
         $crewMember->roles = json_encode(['admin']);
         $crewMember->save();
 
-        return $crew->id;
+        return $crew->guid;
     }
 
     public static function check($name):bool

@@ -71,7 +71,10 @@ class ListPreferences implements IListPreferences
             return;
         }
         $team = $this->teamService->current();
-        $this->userSettingsService->set($provider->cacheFilters(), $team, $data);
+        if(is_null($team)){
+            return;
+        }
+        $this->userSettingsService->set($provider->cacheFilters(), $team->id, $data);
     }
 
     public function saveSort(IListModel $provider, $data): void
@@ -80,7 +83,10 @@ class ListPreferences implements IListPreferences
             return;
         }
         $team = $this->teamService->current();
-        $this->userSettingsService->set($provider->cacheSort(), $team, $data);
+        if(is_null($team)){
+            return;
+        }
+        $this->userSettingsService->set($provider->cacheSort(), $team->id, $data);
     }
 
     public function saveColumns(IListModel $provider, $data): void
@@ -89,7 +95,10 @@ class ListPreferences implements IListPreferences
             return;
         }
         $team = $this->teamService->current();
-        $this->userSettingsService->set($provider->cacheColumns(), $team, $data);
+        if(is_null($team)){
+            return;
+        }
+        $this->userSettingsService->set($provider->cacheColumns(), $team->id, $data);
     }
 
     public function remove($provider): void

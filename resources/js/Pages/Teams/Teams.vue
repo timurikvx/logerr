@@ -67,6 +67,7 @@
     onMounted(() => {
         axios.post('/team/list').then(function(response){
             teams.value = response.data.list;
+            console.log(response.data.list);
         })
     });
 

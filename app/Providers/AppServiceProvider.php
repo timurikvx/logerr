@@ -10,6 +10,7 @@ use App\Interfaces\IListSettingsService;
 use App\Interfaces\IListPreferences;
 use App\Interfaces\IListProvider;
 use App\Interfaces\ILogerrCache;
+use App\Interfaces\ITeamProvider;
 use App\Interfaces\ITeamService;
 use App\Interfaces\IUserSettingsService;
 use App\Listeners\HandleErrorsListener;
@@ -19,6 +20,7 @@ use App\Services\ListOptions\ListPreferences;
 use App\Services\ListOptions\ListSettingsService;
 use App\Services\ListProvider;
 use App\Services\ListSettings;
+use App\Services\TeamProvider;
 use App\Services\Teams\TeamService;
 use App\Services\UserOptions\UserSettingsService;
 use Illuminate\Support\Facades\Auth;
@@ -50,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(IListProvider::class, ListProvider::class);
         $this->app->bind(IListSettings::class, ListSettings::class);
         $this->app->bind(IListPreferences::class, ListPreferences::class);
+        $this->app->bind(ITeamProvider::class, TeamProvider::class);
 
     }
 }

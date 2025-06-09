@@ -2,18 +2,10 @@
 
 namespace App\Http\Controllers\Errors;
 
-use App\Actions\PageOptions;
-use App\Actions\Paginate;
-use App\Events\HandleErrorsEvent;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Crew\CrewItemResource;
-use App\Http\Resources\Errors\ErrorItemResource;
 use App\Interfaces\IListSettings;
-use App\Interfaces\IListSettingsService;
 use App\Interfaces\IListProvider;
 use App\Interfaces\ITeamService;
-use App\Interfaces\IUserSettingsService;
-use App\Models\Crew;
 use App\Models\Error;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -105,6 +97,23 @@ class ErrorController extends Controller
         $field = $request->get('field');
         $this->listPreferences->clear($provider, $field);
         return ['result'=>true];
+    }
+
+    public function filter(Request $request): array
+    {
+        $team = $this->teamService->current();
+        $filters = $request->get('filter');
+        $sort = $request->get('sort');
+
+        $provider = new Error();
+        $this->listPreferences->saveFilters($provider, $filters);
+        $this->listPreferences->saveSort($provider, $sort);
+
+        $data = $this->listProvider->get($provider, $team, $filters, $sort);
+        return [
+            'list'=>$data->data,
+            'paginate'=>$data->paginate
+        ];
     }
 
 }

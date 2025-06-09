@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TelegramChatController;
 use App\Http\Controllers\Errors\ErrorController as NewErrorController;
 use App\Http\Controllers\Logs\LogsController as NewLogsController;
+use App\Http\Controllers\TeamController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -56,9 +57,9 @@ Route::middleware(['auth'])->group(function(){
     ///////////////////////////////// POST //////////////////////////////////////
 
     //Teams
-    Route::post('/team/change', [DashboardController::class, 'teamChange']);
-    Route::post('/team/create', [CrewController::class, 'create']);
-    Route::post('/team/list', [CrewController::class, 'list']);
+    //Route::post('/team/change', [DashboardController::class, 'teamChange']);
+    //Route::post('/team/create', [CrewController::class, 'create']);
+    //Route::post('/team/list', [CrewController::class, 'list']);
     Route::post('/team/invite', [CrewController::class, 'invite']);
     Route::post('/team/save', [CrewController::class, 'save']);
     Route::post('/team/role/change', [CrewController::class, 'roleChange']);
@@ -110,6 +111,11 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/telegram/chat/teams/copy', [TelegramChatController::class, 'copyTeams']);
 
     //New
+
+    Route::post('/team/create', [TeamController::class, 'create']);
+    Route::post('/team/list', [TeamController::class, 'list']);
+    Route::post('/team/change', [TeamController::class, 'change']);
+
 
     Route::post('/error/options/create', [NewErrorController::class, 'createSetting']);
     Route::post('/error/options/change', [NewErrorController::class, 'changeSetting']);

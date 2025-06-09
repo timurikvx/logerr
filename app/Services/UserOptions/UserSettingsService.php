@@ -15,8 +15,7 @@ class UserSettingsService implements IUserSettingsService
     }
     public function set(string $name, $team, mixed $value): void
     {
-        //$this->cache->delete($name);
-        UserOption::set($name, $team->id, $value);
+        UserOption::set($name, $team, $value);
     }
 
     public function get(string $name, int $team = 0, mixed $default = null): mixed

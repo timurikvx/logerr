@@ -70,4 +70,14 @@ class ListProvider implements IListProvider
         return $data;
     }
 
+    public function saveFilters()
+    {
+
+    }
+
+    public function saveSort()
+    {
+
+    }
+
 }
