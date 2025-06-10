@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 interface IListPreferences
 {
-    function columns($provider): array;
+//    function columns($provider): array;
+//
+//    function sort($provider): array;
+//
+//    function filters($provider): array;
 
-    function sort($provider): array;
-
-    function filters($provider): array;
-
-    function remove($provider): void;
+    //function remove($provider): void;
 
     function saveFilters(IListModel $provider, $data): void;
 

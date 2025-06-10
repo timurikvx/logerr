@@ -359,7 +359,6 @@
             option.value = data.option;
             paginate.value = data.paginate;
             scroll.value.$el.scrollTop = 0;
-            //console.log(response.data);
         }).catch(function (error){
             shade.value = false;
         });

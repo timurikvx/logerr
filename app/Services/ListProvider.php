@@ -16,9 +16,10 @@ use Illuminate\Support\Collection;
 class ListProvider implements IListProvider
 {
 
-    public function __construct(IListPreferences $listPreferences, IListSettings $listSettings)
+    private IListSettings $listSettings;
+
+    public function __construct(IListSettings $listSettings)
     {
-        $this->listPreferences = $listPreferences;
         $this->listSettings = $listSettings;
     }
 
@@ -28,12 +29,10 @@ class ListProvider implements IListProvider
         return Paginate::paginate($query, $filters, $sort, ErrorItemResource::class);
     }
 
-    public function list($provider, $team, string $title, Request $request): Collection
+    public function list($provider, $team, Request $request): Collection
     {
         $list = $this->updateList($provider, $team);
-
         $data = PageOptions::get();
-        $data->put('title', $title);
         $data->put('crew', (new CrewItemResource($team))->toArray($request));
         $data->put('list', $list['list']);
         $data->put('sort', $list['sort']);
@@ -42,7 +41,6 @@ class ListProvider implements IListProvider
         $data->put('options', $list['options']);
         $data->put('option', $list['option']);
         $data->put('paginate', $list['paginate']);
-        $data->put('head', $title);
         $data->put('prefix', $provider->prefix());
         $data->put('teams', CrewItemResource::collection(Crew::list())->toArray($request));
         $data->put('team', (new CrewItemResource($team))->toArray($request));
@@ -51,9 +49,9 @@ class ListProvider implements IListProvider
 
     public function updateList($provider, $team): array
     {
-        $columns = $this->listPreferences->columns($provider);
-        $sort = $this->listPreferences->sort($provider);
-        $filters = $this->listPreferences->filters($provider);
+        $columns = $this->listSettings->getColumns($provider);
+        $sort = $this->listSettings->getSort($provider);
+        $filters = $this->listSettings->getFilters($provider);
 
         $paginate = $this->get($provider, $team, $filters, $sort);
         $settings = $this->listSettings->settings($provider);
@@ -70,14 +68,11 @@ class ListProvider implements IListProvider
         return $data;
     }
 
-    public function saveFilters()
+    public function saveFilters($provider, $team, $filters, $sort): \stdClass
     {
-
-    }
-
-    public function saveSort()
-    {
-
+        $this->listSettings->saveFilters($provider, $filters);
+        $this->listSettings->saveSort($provider, $sort);
+        return $this->get($provider, $team, $filters, $sort);
     }
 
 }

@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\PageOptions;
 use App\Actions\Report;
 use App\Http\Resources\Crew\CrewItemResource;
+use App\Http\Resources\Crew\CrewMembersResource;
 use App\Interfaces\ITeamProvider;
+use App\Models\Crew;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class TeamController extends Controller
 {
@@ -15,6 +21,30 @@ class TeamController extends Controller
     {
         parent::__construct();
         $this->teamProvider = $teamProvider;
+    }
+
+    public function teams(Request $request): Response
+    {
+        $list = $this->teamProvider->list();
+        $data = PageOptions::get();
+        $data->put('title', 'Управление командами');
+        $data->put('teams', CrewItemResource::collection($list)->toArray($request));
+        return Inertia::render('Teams/Teams', $data);
+    }
+
+    public function team(Request $request, string $guid): Response
+    {
+        $data = PageOptions::get();
+        $team = $this->teamProvider->current();
+        $members = $this->teamProvider->members($team);
+
+        $data->put('title', 'Команда '.$team->name);
+        $data->put('team', (new CrewItemResource($team))->toArray($request));
+        $data->put('roles', Crew::roles());
+        $data->put('members', CrewMembersResource::collection($members)->toArray($request));
+        $data->put('user', Auth::id());
+        $data->put('title', 'Выбор команды ошибок');
+        return Inertia::render('Teams/Team', $data);
     }
 
     public function create(Request $request): mixed
@@ -59,14 +89,21 @@ class TeamController extends Controller
         $list = $this->teamProvider->list();
         $data_team = Report::getTop5TodayErrors($team->id);
         $report = ['data'=>$data_team->pluck('value', 'name'), 'guid'=>$team->guid, 'team'=>$team->name];
-        $reports = [
-            'today'=>$report
-        ];
+        $reports = ['today'=>$report];
         return [
             'reports'=>$reports,
             'list'=>CrewItemResource::collection($list)->toArray($request)
         ];
 
+    }
+
+    public function save(Request $request): array
+    {
+        $name = $request->get('name');
+        $guid = $request->get('guid');
+        $team = $this->teamProvider->get($guid);
+        $this->teamProvider->rename($team, $name);
+        return ['result'=>true];
     }
 
 }

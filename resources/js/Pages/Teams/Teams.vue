@@ -56,6 +56,7 @@
             type: Object,
             default: {}
         },
+        teams: Array,
         short: {
             type: Boolean,
             default: false
@@ -65,10 +66,7 @@
     provide('short', props.short);
 
     onMounted(() => {
-        axios.post('/team/list').then(function(response){
-            teams.value = response.data.list;
-            console.log(response.data.list);
-        })
+        teams.value = props.teams;
     });
 
     function created(list){

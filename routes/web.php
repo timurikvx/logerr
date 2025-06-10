@@ -37,18 +37,16 @@ Route::middleware(['auth'])->group(function(){
     //Pages
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    Route::get('/errors', [NewErrorController::class, 'errors'])->name('errors');
     //Route::get('/errors', [ErrorController::class, 'getList'])->name('errors');
 
     //Route::get('/errors/teams/select', [ErrorController::class, 'selectTeam'])->name('selectTeamError');
 
-    Route::get('/teams', [CrewController::class, 'teams'])->name('teams');
+    //Route::get('/teams', [CrewController::class, 'teams'])->name('teams');
     //Route::get('/errors/teams/select', [CrewController::class, 'selectTeam'])->name('selectTeamLog');
 
-    Route::get('/teams/{team}', [CrewController::class, 'team']);
+    //Route::get('/teams/{team}', [CrewController::class, 'team']);
 
     //Route::get('/logs', [LogController::class, 'getList'])->name('logs');
-    Route::get('/logs', [NewLogsController::class, 'logs'])->name('logs');
 
     Route::get('/notifications', [NotificationController::class, 'notifications']);
     Route::get('/notifications/telegram', [NotificationController::class, 'telegram']);
@@ -61,7 +59,7 @@ Route::middleware(['auth'])->group(function(){
     //Route::post('/team/create', [CrewController::class, 'create']);
     //Route::post('/team/list', [CrewController::class, 'list']);
     Route::post('/team/invite', [CrewController::class, 'invite']);
-    Route::post('/team/save', [CrewController::class, 'save']);
+    //Route::post('/team/save', [CrewController::class, 'save']);
     Route::post('/team/role/change', [CrewController::class, 'roleChange']);
     Route::post('/team/exclude', [CrewController::class, 'exclude']);
 
@@ -88,9 +86,9 @@ Route::middleware(['auth'])->group(function(){
     //Route::post('/error/options/change', [ErrorController::class, 'optionChange']);
     //Route::post('/error/options/delete', [ErrorController::class, 'optionDelete']);
 
-    Route::post('/error/team/change', [ErrorController::class, 'teamChange']);
-    Route::post('/error/filter', [ErrorController::class, 'filter']);
-    Route::post('/error/page', [ErrorController::class, 'page']);
+    //Route::post('/error/team/change', [ErrorController::class, 'teamChange']);
+    //Route::post('/error/filter', [ErrorController::class, 'filter']);
+    //Route::post('/error/page', [ErrorController::class, 'page']);
 
     //Logs
     //Route::post('/log/options/set', [LogController::class, 'optionSet']);
@@ -101,8 +99,8 @@ Route::middleware(['auth'])->group(function(){
     //Route::post('/log/options/change', [LogController::class, 'optionChange']);
     //Route::post('/log/options/delete', [LogController::class, 'optionDelete']);
 
-    Route::post('/log/team/change', [LogController::class, 'teamChange']);
-    Route::post('/log/filter', [LogController::class, 'filter']);
+    //Route::post('/log/team/change', [LogController::class, 'teamChange']);
+    //Route::post('/log/filter', [LogController::class, 'filter']);
     Route::post('/log/page', [LogController::class, 'page']);
 
     Route::post('/telegram/chat/save', [TelegramChatController::class, 'save']);
@@ -110,20 +108,34 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/telegram/chat/teams/get', [TelegramChatController::class, 'getFromTeams']);
     Route::post('/telegram/chat/teams/copy', [TelegramChatController::class, 'copyTeams']);
 
+
+
     //New
 
+    //GET
+    Route::get('/errors', [NewErrorController::class, 'errors'])->name('errors');
+    Route::get('/logs', [NewLogsController::class, 'logs'])->name('logs');
+
+    Route::get('/teams', [TeamController::class, 'teams'])->name('teams');
+    Route::get('/teams/{team}', [TeamController::class, 'team'])->name('team');
+
+    //POST
     Route::post('/team/create', [TeamController::class, 'create']);
     Route::post('/team/list', [TeamController::class, 'list']);
     Route::post('/team/change', [TeamController::class, 'change']);
+    Route::post('/team/save', [TeamController::class, 'save']);
 
+
+    Route::post('/error/filter', [NewErrorController::class, 'filter']);
+    Route::post('/log/filter', [NewLogsController::class, 'filter']);
 
     Route::post('/error/options/create', [NewErrorController::class, 'createSetting']);
     Route::post('/error/options/change', [NewErrorController::class, 'changeSetting']);
     Route::post('/error/options/delete', [NewErrorController::class, 'removeSetting']);
     Route::post('/error/options/save', [NewErrorController::class, 'saveSetting']);
-
     Route::post('/error/options/set', [NewErrorController::class, 'setPreferences']);
     Route::post('/error/options/clear', [NewErrorController::class, 'clearPreferences']);
+    Route::post('/error/page', [NewErrorController::class, 'page']);
 
     Route::post('/log/options/create', [NewLogsController::class, 'createSetting']);
     Route::post('/log/options/change', [NewLogsController::class, 'changeSetting']);
@@ -132,5 +144,8 @@ Route::middleware(['auth'])->group(function(){
 
     Route::post('/log/options/set', [NewLogsController::class, 'setPreferences']);
     Route::post('/log/options/clear', [NewLogsController::class, 'clearPreferences']);
+
+    Route::post('/error/team/change', [NewErrorController::class, 'changeTeam']);
+    Route::post('/log/team/change', [NewLogsController::class, 'changeTeam']);
 
 });

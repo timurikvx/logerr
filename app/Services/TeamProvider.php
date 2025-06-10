@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\ITeamProvider;
 use App\Interfaces\ITeamService;
+use App\Models\Crew;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +16,14 @@ class TeamProvider implements ITeamProvider
         $this->teamService = $teamService;
     }
 
+    public function current($guid = null): Model|null
+    {
+        if(!is_null($guid)){
+            return $this->change($guid);
+        }
+        return $this->teamService->current();
+    }
+
     public function change($guid): Model|null
     {
         $team = $this->teamService->getByGuid($guid);
@@ -24,9 +33,9 @@ class TeamProvider implements ITeamProvider
         return $this->teamService->current($team->id);
     }
 
-    public function update()
+    public function members($team): Collection
     {
-
+        return Crew::getMembers($team->id);
     }
 
     public function list(): Collection
@@ -39,24 +48,13 @@ class TeamProvider implements ITeamProvider
         return $this->teamService->create($name);
     }
 
-    public function save()
+    public function rename(&$team, $name): void
     {
-
+        Crew::rename($team, $name);
     }
 
-    public function exclude()
+    public function get(string $guid): Model|null
     {
-
+        return Crew::getByGuid($guid);
     }
-
-    public function invite()
-    {
-
-    }
-
-    public function roleChange()
-    {
-
-    }
-
 }

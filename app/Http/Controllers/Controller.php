@@ -3,23 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Report as Reporting;
-use App\Interfaces\ITeamService;
-use App\Models\Crew;
-use App\Models\NotificationMessage;
-use App\Models\NotificationsOption;
-use App\Models\Option;
-use App\Services\Teams\TeamService;
 use Illuminate\Http\Request;
-use App\Models\TelegramChat;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
-use Inertia\Response;
-use Ramsey\Uuid\Uuid;
 
 class Controller extends BaseController
 {
@@ -40,7 +29,7 @@ class Controller extends BaseController
         ]);
     }
 
-    public function test(Request $request,): void
+    public function test(Request $request): void
     {
         //dump($this->service->roles());
         //dump($service->roles());

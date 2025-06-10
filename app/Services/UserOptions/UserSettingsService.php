@@ -20,7 +20,7 @@ class UserSettingsService implements IUserSettingsService
 
     public function get(string $name, int $team = 0, mixed $default = null): mixed
     {
-        //return $this->cache->get($name, function () use ($name, $team, $default){
+        //return $this->cache->get($name.'_'.$team, function () use ($name, $team, $default){
         return UserOption::get($name, $team, $default);
         //});
     }

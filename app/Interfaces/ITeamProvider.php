@@ -13,4 +13,12 @@ interface ITeamProvider
 
     function change($guid): Model|null;
 
+    function current($guid = null): Model|null;
+
+    function members($team): Collection;
+
+    function get(string $guid): Model|null;
+
+    function rename(&$team, $name): void;
+
 }

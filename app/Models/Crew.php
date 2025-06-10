@@ -121,4 +121,13 @@ class Crew extends Model
         return $list;
     }
 
+    public static function rename(&$team, $name): void
+    {
+        $roles = $team->roles;
+        $team->name = $name;
+        unset($team->roles);
+        $team->save();
+        $team->roles = $roles;
+    }
+
 }

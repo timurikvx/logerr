@@ -2,7 +2,6 @@
 
 namespace App\Interfaces;
 
-use App\Interfaces\IListModel;
 use Illuminate\Http\Request;
 
 interface IListSettings
@@ -15,10 +14,24 @@ interface IListSettings
 
     function removeSetting(IListModel $provider, string $guid): void;
 
-    function changeSetting();
-
     function saveSetting(IListModel $provider, $guid, $data): array;
 
     function getSettingData(Request $request): array;
+
+    function removePreferences(IListModel $provider, $team): void;
+
+    function getFilters($provider): array;
+
+    function getSort($provider): array;
+
+    function getColumns($provider): array;
+
+    function saveFilters(IListModel $provider, $data): void;
+
+    function saveSort(IListModel $provider, $data): void;
+
+    function saveColumns(IListModel $provider, $data): void;
+
+    function clearCondition(IListModel $provider, $field): void;
 
 }

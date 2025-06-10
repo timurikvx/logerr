@@ -73,13 +73,6 @@ class CrewController extends Controller
         $data->put('members', CrewMembersResource::collection($members)->toArray($request));
         $data->put('user', Auth::id());
         $data->put('title', 'Выбор команды ошибок');
-//        $data = [
-//            'title'=>'Команда '.$team->name,
-//            'team'=>(new CrewItemResource($team))->toArray($request),
-//            'roles'=>Crew::roles(),
-//            'members'=>CrewMembersResource::collection($members)->toArray($request),
-//            'user'=>Auth::id()
-//        ];
         return Inertia::render('Teams/Team', $data);
     }
 

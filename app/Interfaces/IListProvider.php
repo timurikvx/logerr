@@ -9,8 +9,10 @@ interface IListProvider
 {
     function get($provider, $team, array $filters = [], array $sort = []): \stdClass;
 
-    function list($provider, $team, string $title, Request $request): Collection;
+    function list($provider, $team, Request $request): Collection;
 
     function updateList($provider, $team): array;
+
+    function saveFilters($provider, $team, $filters, $sort): \stdClass;
 
 }

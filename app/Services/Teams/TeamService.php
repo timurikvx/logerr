@@ -36,46 +36,10 @@ class TeamService implements ITeamService
         return Crew::list();
     }
 
-//
-//    public function inTeam(string $name): bool
-//    {
-//        return Crew::check($name);
-//    }
-//
-//    public function inTeamByGuid(string $guid):bool
-//    {
-//        return Crew::checkGuid($guid);
-//    }
-//
-//    public function userTeams(): Collection
-//    {
-//        return Crew::list();
-//    }
-//
     public function getByGuid(string $guid): Model|null
     {
         return Crew::getByGuid($guid);
     }
-//
-//    public function getByID(int $id): Model|null
-//    {
-//        return Crew::getByGuid($id);
-//    }
-//
-//    public function append(int $user, int $team, $role = null): void
-//    {
-//        Crew::addToTeam($user, $team, $role);
-//    }
-//
-//    public function roles(): array
-//    {
-//        return Crew::roles();
-//    }
-//
-//    public function getMembers(int $team): Collection
-//    {
-//        return Crew::getMembers($team);
-//    }
 
     public function current(int $team = null): Model|null
     {
@@ -86,7 +50,7 @@ class TeamService implements ITeamService
         }
         return $this->cache->get('current_team', function (){
             $team_id = $this->userSettingsService->get('current_team', 0);
-            return Crew::find($team_id);
+            return Crew::getByID($team_id);
         }, 30);
     }
 
