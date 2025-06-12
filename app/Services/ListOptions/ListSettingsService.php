@@ -33,39 +33,39 @@ class ListSettingsService implements IListSettingsService
         return Option::set($team, $name, $value, $category);
     }
 
-    public static function setByGuid($team, $guid, $value, $category = null): string|null
+    public function setByGuid($team, $guid, $value, $category = null): string|null
     {
         return Option::setByGuid($team, $guid, $value, $category);
     }
 
-    public static function getByGuid($team, $guid, $category = null, $without_data = false): mixed
+    public function getByGuid($team, $guid, $category = null, $without_data = false): mixed
     {
         return Option::getByGuid($team->id, $guid, $category, $without_data);
     }
 
-    public static function updateByGuid($team, $guid, $value, $category = null): string|null
+    public function updateByGuid($team, $guid, $value, $category = null): string|null
     {
         return Option::updateByGuid($team, $guid, $value, $category);
     }
 
-    public static function getAll($team, $category, $without_data = false): array
+    public function getAll($team, $category, $without_data = false): array
     {
         return Option::getAll($team, $category, $without_data);
     }
 
-    public static function remove($team, $name, $category = null): void
-    {
-        Option::remove($team, $name, $category);
-    }
+//    public function remove($team, $name, $category = null): void
+//    {
+//        Option::remove($team, $name, $category);
+//    }
 
-    public static function removeByGuid($team, $guid): void
+    public function removeByGuid($team, $guid): void
     {
         Option::removeByGuid($team, $guid);
     }
 
-    public static function clearData(&$options): void
-    {
-        Option::clearData($options);
-    }
+//    public function clearData(&$options): void
+//    {
+//        Option::clearData($options);
+//    }
 
 }

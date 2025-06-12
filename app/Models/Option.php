@@ -137,6 +137,7 @@ class Option extends Model
             ->where('user', '=', $user)
             ->where('team', '=', $team)
             ->where('category', '=', $category)
+            ->orderBy('name')
             ->get();
         $list = [];
         foreach ($options as $option){

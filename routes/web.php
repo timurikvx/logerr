@@ -58,7 +58,7 @@ Route::middleware(['auth'])->group(function(){
     //Route::post('/team/change', [DashboardController::class, 'teamChange']);
     //Route::post('/team/create', [CrewController::class, 'create']);
     //Route::post('/team/list', [CrewController::class, 'list']);
-    Route::post('/team/invite', [CrewController::class, 'invite']);
+    //Route::post('/team/invite', [CrewController::class, 'invite']);
     //Route::post('/team/save', [CrewController::class, 'save']);
     Route::post('/team/role/change', [CrewController::class, 'roleChange']);
     Route::post('/team/exclude', [CrewController::class, 'exclude']);
@@ -101,7 +101,7 @@ Route::middleware(['auth'])->group(function(){
 
     //Route::post('/log/team/change', [LogController::class, 'teamChange']);
     //Route::post('/log/filter', [LogController::class, 'filter']);
-    Route::post('/log/page', [LogController::class, 'page']);
+    //Route::post('/log/page', [LogController::class, 'page']);
 
     Route::post('/telegram/chat/save', [TelegramChatController::class, 'save']);
     Route::post('/telegram/chat/remove', [TelegramChatController::class, 'remove']);
@@ -124,7 +124,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/team/list', [TeamController::class, 'list']);
     Route::post('/team/change', [TeamController::class, 'change']);
     Route::post('/team/save', [TeamController::class, 'save']);
-
+    Route::post('/team/invite', [TeamController::class, 'invite']);
 
     Route::post('/error/filter', [NewErrorController::class, 'filter']);
     Route::post('/log/filter', [NewLogsController::class, 'filter']);
@@ -141,6 +141,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/log/options/change', [NewLogsController::class, 'changeSetting']);
     Route::post('/log/options/delete', [NewLogsController::class, 'removeSetting']);
     Route::post('/log/options/save', [NewLogsController::class, 'saveSetting']);
+    Route::post('/log/page', [NewLogsController::class, 'page']);
 
     Route::post('/log/options/set', [NewLogsController::class, 'setPreferences']);
     Route::post('/log/options/clear', [NewLogsController::class, 'clearPreferences']);

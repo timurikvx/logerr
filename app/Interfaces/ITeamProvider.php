@@ -21,4 +21,6 @@ interface ITeamProvider
 
     function rename(&$team, $name): void;
 
+    function invite($inviter, string $email, string $team_guid): array;
+
 }

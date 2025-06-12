@@ -13,6 +13,10 @@ use Inertia\Inertia;
 
 class LogsController extends Controller
 {
+    private ITeamProvider $teamProvider;
+    private IListProvider $listProvider;
+    private IListSettings $listSettings;
+
     public function __construct(
         ITeamProvider        $teamProvider,
         IListProvider        $listProvider,

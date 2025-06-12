@@ -18,7 +18,7 @@ interface IListSettings
 
     function getSettingData(Request $request): array;
 
-    function removePreferences(IListModel $provider, $team): void;
+    function removeConditions(IListModel $provider, $team): void;
 
     function getFilters($provider): array;
 

@@ -61,7 +61,7 @@ class ListSettings implements IListSettings
     {
         $guid = $this->listSettingsService->set($team->id, $name, $data, $provider->prefix());
 
-        $this->removePreferences($provider, $team);
+        $this->removeConditions($provider, $team);
 
         $settings = $this->settings($provider);
         $setting = $this->listSettingsService->getByGuid($team, $guid, $provider->prefix());
@@ -79,7 +79,7 @@ class ListSettings implements IListSettings
         $team = $this->teamService->current();
         $this->listSettingsService->updateByGuid($team->id, $guid, $data, $provider->prefix());
 
-        $this->removePreferences($provider, $team);
+        $this->removeConditions($provider, $team);
 
         $settings = $this->settings($provider);
         $setting = $this->listSettingsService->getByGuid($team, $guid, $provider->prefix());
@@ -95,7 +95,7 @@ class ListSettings implements IListSettings
         ];
     }
 
-    public function removePreferences(IListModel $provider, $team): void
+    public function removeConditions(IListModel $provider, $team): void
     {
         $this->userSettingsService->remove($provider->cacheSort(), $team->id);
         $this->userSettingsService->remove($provider->cacheFilters(), $team->id);

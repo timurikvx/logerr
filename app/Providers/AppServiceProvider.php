@@ -47,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ITeamService::class, TeamService::class);
         $this->app->bind(IUserSettingsService::class, UserSettingsService::class);
         $this->app->bind(IListSettingsService::class, ListSettingsService::class);
+
         $this->app->bind(IListProvider::class, ListProvider::class);
         $this->app->bind(IListSettings::class, ListSettings::class);
         //$this->app->bind(IListPreferences::class, ListPreferences::class);

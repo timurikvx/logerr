@@ -8,8 +8,12 @@ use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Crew\CrewMembersResource;
 use App\Interfaces\ITeamProvider;
 use App\Models\Crew;
+use App\Models\Notification;
+use App\Models\User;
+use App\Services\Teams\TeamValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -103,6 +107,47 @@ class TeamController extends Controller
         $guid = $request->get('guid');
         $team = $this->teamProvider->get($guid);
         $this->teamProvider->rename($team, $name);
+        return ['result'=>true];
+    }
+
+    public function invite(Request $request): array
+    {
+        $iam = Auth::user();
+        $team_guid = $request->get('guid');
+        $email = $request->get('email');
+
+        $team = $this->teamProvider->get($team_guid);
+
+        $validator = new TeamValidator();
+        $validator->validateInvite($team, $iam, '', 'invite_to_team');
+//        $iam = Auth::user();
+//        $team_guid = $request->get('guid');
+//        $email = $request->get('email');
+//
+//        $team = Crew::getByGuid($team_guid);
+//        $user = User::query()->where('email', '=', $email)->first();
+//        if(is_null($team)){
+//            return ['error'=>'Команда не найдена'];
+//        }
+//        $try = Cache::get('invite_try_'.$iam, 0);
+//        if($try >= 5){
+//            return ['error'=>'Слишком много неудачных приглашений. Подождите 2 минуты перед следующей попыткой', 'try'=>$try];
+//        }
+//        if(is_null($user)){
+//            Cache::set('invite_try_'.$iam, $try + 1, 120);
+//            return ['error'=>'Пользователь не найден', 'try'=>$try];
+//        }
+//        if($iam->id === $user->id){
+//            Cache::set('invite_try_'.$iam, $try + 1, 120);
+//            return ['error'=>'Вы приглашаете самого себя', 'try'=>$try];
+//        }
+//        $type = 'invite_to_team';
+//        if(Notification::exist($type, $user->id)){
+//            Cache::set('invite_try_'.$iam, $try + 1, 120);
+//            return ['error'=>'Вы приглашаете самого себя', 'try'=>$try];
+//        }
+//        $text = 'Вы приглашены в команду '.$team->name.' вступите или проигнорируйте уведомление!';
+//        Notification::create($type, $user->id, 'Приглашение в команду '.$team->name, $text, $team->toArray());
         return ['result'=>true];
     }
 

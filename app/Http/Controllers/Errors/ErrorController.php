@@ -14,6 +14,10 @@ use Inertia\Inertia;
 class ErrorController extends Controller
 {
 
+    private IListProvider $listProvider;
+    private IListSettings $listSettings;
+    private ITeamProvider $teamProvider;
+
     public function __construct(
         IListProvider        $listProvider,
         IListSettings        $listSettings,
