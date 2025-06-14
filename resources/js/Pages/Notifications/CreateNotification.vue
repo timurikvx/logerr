@@ -58,7 +58,7 @@
         <div class="grow"></div>
         <button class="button green" @click="save()">Сохранить</button>
     </div>
-    <ListChoice v-model:visible="choice" :list="list" table="error" column="name"></ListChoice>
+    <ListChoice v-model:visible="choice" :list="list" table="errors" column="name"></ListChoice>
 </template>
 
 <script setup>

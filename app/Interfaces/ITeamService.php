@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Interfaces\Models\TeamInterface;
 use Illuminate\Support\Collection;
 
 interface ITeamService
@@ -12,25 +12,8 @@ interface ITeamService
 
     function list(): Collection;
 
-    function getByGuid(string $guid): Model|null;
+    function getByGuid(string $guid): TeamInterface|null;
 
-//
-//    public function inTeam(string $name): bool;
-//
-//    public function inTeamByGuid(string $guid):bool;
-//
-//    public function userTeams(): Collection;
-//
-//    public function getByGuid(string $guid): Model|null;
-//
-//    public function getByID(int $id): Model|null;
-//
-//    public function append(int $user, int $team, $role = null): void;
-//
-//    public function roles(): array;
-//
-//    public function getMembers(int $team): Collection;
-
-    function current(int $team = null): Model|null;
+    function current(int $team = null): TeamInterface|null;
 
 }

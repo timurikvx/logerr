@@ -4,12 +4,15 @@ namespace App\Services;
 
 use App\Interfaces\ITeamProvider;
 use App\Interfaces\ITeamService;
+use App\Interfaces\Models\TeamInterface;
+use App\Interfaces\Models\UserInterface;
 use App\Models\Crew;
+use App\Models\CrewMembers;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Enumerable;
 
 class TeamProvider implements ITeamProvider
 {
@@ -19,7 +22,7 @@ class TeamProvider implements ITeamProvider
         $this->teamService = $teamService;
     }
 
-    public function current($guid = null): Model|null
+    public function current($guid = null): TeamInterface|null
     {
         if(!is_null($guid)){
             return $this->change($guid);
@@ -27,7 +30,7 @@ class TeamProvider implements ITeamProvider
         return $this->teamService->current();
     }
 
-    public function change($guid): Model|null
+    public function change($guid): TeamInterface|null
     {
         $team = $this->teamService->getByGuid($guid);
         if($team == null){
@@ -36,12 +39,12 @@ class TeamProvider implements ITeamProvider
         return $this->teamService->current($team->id);
     }
 
-    public function members($team): Collection
+    public function members($team): Enumerable
     {
         return Crew::getMembers($team->id);
     }
 
-    public function list(): Collection
+    public function list(): Enumerable
     {
         return $this->teamService->list();
     }
@@ -56,7 +59,7 @@ class TeamProvider implements ITeamProvider
         Crew::rename($team, $name);
     }
 
-    public function get(string $guid): Model|null
+    public function get(string $guid): TeamInterface|null
     {
         return Crew::getByGuid($guid);
     }
@@ -89,6 +92,37 @@ class TeamProvider implements ITeamProvider
         $text = 'Вы приглашены в команду '.$team->name.' вступите или проигнорируйте уведомление!';
         Notification::create($type, $user->id, 'Приглашение в команду '.$team->name, $text, $team->toArray());
         return ['result'=>true];
+    }
+
+    public function changeRole(TeamInterface $team, UserInterface $user, $role): bool
+    {
+        $member = CrewMembers::query()->where('user', '=',$user->getID())->where('crew', '=', $team->getID())->first();
+        if($member == null){
+            return false;
+        }
+        $member->roles = json_encode([$role]);
+        $member->save();
+        return true;
+    }
+
+    public function exclude(UserInterface $user, TeamInterface $team): Enumerable
+    {
+        CrewMembers::query()->where('user', '=',$user->getID())->where('crew', '=', $team->getID())->delete();
+        return Crew::getMembers($team->getID());
+    }
+
+    public function listWithout(Enumerable $teams): Enumerable
+    {
+        $list = [];
+        $ids = $teams->pluck('id')->values()->toArray();
+        $all = $this->teamService->list();
+        foreach ($all as $team){
+            if(in_array($team->getID(), $ids)){
+                continue;
+            }
+            $list[] = $team;
+        }
+        return collect($list);
     }
 
 }

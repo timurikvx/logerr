@@ -5,6 +5,7 @@ namespace App\Services\Teams;
 use App\Interfaces\ILogerrCache;
 use App\Interfaces\ITeamService;
 use App\Interfaces\IUserSettingsService;
+use App\Interfaces\Models\TeamInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use App\Models\Crew;
@@ -36,12 +37,12 @@ class TeamService implements ITeamService
         return Crew::list();
     }
 
-    public function getByGuid(string $guid): Model|null
+    public function getByGuid(string $guid): TeamInterface|null
     {
         return Crew::getByGuid($guid);
     }
 
-    public function current(int $team = null): Model|null
+    public function current(int $team = null): TeamInterface|null
     {
         if(!is_null($team)){
             $teamItem = Crew::find($team);

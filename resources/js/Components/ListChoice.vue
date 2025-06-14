@@ -77,7 +77,7 @@
         show();
         clearTimeout(id);
         id = setTimeout(function (){
-            axios.post('/choice', {value: text, type: props.table, field: props.column}).then(function (response){
+            axios.post('/filter/search', {value: text, type: props.table, field: props.column}).then(function (response){
                 list_visible.value = true;
                 choice.value = response.data.list;
             });

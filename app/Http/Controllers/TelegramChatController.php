@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Telegram\TelegramChatResource;
+use App\Interfaces\ITeamProvider;
+use App\Interfaces\ITeamService;
+use App\Interfaces\TelegramChatProviderInterface;
 use App\Models\Crew;
 use App\Models\TelegramChat;
 use App\Models\UserOption;
@@ -10,6 +13,17 @@ use Illuminate\Http\Request;
 
 class TelegramChatController extends Controller
 {
+
+    private ITeamProvider $teamProvider;
+    private TelegramChatProviderInterface $telegramChatProvider;
+
+    public function __construct(ITeamProvider $teamProvider, TelegramChatProviderInterface $telegramChatProvider)
+    {
+        parent::__construct();
+        $this->teamProvider = $teamProvider;
+        $this->telegramChatProvider = $telegramChatProvider;
+    }
+
     function save(Request $request): array
     {
         $name = $request->get('name');
@@ -17,17 +31,13 @@ class TelegramChatController extends Controller
         $chat_id = $request->get('chat_id');
         $guid = $request->get('guid');
 
-        $team = UserOption::get('current_team');
-        if(!empty($guid)){
-            $chat = TelegramChat::getByGuid($guid);
-            $chat->name = $name;
-            $chat->token = $token;
-            $chat->chat_id = $chat_id;
-            $chat->save();
+        $team = $this->teamProvider->current();
+        if(empty($guid)){
+            $this->telegramChatProvider->create($team, $name, $token, $chat_id);
         }else{
-            TelegramChat::create($name, $token, $chat_id, $team);
+            $this->telegramChatProvider->update($guid, $name, $token, $chat_id);
         }
-        $chats = TelegramChat::getChats($team);
+        $chats = $this->telegramChatProvider->chats($team);
         return [
             'list'=>(TelegramChatResource::collection($chats))->toArray($request)
         ];
@@ -36,9 +46,9 @@ class TelegramChatController extends Controller
     function remove(Request $request): array
     {
         $guid = $request->get('guid');
-        $team = UserOption::get('current_team');
-        TelegramChat::remove($guid, $team);
-        $chats = TelegramChat::getChats($team);
+        $team = $this->teamProvider->current();
+        $this->telegramChatProvider->remove($team, $guid);
+        $chats = $this->telegramChatProvider->chats($team);
         return [
             'list'=>(TelegramChatResource::collection($chats))->toArray($request)
         ];
@@ -46,30 +56,26 @@ class TelegramChatController extends Controller
 
     function getFromTeams(Request $request): array
     {
-        $teams = Crew::list();
-        $team = UserOption::get('current_team');
-        $list = $teams->filter(function ($item) use ($team){
-            return $item->id !== intval($team);
-        })->pluck('id')->toArray();
-
-        $chats = TelegramChat::query()->whereIn('team', $list)->orderBy('name')->get();
+        $team = $this->teamProvider->current();
+        $teams = $this->teamProvider->listWithout(collect([$team]));
+        $chats = $this->telegramChatProvider->chatsByTeams($teams);
         return [
             'chats'=>(TelegramChatResource::collection($chats))->toArray($request)
         ];
     }
 
-    public function copyTeams(Request $request)
+    public function copyTeams(Request $request): array
     {
-        $team = intval(UserOption::get('current_team'));
+        $team = $this->teamProvider->current();
         $list = $request->get('chats');
-        if(is_array($list)){
-            foreach ($list as $item){
-                $chat = TelegramChat::getByGuid($item['guid']);
-                TelegramChat::create($chat['name'], $chat['token'], $chat['chat_id'], $team);
+        foreach ($list as $guid){
+            $chat = $this->telegramChatProvider->getByGuid($guid);
+            if(is_null($chat)){
+                continue;
             }
+            $this->telegramChatProvider->copyChatToTeam($team, $chat);
         }
-
-        $chats = TelegramChat::getChats($team);
+        $chats = $this->telegramChatProvider->chats($team);
         return [
             'list'=>(TelegramChatResource::collection($chats))->toArray($request)
         ];

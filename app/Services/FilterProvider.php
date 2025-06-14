@@ -2,8 +2,21 @@
 
 namespace App\Services;
 
-class FilterProvider
+use App\Actions\Filters;
+use App\Interfaces\FilterProviderInterface;
+use App\Models\LogerrNames;
+
+class FilterProvider implements FilterProviderInterface
 {
-    //Filters::setFilters($query, $filters);
-    //Filters::setSort($query, $sort);
+    public function search($type, $field, $value): array
+    {
+        $collection = LogerrNames::search($type, $field, $value);
+        return $collection->pluck('value')->toArray();
+    }
+
+    public function filters(): array
+    {
+        return Filters::equalsByTypes();
+    }
+
 }

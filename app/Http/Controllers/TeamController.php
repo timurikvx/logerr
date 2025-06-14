@@ -7,6 +7,7 @@ use App\Actions\Report;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Crew\CrewMembersResource;
 use App\Interfaces\ITeamProvider;
+use App\Interfaces\IUserProvider;
 use App\Models\Crew;
 use App\Models\Notification;
 use App\Models\User;
@@ -21,10 +22,14 @@ use Inertia\Response;
 class TeamController extends Controller
 {
 
-    public function __construct(ITeamProvider $teamProvider)
+    private ITeamProvider $teamProvider;
+    private IUserProvider $userProvider;
+
+    public function __construct(ITeamProvider $teamProvider, IUserProvider $userProvider)
     {
         parent::__construct();
         $this->teamProvider = $teamProvider;
+        $this->userProvider = $userProvider;
     }
 
     public function teams(Request $request): Response
@@ -116,39 +121,45 @@ class TeamController extends Controller
         $team_guid = $request->get('guid');
         $email = $request->get('email');
 
+        $user = $this->userProvider->getByEmail($email);
         $team = $this->teamProvider->get($team_guid);
+        $type = 'invite_to_team';
 
         $validator = new TeamValidator();
-        $validator->validateInvite($team, $iam, '', 'invite_to_team');
-//        $iam = Auth::user();
-//        $team_guid = $request->get('guid');
-//        $email = $request->get('email');
-//
-//        $team = Crew::getByGuid($team_guid);
-//        $user = User::query()->where('email', '=', $email)->first();
-//        if(is_null($team)){
-//            return ['error'=>'Команда не найдена'];
-//        }
-//        $try = Cache::get('invite_try_'.$iam, 0);
-//        if($try >= 5){
-//            return ['error'=>'Слишком много неудачных приглашений. Подождите 2 минуты перед следующей попыткой', 'try'=>$try];
-//        }
-//        if(is_null($user)){
-//            Cache::set('invite_try_'.$iam, $try + 1, 120);
-//            return ['error'=>'Пользователь не найден', 'try'=>$try];
-//        }
-//        if($iam->id === $user->id){
-//            Cache::set('invite_try_'.$iam, $try + 1, 120);
-//            return ['error'=>'Вы приглашаете самого себя', 'try'=>$try];
-//        }
-//        $type = 'invite_to_team';
-//        if(Notification::exist($type, $user->id)){
-//            Cache::set('invite_try_'.$iam, $try + 1, 120);
-//            return ['error'=>'Вы приглашаете самого себя', 'try'=>$try];
-//        }
-//        $text = 'Вы приглашены в команду '.$team->name.' вступите или проигнорируйте уведомление!';
-//        Notification::create($type, $user->id, 'Приглашение в команду '.$team->name, $text, $team->toArray());
+        $errors = $validator->validateInvite($team, $iam, $user, $type);
+        if(count($errors) > 0){
+            return ['errors'=>$errors];
+        }
+
+        $text = 'Вы приглашены в команду '.$team->name.' вступите или проигнорируйте уведомление!';
+        Notification::create($type, $user->getID(), 'Приглашение в команду '.$team->name, $text, $team->toArray());
         return ['result'=>true];
+    }
+
+    public function roleChange(Request $request): array
+    {
+        $role = $request->get('role');
+        $team_guid = $request->get('team');
+        $email = $request->get('email');
+
+        $team = $this->teamProvider->get($team_guid);
+        $user = $this->userProvider->getByEmail($email);
+
+        $result = $this->teamProvider->changeRole($team, $user, $role);
+        return ['result'=>$result];
+    }
+
+    public function exclude(Request $request): array
+    {
+        $team_guid = $request->get('team');
+        $email = $request->get('email');
+
+        $team = $this->teamProvider->get($team_guid);
+        $user = $this->userProvider->getByEmail($email);
+        $members = $this->teamProvider->exclude($user, $team);
+        return [
+            'members'=>CrewMembersResource::collection($members)->toArray($request)
+        ];
     }
 
 }

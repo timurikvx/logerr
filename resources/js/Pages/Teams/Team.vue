@@ -16,7 +16,7 @@
         </div>
         <PerfectScrollbar class="flex flex-col m-4 mt-0">
             <div class="flex border-bottom mb-2">
-                <div class="p-2 text-2xl">Учатники команды</div>
+                <div class="p-2 text-2xl">Участники команды</div>
                 <div class="grow"></div>
                 <div class="w-1/4 flex mb-2">
                     <input type="text" class="self-center input grow" placeholder="Поиск" v-model="search" @input="searching">
@@ -40,7 +40,7 @@
                 <button v-else class="button red mr-4" @click="excludeBegin(member.user)">Исключить</button>
             </div>
         </PerfectScrollbar>
-        <Question :title="question.title" :question="question.question" :type="question.type" v-model:visible="question.visible" @confirm="questionEnd"></Question>
+        <Question :question="question" v-model:visible="question.visible" @confirm="questionEnd"></Question>
     </Layout>
 </template>
 
@@ -94,7 +94,7 @@
     }
 
     function changeRole(member, role){
-        axios.post('/team/role/change', {role: role, user: member.user.id, team: team.value.id}).then(function (response){
+        axios.post('/team/role/change', {role: role, email: member.user.email, team: team.value.guid}).then(function (response){
             if(response.data.result){
                 member.roles = [role];
             }
@@ -106,19 +106,21 @@
         question.value.visible = true;
         question.value.type = 'exclude';
         question.value.title = 'Исключение пользователя из команды';
-        question.value.question = 'Исключенить пользователя из команды ' + team.value.name + '?';
+        question.value.question = 'Исключить пользователя из команды ' + team.value.name + '?';
     }
 
     function exclude(user){
-        axios.post('/team/exclude', {user: user.id, team: team.value.id}).then(function (response){
+        axios.post('/team/exclude', {email: user.email, team: team.value.guid}).then(function (response){
             if(response.data.members){
+                search.value = '';
                 members.value = response.data.members;
+                filtered.value = members.value;
             }
         });
     }
 
-    function questionEnd(type){
-        if(type === 'exclude'){
+    function questionEnd(data){
+        if(data.type === 'exclude'){
             exclude(excludable.value);
         }
     }

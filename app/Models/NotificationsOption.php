@@ -2,13 +2,59 @@
 
 namespace App\Models;
 
+use App\Interfaces\Models\UserNotificationInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class NotificationsOption extends Model
+class NotificationsOption extends Model implements UserNotificationInterface
 {
     use HasFactory;
+
+    function getID(): int
+    {
+        return $this->id;
+    }
+
+    function getName(): string
+    {
+        return $this->name;
+    }
+
+    function getGuid(): string
+    {
+        return $this->guid;
+    }
+
+    function getType(): string
+    {
+        return $this->type;
+    }
+
+    function getChat()
+    {
+        return $this->chat;
+    }
+
+    function getMinutes(): int
+    {
+        return $this->minutes;
+    }
+
+    function getCount(): int
+    {
+        return $this->count;
+    }
+
+    function getEvery(): int
+    {
+        return $this->every;
+    }
+
+    function isDisable(): bool
+    {
+        return (bool)$this->disable;
+    }
 
     public static function getOptions($team, $type): Collection
     {

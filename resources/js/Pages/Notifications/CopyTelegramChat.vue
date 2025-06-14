@@ -38,8 +38,9 @@
     }
 
     function copy(){
+        let list = chats.value.filter((item) => item.select);
         let data = {
-            'chats': chats.value.filter((item)=> item.select)
+            'chats': list.map((item) => item.guid)
         }
         axios.post('/telegram/chat/teams/copy', data).then(function (response){
             modal.telegramChatCopy = false;

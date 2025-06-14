@@ -2,25 +2,32 @@
 
 namespace App\Interfaces;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
+use App\Interfaces\Models\TeamInterface;
+use App\Interfaces\Models\UserInterface;
+use Illuminate\Support\Enumerable;
 
 interface ITeamProvider
 {
     function create($name): array;
 
-    function list(): Collection;
+    function list(): Enumerable;
 
-    function change($guid): Model|null;
+    function change($guid): TeamInterface|null;
 
-    function current($guid = null): Model|null;
+    function current($guid = null): TeamInterface|null;
 
-    function members($team): Collection;
+    function members($team): Enumerable;
 
-    function get(string $guid): Model|null;
+    function get(string $guid): TeamInterface|null;
 
     function rename(&$team, $name): void;
 
     function invite($inviter, string $email, string $team_guid): array;
+
+    function changeRole(TeamInterface $team, UserInterface $user, $role): bool;
+
+    function exclude(UserInterface $user, TeamInterface $team): Enumerable;
+
+    function listWithout(Enumerable $teams): Enumerable;
 
 }

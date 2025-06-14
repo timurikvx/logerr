@@ -36,7 +36,7 @@
             <button class="button" @click="confirm">Применить</button>
         </div>
     </Modal>
-    <ListChoice v-model:visible="list_choice" :list="choice" table="error" :column="field" @complete="choiceComplete"></ListChoice>
+    <ListChoice v-model:visible="list_choice" :list="choice" table="errors" :column="field" @complete="choiceComplete"></ListChoice>
 </template>
 
 <script setup>

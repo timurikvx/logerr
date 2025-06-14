@@ -50,51 +50,48 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', $data);
     }
 
-    public function filters(Request $request): array
-    {
-        return Filters::equalsByTypes();
-    }
+//    public function filters(Request $request): array
+//    {
+//        return Filters::equalsByTypes();
+//    }
 
-    public function choice(Request $request): array
-    {
-        $value = $request->get('value');
-        $type = $request->get('type');
-        $field = $request->get('field');
+//    public function choice(Request $request): array
+//    {
+//        $value = $request->get('value');
+//        $type = $request->get('type');
+//        $field = $request->get('field');
+//
+//        $list = [];
+//        if($type === 'error'){
+//            $list = LogerrNames::query()
+//                ->select('value')
+//                ->where('type', '=', 'errors')
+//                ->where('field', '=', $field)
+//                ->where('value', 'ILIKE', $value.'%')
+//                ->limit(20)->orderBy('value')->get();
+//        }
+//        return [
+//            'list'=>$list->pluck('value')
+//        ];
+//    }
 
-        $list = [];
-        if($type === 'error'){
-            $list = LogerrNames::query()
-                ->select('value')
-                ->where('type', '=', 'errors')
-                ->where('field', '=', $field)
-                ->where('value', 'ILIKE', $value.'%')
-                ->limit(20)->orderBy('value')->get();
-            //$list = Error::query()->select([$field])->where($field, 'ILIKE', $value.'%')->limit(20)->distinct()->orderBy($field)->get();
-
-        }
-        return [
-            'list'=>$list->pluck('value')
-            //'list'=>$list->pluck($field)
-        ];
-    }
-
-    public function teamChange(Request $request): array
-    {
-        $guid = $request->get('team');
-        $team = Crew::getByGuid($guid);
-        if(is_null($team)){
-            return [];
-        }
-        UserOption::set('current_team', 0, $team->id);
-
-        $data_team = Report::getTodayErrors($team->id);
-        $report = ['data'=>$data_team->pluck('value', 'name'), 'guid'=>$team->guid, 'team'=>$team->name];
-        $reports = [
-            'today'=>$report
-        ];
-        return [
-            'reports'=>$reports
-        ];
-    }
+//    public function teamChange(Request $request): array
+//    {
+//        $guid = $request->get('team');
+//        $team = Crew::getByGuid($guid);
+//        if(is_null($team)){
+//            return [];
+//        }
+//        UserOption::set('current_team', 0, $team->id);
+//
+//        $data_team = Report::getTodayErrors($team->id);
+//        $report = ['data'=>$data_team->pluck('value', 'name'), 'guid'=>$team->guid, 'team'=>$team->name];
+//        $reports = [
+//            'today'=>$report
+//        ];
+//        return [
+//            'reports'=>$reports
+//        ];
+//    }
 
 }

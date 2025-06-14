@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Notifications\NotificationOptionResource;
 use App\Http\Resources\Notifications\NotificationResource;
 use App\Http\Resources\Telegram\TelegramChatResource;
+use App\Interfaces\ITeamProvider;
+use App\Interfaces\NotificationInterface;
 use App\Models\Crew;
 use App\Models\Notification;
 use App\Models\NotificationsFields;
 use App\Models\NotificationsOption;
 use App\Models\TelegramChat;
 use App\Models\UserOption;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -20,44 +23,58 @@ use Ramsey\Uuid\Guid\Guid;
 class NotificationController extends Controller
 {
 
+    private ITeamProvider $teamProvider;
+    private NotificationInterface $notifications;
+
+    public function __construct(NotificationInterface $notifications, ITeamProvider $teamProvider)
+    {
+        parent::__construct();
+        $this->notifications = $notifications;
+        $this->teamProvider = $teamProvider;
+    }
     public function get(Request $request): array
     {
-        $list = Notification::get();
-        return [
-            'list'=>NotificationResource::collection($list)->toArray($request)
-        ];
+        $list = $this->notifications->get();
+        return $list->toArray();
     }
 
     public function confirm(Request $request): array
     {
         $guid = $request->get('guid');
-        $notification = Notification::getByGuid($guid);
-        if(is_null($notification)){
-            return [];
-        }
-        $type = $notification->type;
-        if($type === 'invite_to_team'){
-            $data = json_decode($notification->data, true);
-            $team = $data['id'];
-            Crew::addToTeam(Auth::id(), $team);
-        }
-        $notification->completed = true;
-        $notification->save();
+        $this->notifications->complete($guid);
         return $this->get($request);
+
+//        $notification = Notification::getByGuid($guid);
+//        if(is_null($notification)){
+//            return [];
+//        }
+//        $type = $notification->type;
+//        if($type === 'invite_to_team'){
+//            $data = json_decode($notification->data, true);
+//            $team = $data['id'];
+//            Crew::addToTeam(Auth::id(), $team);
+//        }
+//        $notification->completed = true;
+//        $notification->save();
+//        return $this->get($request);
     }
 
     public function end(Request $request): array
     {
         $guid = $request->get('guid');
-        $notification = Notification::getByGuid($guid);
-        $notification->completed = true;
-        $notification->save();
+        $this->notifications->complete($guid);
         return $this->get($request);
     }
 
-    public function notifications(Request $request): Response
+    ////////////////////// User Notifications ///////////////////////
+
+    public function notifications(Request $request): Response|RedirectResponse
     {
-        $team = UserOption::get('current_team');
+        //$team = UserOption::get('current_team');
+        $team = $this->teamProvider->current();
+        if($team == null){
+            return redirect()->route('teams');
+        }
 
         $options = NotificationsOption::getOptions($team, 'errors');
         $chats = TelegramChat::getChats($team);
@@ -75,7 +92,6 @@ class NotificationController extends Controller
 
     public function columns(Request $request): array
     {
-        //$type = $request->get('type');
         $list = new ListController();
         $columns = collect($list->columns())->map(function ($item){
             return ['name'=>$item['name'], 'value'=>$item['column']];
@@ -85,7 +101,7 @@ class NotificationController extends Controller
         ];
     }
 
-    function save(Request $request): array
+    public function save(Request $request): array
     {
         $team = intval(UserOption::get('current_team'));
         $item = $request->get('notification');

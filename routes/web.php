@@ -12,6 +12,10 @@ use App\Http\Controllers\TelegramChatController;
 use App\Http\Controllers\Errors\ErrorController as NewErrorController;
 use App\Http\Controllers\Logs\LogsController as NewLogsController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\FilterController;
+use App\Http\Controllers\UserNotificationController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,7 +52,7 @@ Route::middleware(['auth'])->group(function(){
 
     //Route::get('/logs', [LogController::class, 'getList'])->name('logs');
 
-    Route::get('/notifications', [NotificationController::class, 'notifications']);
+    //Route::get('/notifications', [NotificationController::class, 'notifications']);
     Route::get('/notifications/telegram', [NotificationController::class, 'telegram']);
     Route::get('/notifications/{item}', [NotificationController::class, 'notificationOption']);
 
@@ -60,21 +64,21 @@ Route::middleware(['auth'])->group(function(){
     //Route::post('/team/list', [CrewController::class, 'list']);
     //Route::post('/team/invite', [CrewController::class, 'invite']);
     //Route::post('/team/save', [CrewController::class, 'save']);
-    Route::post('/team/role/change', [CrewController::class, 'roleChange']);
-    Route::post('/team/exclude', [CrewController::class, 'exclude']);
+    //Route::post('/team/role/change', [CrewController::class, 'roleChange']);
+    //Route::post('/team/exclude', [CrewController::class, 'exclude']);
 
     //Choice
-    Route::post('/choice', [DashboardController::class, 'choice']);
+    //Route::post('/filter/search', [DashboardController::class, 'choice']);
 
     //Notifications
-    Route::post('/notifications/get', [NotificationController::class, 'get']);
-    Route::post('/notifications/confirm', [NotificationController::class, 'confirm']);
-    Route::post('/notifications/end', [NotificationController::class, 'end']);
+//    Route::post('/notifications/get', [NotificationController::class, 'get']);
+//    Route::post('/notifications/confirm', [NotificationController::class, 'confirm']);
+//    Route::post('/notifications/end', [NotificationController::class, 'end']);
     Route::post('/notifications/columns', [NotificationController::class, 'columns']);
     Route::post('/notifications/save', [NotificationController::class, 'save']);
 
     //Common
-    Route::post('/filters/get', [DashboardController::class, 'filters']);
+    //Route::post('/filters/get', [DashboardController::class, 'filters']);
     Route::post('/option/set', [UserOptionController::class, 'set']);
     Route::post('/option/get', [UserOptionController::class, 'get']);
 
@@ -119,12 +123,21 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/teams', [TeamController::class, 'teams'])->name('teams');
     Route::get('/teams/{team}', [TeamController::class, 'team'])->name('team');
 
+    Route::post('/filter/search', [FilterController::class, 'search']);
+    Route::post('/filters/get', [FilterController::class, 'filters']);
+
+    Route::get('/notifications', [UserNotificationController::class, 'notifications']);
+
+
+
     //POST
     Route::post('/team/create', [TeamController::class, 'create']);
     Route::post('/team/list', [TeamController::class, 'list']);
     Route::post('/team/change', [TeamController::class, 'change']);
     Route::post('/team/save', [TeamController::class, 'save']);
     Route::post('/team/invite', [TeamController::class, 'invite']);
+    Route::post('/team/role/change', [TeamController::class, 'roleChange']);
+    Route::post('/team/exclude', [TeamController::class, 'exclude']);
 
     Route::post('/error/filter', [NewErrorController::class, 'filter']);
     Route::post('/log/filter', [NewLogsController::class, 'filter']);
@@ -148,5 +161,11 @@ Route::middleware(['auth'])->group(function(){
 
     Route::post('/error/team/change', [NewErrorController::class, 'changeTeam']);
     Route::post('/log/team/change', [NewLogsController::class, 'changeTeam']);
+
+    Route::post('/notifications/get', [NotificationController::class, 'get']);
+    Route::post('/notifications/confirm', [NotificationController::class, 'confirm']);
+    Route::post('/notifications/end', [NotificationController::class, 'end']);
+
+    Route::post('/notifications/save', [UserNotificationController::class, 'save']);
 
 });

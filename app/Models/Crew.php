@@ -2,15 +2,38 @@
 
 namespace App\Models;
 
+use App\Interfaces\Models\TeamInterface;
+use App\Interfaces\Models\UserInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 
-class Crew extends Model
+class Crew extends Model implements TeamInterface
 {
     use HasFactory;
+
+    public function getID(): int
+    {
+        return (int)$this->id;
+    }
+
+    public function getName(): string
+    {
+        return (string)$this->name;
+    }
+
+    public function getRoles(UserInterface $user): array
+    {
+        $member = CrewMembers::query()->where('user', '=',$user->getID())->where('crew', '=', $this->id)->first();
+        if($member == null){
+            return [];
+        }
+        return json_decode($member->roles, true);
+    }
+
+    ////////////////////////////////////////////////////////////////
 
     public static function create($name, $guid = null): string
     {
@@ -64,7 +87,10 @@ class Crew extends Model
         return $list;
     }
 
-    public static function getByGuid($guid): Model|null
+    /*
+     *  @return TeamInterface
+     */
+    public static function getByGuid($guid): TeamInterface|null
     {
         $user = Auth::id();
         $ids = CrewMembers::query()->select(['crew', 'roles'])->where('user', '=', $user)->get();
@@ -74,7 +100,12 @@ class Crew extends Model
             return null;
         }
         $crew->roles = json_decode($roles->get($crew->id));
-        return $crew;
+        if($crew instanceof Crew){
+            return $crew;
+        }
+        return null;
+        //return $crew;
+        //return new Crew();
     }
 
     public static function getByID($id): Model|null

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Interfaces\Models\UserInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,7 +12,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements UserInterface
 {
     use HasApiTokens;
     use HasFactory;
@@ -61,11 +62,40 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    public static function getUser($email): Model|null
+    public static function getUser($email): User|null
     {
         return User::query()->where('email', '=', $email)->first();
     }
 
+    public function getByEmail(string $email)
+    {
+        return self::query()->where('email', '=', $email)->first();
+    }
+
+    public function getID(): int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getSurname(): string
+    {
+        return $this->surname;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getBirth(): \DateTime
+    {
+        return new \DateTime($this->birth);
+    }
 
 
 }

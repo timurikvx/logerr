@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Interfaces\Models\TelegramChatInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,9 +10,34 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Ramsey\Uuid\Uuid;
 
-class TelegramChat extends Model
+class TelegramChat extends Model implements TelegramChatInterface
 {
     use HasFactory;
+
+    function getID(): int
+    {
+        return $this->id;
+    }
+
+    function getGuid(): string
+    {
+        return $this->guid;
+    }
+
+    function getName(): string
+    {
+        return $this->name;
+    }
+
+    function getToken(): string
+    {
+        return $this->token;
+    }
+
+    function getChatID(): string
+    {
+        return $this->chat_id;
+    }
 
     public static function create($name, $token, $chat_id, $team): string|null
     {
@@ -44,7 +70,7 @@ class TelegramChat extends Model
 
     public static function getByGuid($guid): Model|null
     {
-        return self::query()->where('guid', '=', $guid)->first();
+        return static::query()->where('guid', '=', $guid)->first();
     }
 
     public function send($text):void
@@ -55,7 +81,6 @@ class TelegramChat extends Model
             'parse_mode'=>'Markdown'
         ];
         Http::post('https://api.telegram.org/bot'.$this->token.'/sendMessage', $data);
-        //dump($response);
     }
 
 }
