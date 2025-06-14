@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface ILogerrCache
+interface LogerrCacheInterface
 {
     public function get(string $name, \Closure $func, int $ttl = 0): mixed;
 

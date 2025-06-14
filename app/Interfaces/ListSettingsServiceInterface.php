@@ -5,7 +5,7 @@ namespace App\Interfaces;
 use App\Models\Option;
 use Illuminate\Database\Eloquent\Model;
 
-interface IListSettingsService
+interface ListSettingsServiceInterface
 {
 
     function current($team, $prefix): array|null;

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Telegram\TelegramChatResource;
-use App\Interfaces\ITeamProvider;
-use App\Interfaces\ITeamService;
+use App\Interfaces\TeamProviderInterface;
+use App\Interfaces\TeamServiceInterface;
 use App\Interfaces\TelegramChatProviderInterface;
 use App\Models\Crew;
 use App\Models\TelegramChat;
@@ -14,10 +14,10 @@ use Illuminate\Http\Request;
 class TelegramChatController extends Controller
 {
 
-    private ITeamProvider $teamProvider;
+    private TeamProviderInterface $teamProvider;
     private TelegramChatProviderInterface $telegramChatProvider;
 
-    public function __construct(ITeamProvider $teamProvider, TelegramChatProviderInterface $telegramChatProvider)
+    public function __construct(TeamProviderInterface $teamProvider, TelegramChatProviderInterface $telegramChatProvider)
     {
         parent::__construct();
         $this->teamProvider = $teamProvider;

@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface IUserSettingsService
+interface UserSettingsServiceInterface
 {
     function set(string $name, $team, mixed $value): void;
 

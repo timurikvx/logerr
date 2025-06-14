@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Actions\Filters;
-use App\Interfaces\IListModel;
+use App\Interfaces\ListModelInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
-class Log extends Error implements IListModel
+class Log extends Error implements ListModelInterface
 {
     use HasFactory;
 

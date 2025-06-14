@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface IListModel
+interface ListModelInterface
 {
     function availableColumns(): array;
 

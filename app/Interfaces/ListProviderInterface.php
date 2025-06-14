@@ -5,7 +5,7 @@ namespace App\Interfaces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
-interface IListProvider
+interface ListProviderInterface
 {
     function get($provider, $team, array $filters = [], array $sort = []): \stdClass;
 

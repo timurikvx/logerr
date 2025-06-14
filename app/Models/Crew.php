@@ -104,8 +104,6 @@ class Crew extends Model implements TeamInterface
             return $crew;
         }
         return null;
-        //return $crew;
-        //return new Crew();
     }
 
     public static function getByID($id): Model|null

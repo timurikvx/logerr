@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Interfaces\IUserProvider;
+use App\Interfaces\UserProviderInterface;
 use App\Interfaces\Models\UserInterface;
 
-class UserProvider implements IUserProvider
+class UserProvider implements UserProviderInterface
 {
 
     public function __construct(UserInterface $userFactory)

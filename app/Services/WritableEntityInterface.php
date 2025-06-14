@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Interfaces\IWritableEntity;
+use App\Interfaces\WritableEntityInterface;
 
-abstract class WritableEntity implements IWritableEntity
+abstract class WritableEntityInterface implements WritableEntityInterface
 {
 
     public string $cache_sort = 'error_sort';

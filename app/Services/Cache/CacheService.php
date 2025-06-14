@@ -2,10 +2,10 @@
 
 namespace App\Services\Cache;
 
-use App\Interfaces\ILogerrCache;
+use App\Interfaces\LogerrCacheInterface;
 use Illuminate\Support\Facades\Cache;
 
-class CacheService implements ILogerrCache
+class CacheService implements LogerrCacheInterface
 {
 
     public function get(string $name, \Closure $func, int $ttl = 0): mixed

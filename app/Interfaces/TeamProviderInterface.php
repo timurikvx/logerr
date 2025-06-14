@@ -6,7 +6,7 @@ use App\Interfaces\Models\TeamInterface;
 use App\Interfaces\Models\UserInterface;
 use Illuminate\Support\Enumerable;
 
-interface ITeamProvider
+interface TeamProviderInterface
 {
     function create($name): array;
 

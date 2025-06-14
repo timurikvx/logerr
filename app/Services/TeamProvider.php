@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Interfaces\ITeamProvider;
-use App\Interfaces\ITeamService;
+use App\Interfaces\TeamProviderInterface;
+use App\Interfaces\TeamServiceInterface;
 use App\Interfaces\Models\TeamInterface;
 use App\Interfaces\Models\UserInterface;
 use App\Models\Crew;
@@ -14,10 +14,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Enumerable;
 
-class TeamProvider implements ITeamProvider
+class TeamProvider implements TeamProviderInterface
 {
 
-    public function __construct(ITeamService $teamService)
+    public function __construct(TeamServiceInterface $teamService)
     {
         $this->teamService = $teamService;
     }

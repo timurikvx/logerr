@@ -6,8 +6,8 @@ use App\Actions\PageOptions;
 use App\Actions\Report;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Crew\CrewMembersResource;
-use App\Interfaces\ITeamProvider;
-use App\Interfaces\IUserProvider;
+use App\Interfaces\TeamProviderInterface;
+use App\Interfaces\UserProviderInterface;
 use App\Models\Crew;
 use App\Models\Notification;
 use App\Models\User;
@@ -22,10 +22,10 @@ use Inertia\Response;
 class TeamController extends Controller
 {
 
-    private ITeamProvider $teamProvider;
-    private IUserProvider $userProvider;
+    private TeamProviderInterface $teamProvider;
+    private UserProviderInterface $userProvider;
 
-    public function __construct(ITeamProvider $teamProvider, IUserProvider $userProvider)
+    public function __construct(TeamProviderInterface $teamProvider, UserProviderInterface $userProvider)
     {
         parent::__construct();
         $this->teamProvider = $teamProvider;

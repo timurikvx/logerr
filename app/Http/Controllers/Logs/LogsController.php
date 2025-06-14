@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\Logs;
 
 use App\Http\Controllers\Controller;
-use App\Interfaces\IListProvider;
-use App\Interfaces\IListSettings;
-use App\Interfaces\ITeamProvider;
-use App\Interfaces\ITeamService;
+use App\Interfaces\ListProviderInterface;
+use App\Interfaces\ListSettingsInterface;
+use App\Interfaces\TeamProviderInterface;
+use App\Interfaces\TeamServiceInterface;
 use App\Models\Log;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class LogsController extends Controller
 {
-    private ITeamProvider $teamProvider;
-    private IListProvider $listProvider;
-    private IListSettings $listSettings;
+    private TeamProviderInterface $teamProvider;
+    private ListProviderInterface $listProvider;
+    private ListSettingsInterface $listSettings;
 
     public function __construct(
-        ITeamProvider        $teamProvider,
-        IListProvider        $listProvider,
-        IListSettings        $listSettings
+        TeamProviderInterface $teamProvider,
+        ListProviderInterface $listProvider,
+        ListSettingsInterface $listSettings
     )
     {
         parent::__construct();

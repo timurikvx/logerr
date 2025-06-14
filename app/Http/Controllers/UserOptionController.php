@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Interfaces\IUserSettingsService;
+use App\Interfaces\UserSettingsServiceInterface;
 use App\Models\UserOption;
 use Illuminate\Http\Request;
 
 class UserOptionController extends Controller
 {
 
-    private IUserSettingsService $userSettings;
+    private UserSettingsServiceInterface $userSettings;
 
-    public function __construct(IUserSettingsService $userSettings)
+    public function __construct(UserSettingsServiceInterface $userSettings)
     {
         parent::__construct();
         $this->userSettings = $userSettings;

@@ -2,24 +2,24 @@
 
 namespace App\Services;
 
-use App\Interfaces\IListSettings;
-use App\Interfaces\IListSettingsService;
-use App\Interfaces\ITeamService;
-use App\Interfaces\IUserSettingsService;
+use App\Interfaces\ListSettingsInterface;
+use App\Interfaces\ListSettingsServiceInterface;
+use App\Interfaces\TeamServiceInterface;
+use App\Interfaces\UserSettingsServiceInterface;
 use Illuminate\Http\Request;
-use App\Interfaces\IListModel;
+use App\Interfaces\ListModelInterface;
 
-class ListSettings implements IListSettings
+class ListSettings implements ListSettingsInterface
 {
 
-    private IUserSettingsService $userSettingsService;
-    private IListSettingsService $listSettingsService;
-    private ITeamService $teamService;
+    private UserSettingsServiceInterface $userSettingsService;
+    private ListSettingsServiceInterface $listSettingsService;
+    private TeamServiceInterface $teamService;
 
     public function __construct(
-        ITeamService $teamService,
-        IListSettingsService $listSettingsService,
-        IUserSettingsService $userSettingsService
+        TeamServiceInterface         $teamService,
+        ListSettingsServiceInterface $listSettingsService,
+        UserSettingsServiceInterface $userSettingsService
     )
     {
         $this->teamService = $teamService;
@@ -27,7 +27,7 @@ class ListSettings implements IListSettings
         $this->userSettingsService = $userSettingsService;
     }
 
-    public function current(IListModel $provider, $option = null)
+    public function current(ListModelInterface $provider, $option = null)
     {
         $team = $this->teamService->current();
         if(is_null($team)){
@@ -40,13 +40,13 @@ class ListSettings implements IListSettings
         return $this->listSettingsService->getByGuid($team, $guid, $provider->prefix());
     }
 
-    public function settings(IListModel $provider): array
+    public function settings(ListModelInterface $provider): array
     {
         $team = $this->teamService->current();
         return $this->listSettingsService->getAll($team->id, $provider->prefix());
     }
 
-    public function changeSettings(IListModel $provider, $team, $guid): void
+    public function changeSettings(ListModelInterface $provider, $team, $guid): void
     {
         $setting = $this->listSettingsService->get($team->id, $guid, $provider->prefix());
         //change setting
@@ -57,7 +57,7 @@ class ListSettings implements IListSettings
         }
     }
 
-    public function createSetting(IListModel $provider, string $name, $team, array $data): array
+    public function createSetting(ListModelInterface $provider, string $name, $team, array $data): array
     {
         $guid = $this->listSettingsService->set($team->id, $name, $data, $provider->prefix());
 
@@ -68,13 +68,13 @@ class ListSettings implements IListSettings
         return ['result'=>true, 'options'=>$settings, 'option'=>$setting];
     }
 
-    public function removeSetting(IListModel $provider, string $guid): void
+    public function removeSetting(ListModelInterface $provider, string $guid): void
     {
         $team = $this->teamService->current();
         $this->listSettingsService->removeByGuid($team->id, $guid);
     }
 
-    public function saveSetting(IListModel $provider, $guid, $data): array
+    public function saveSetting(ListModelInterface $provider, $guid, $data): array
     {
         $team = $this->teamService->current();
         $this->listSettingsService->updateByGuid($team->id, $guid, $data, $provider->prefix());
@@ -95,7 +95,7 @@ class ListSettings implements IListSettings
         ];
     }
 
-    public function removeConditions(IListModel $provider, $team): void
+    public function removeConditions(ListModelInterface $provider, $team): void
     {
         $this->userSettingsService->remove($provider->cacheSort(), $team->id);
         $this->userSettingsService->remove($provider->cacheFilters(), $team->id);
@@ -143,7 +143,7 @@ class ListSettings implements IListSettings
         return $columns;
     }
 
-    public function saveFilters(IListModel $provider, $data): void
+    public function saveFilters(ListModelInterface $provider, $data): void
     {
         if(is_null($data)){
             return;
@@ -155,7 +155,7 @@ class ListSettings implements IListSettings
         $this->userSettingsService->set($provider->cacheFilters(), $team->id, $data);
     }
 
-    public function saveSort(IListModel $provider, $data): void
+    public function saveSort(ListModelInterface $provider, $data): void
     {
         if(is_null($data)){
             return;
@@ -167,7 +167,7 @@ class ListSettings implements IListSettings
         $this->userSettingsService->set($provider->cacheSort(), $team->id, $data);
     }
 
-    public function saveColumns(IListModel $provider, $data): void
+    public function saveColumns(ListModelInterface $provider, $data): void
     {
         if(is_null($data)){
             return;
@@ -179,7 +179,7 @@ class ListSettings implements IListSettings
         $this->userSettingsService->set($provider->cacheColumns(), $team->id, $data);
     }
 
-    public function clearCondition(IListModel $provider, $field): void
+    public function clearCondition(ListModelInterface $provider, $field): void
     {
         $team = $this->teamService->current();
         $this->userSettingsService->remove($provider->prefix().'_'.$field, $team->id);

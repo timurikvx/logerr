@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Notifications\NotificationOptionResource;
 use App\Http\Resources\Notifications\NotificationResource;
 use App\Http\Resources\Telegram\TelegramChatResource;
-use App\Interfaces\ITeamProvider;
+use App\Interfaces\TeamProviderInterface;
 use App\Interfaces\NotificationInterface;
 use App\Models\Crew;
 use App\Models\Notification;
@@ -23,10 +23,10 @@ use Ramsey\Uuid\Guid\Guid;
 class NotificationController extends Controller
 {
 
-    private ITeamProvider $teamProvider;
+    private TeamProviderInterface $teamProvider;
     private NotificationInterface $notifications;
 
-    public function __construct(NotificationInterface $notifications, ITeamProvider $teamProvider)
+    public function __construct(NotificationInterface $notifications, TeamProviderInterface $teamProvider)
     {
         parent::__construct();
         $this->notifications = $notifications;

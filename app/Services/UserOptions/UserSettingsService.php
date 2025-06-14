@@ -2,14 +2,14 @@
 
 namespace App\Services\UserOptions;
 
-use App\Interfaces\ILogerrCache;
-use App\Interfaces\IUserSettingsService;
+use App\Interfaces\LogerrCacheInterface;
+use App\Interfaces\UserSettingsServiceInterface;
 use App\Models\UserOption;
 
-class UserSettingsService implements IUserSettingsService
+class UserSettingsService implements UserSettingsServiceInterface
 {
 
-    public function __construct(ILogerrCache $cache)
+    public function __construct(LogerrCacheInterface $cache)
     {
         $this->cache = $cache;
     }

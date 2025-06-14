@@ -2,16 +2,16 @@
 
 namespace App\Services\ListOptions;
 
-use App\Interfaces\IListSettingsService;
-use App\Interfaces\ILogerrCache;
-use App\Interfaces\IUserSettingsService;
+use App\Interfaces\ListSettingsServiceInterface;
+use App\Interfaces\LogerrCacheInterface;
+use App\Interfaces\UserSettingsServiceInterface;
 use App\Models\Option;
 use Illuminate\Database\Eloquent\Model;
 
-class ListSettingsService implements IListSettingsService
+class ListSettingsService implements ListSettingsServiceInterface
 {
 
-    public function __construct(IUserSettingsService $userOption, ILogerrCache $cache)
+    public function __construct(UserSettingsServiceInterface $userOption, LogerrCacheInterface $cache)
     {
         $this->userOption = $userOption;
         $this->cache = $cache;

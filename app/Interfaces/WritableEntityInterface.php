@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface IWritableEntity
+interface WritableEntityInterface
 {
 
     function columns(): array;

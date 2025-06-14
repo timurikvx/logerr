@@ -7,18 +7,18 @@ use App\Actions\Paginate;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Errors\ErrorItemResource;
 use App\Interfaces\IListPreferences;
-use App\Interfaces\IListProvider;
-use App\Interfaces\IListSettings;
+use App\Interfaces\ListProviderInterface;
+use App\Interfaces\ListSettingsInterface;
 use App\Models\Crew;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
-class ListProvider implements IListProvider
+class ListProvider implements ListProviderInterface
 {
 
-    private IListSettings $listSettings;
+    private ListSettingsInterface $listSettings;
 
-    public function __construct(IListSettings $listSettings)
+    public function __construct(ListSettingsInterface $listSettings)
     {
         $this->listSettings = $listSettings;
     }

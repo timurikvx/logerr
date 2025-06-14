@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Errors;
 
 use App\Http\Controllers\Controller;
-use App\Interfaces\IListSettings;
-use App\Interfaces\IListProvider;
-use App\Interfaces\ITeamProvider;
+use App\Interfaces\ListSettingsInterface;
+use App\Interfaces\ListProviderInterface;
+use App\Interfaces\TeamProviderInterface;
 use App\Models\Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -14,14 +14,14 @@ use Inertia\Inertia;
 class ErrorController extends Controller
 {
 
-    private IListProvider $listProvider;
-    private IListSettings $listSettings;
-    private ITeamProvider $teamProvider;
+    private ListProviderInterface $listProvider;
+    private ListSettingsInterface $listSettings;
+    private TeamProviderInterface $teamProvider;
 
     public function __construct(
-        IListProvider        $listProvider,
-        IListSettings        $listSettings,
-        ITeamProvider        $teamProvider
+        ListProviderInterface $listProvider,
+        ListSettingsInterface $listSettings,
+        TeamProviderInterface $teamProvider
     )
     {
         parent::__construct();

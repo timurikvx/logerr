@@ -2,18 +2,17 @@
 
 namespace App\Services\Teams;
 
-use App\Interfaces\ILogerrCache;
-use App\Interfaces\ITeamService;
-use App\Interfaces\IUserSettingsService;
+use App\Interfaces\LogerrCacheInterface;
+use App\Interfaces\TeamServiceInterface;
+use App\Interfaces\UserSettingsServiceInterface;
 use App\Interfaces\Models\TeamInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use App\Models\Crew;
 
-class TeamService implements ITeamService
+class TeamService implements TeamServiceInterface
 {
 
-    public function __construct(ILogerrCache $cache, IUserSettingsService $userSettingsService)
+    public function __construct(LogerrCacheInterface $cache, UserSettingsServiceInterface $userSettingsService)
     {
         $this->cache = $cache;
         $this->userSettingsService = $userSettingsService;

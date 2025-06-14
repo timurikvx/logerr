@@ -5,7 +5,7 @@ namespace App\Interfaces;
 use App\Interfaces\Models\TeamInterface;
 use Illuminate\Support\Collection;
 
-interface ITeamService
+interface TeamServiceInterface
 {
 
     function create($name, $guid = null): array;
