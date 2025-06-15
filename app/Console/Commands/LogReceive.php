@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Actions\RabbitMQ\LogerrRabbit;
+use App\Interfaces\QueueProviderInterface;
+use App\Models\Error;
+use App\Models\Log;
 use Illuminate\Console\Command;
 
 class LogReceive extends Command
@@ -19,13 +22,19 @@ class LogReceive extends Command
      *
      * @var string
      */
-    protected $description = 'Shell rabbit MQ error receiving';
+    protected $description = 'Shell RabbitMQ log receiving';
 
+    public function __construct(QueueProviderInterface $queueProvider)
+    {
+        parent::__construct();
+        $this->queueProvider = $queueProvider;
+    }
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
-        LogerrRabbit::receive('logs');
+        $log = new Log();
+        $this->queueProvider->receive($log->prefix());
     }
 }

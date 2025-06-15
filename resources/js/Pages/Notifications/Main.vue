@@ -22,7 +22,7 @@
                             </div>
                             <a v-for="option in props.options" class="options-grid line" target="_blank" :href="'notifications/' + option.guid">
                                 <div class="p-2">{{ option.name }}</div>
-                                <div class="p-2">{{ types[option.type] }}</div>
+                                <div class="p-2">{{ option.type.name }}</div>
                                 <div class="p-2">{{ option.chat.name }}</div>
                                 <div class="p-2 text-center">{{ option.count }}</div>
                                 <div class="p-2 text-center">{{ option.minutes }}</div>
@@ -30,7 +30,7 @@
                             </a>
                         </div>
                     </div>
-                    <CreateNotification :chats="chats" v-else></CreateNotification>
+                    <CreateNotification :chats="chats" :types="types" v-else></CreateNotification>
                 </div>
                 <div class="flex flex-col grow overflow-hidden" v-if="tab === 'chats'">
                     <div class="flex mb-4">
@@ -70,14 +70,11 @@
     const modal = modalStore();
     const props = defineProps({
         chats: Array,
-        options: Array
+        options: Array,
+        types: Array
     });
     const telegramChats = ref(null);
     const telegramChatsCopy = ref(null);
-    const types = {
-        'errors':'Ошибки',
-        'logs':'Логи'
-    }
 
     let tab = ref('options');
     let chats = ref([]);

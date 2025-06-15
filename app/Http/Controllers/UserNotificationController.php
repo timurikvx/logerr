@@ -9,6 +9,7 @@ use App\Interfaces\TelegramChatProviderInterface;
 use App\Interfaces\UserNotificationProviderInterface;
 use App\Models\NotificationsOption;
 use App\Models\TelegramChat;
+use App\Models\UserOption;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -42,7 +43,8 @@ class UserNotificationController extends Controller
         $chats = TelegramChat::getChats($team->getID());
         $data = [
             'chats'=>(TelegramChatResource::collection($chats))->toArray($request),
-            'options'=>NotificationOptionResource::collection($options)->toArray($request)
+            'options'=>NotificationOptionResource::collection($options)->toArray($request),
+            'types'=>$this->userNotificationProvider->types()
         ];
         return Inertia::render('Notifications/Main', $data);
     }
@@ -86,5 +88,22 @@ class UserNotificationController extends Controller
     {
 
     }
+
+    public function item(Request $request, $guid): Response
+    {
+        $team = $this->teamProvider->current();
+        $chats = $this->telegramChat->chats($team);
+        $option = $this->userNotificationProvider->getByGuid($team, $guid);
+
+        $provider = $this->userNotificationProvider->getProvider($option->type);
+        $data = [
+            'chats'=>(TelegramChatResource::collection($chats))->toArray($request),
+            'option'=>(new NotificationOptionResource($option))->toArray($request),
+            'columns'=>$provider->availableColumns(),
+            'types'=>$this->userNotificationProvider->types()
+        ];
+        return Inertia::render('Notifications/Item', $data);
+    }
+
 
 }

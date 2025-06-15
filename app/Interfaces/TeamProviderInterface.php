@@ -20,6 +20,8 @@ interface TeamProviderInterface
 
     function get(string $guid): TeamInterface|null;
 
+    function getByID(int $id): TeamInterface|null;
+
     function rename(&$team, $name): void;
 
     function invite($inviter, string $email, string $team_guid): array;

@@ -55,6 +55,7 @@
         </div>
     </div>
     <div class="flex mt-2">
+        <button class="button" @click="modal.newNotification = false">Закрыть</button>
         <div class="grow"></div>
         <button class="button green" @click="save()">Сохранить</button>
     </div>
@@ -85,14 +86,17 @@
         columns: {
             type: Array,
             default: null
+        },
+        types: {
+            type: Array
         }
     })
     const emits = defineEmits(['update:notification', 'update:fields']);
     const modal = modalStore();
-    const types = [
-        {'name':'Ошибки', 'value': 'errors'},
-        {'name':'Логи', 'value': 'logs'},
-    ]
+    // const types = [
+    //     {'name':'Ошибки', 'value': 'errors'},
+    //     {'name':'Логи', 'value': 'logs'},
+    // ]
 
     let choice = ref(false);
     let list = ref([]);
@@ -129,7 +133,6 @@
             }
         },
         set(value){
-            console.log('_fields');
             _fields.value = value;
             emits('update:fields', value);
         }

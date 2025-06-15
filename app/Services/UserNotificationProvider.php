@@ -2,15 +2,28 @@
 
 namespace App\Services;
 
+use App\Interfaces\ListModelInterface;
 use App\Interfaces\Models\TeamInterface;
 use App\Interfaces\Models\UserNotificationInterface;
 use App\Interfaces\UserNotificationProviderInterface;
+use App\Models\Error;
+use App\Models\Log;
 use App\Models\NotificationsFields;
 use App\Models\NotificationsOption;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserNotificationProvider implements UserNotificationProviderInterface
 {
+
+    private array $providers;
+
+    public function __construct()
+    {
+        $this->providers = [
+            'errors'=>Error::class,
+            'logs'=>Log::class
+        ];
+    }
 
     public function create(TeamInterface $team, string $guid, string $type, string $name, string $chat, int $minutes, int $count, int $every): UserNotificationInterface
     {
@@ -64,5 +77,17 @@ class UserNotificationProvider implements UserNotificationProviderInterface
         return NotificationsOption::getOptions($team->getID(), $type);
     }
 
+    public function getProvider(string $type): ListModelInterface
+    {
+        return new ($this->providers[$type]);
+    }
+
+    public function types(): array
+    {
+        return [
+            ['name'=>'Ошибки', 'value'=>'errors'],
+            ['name'=>'Логи', 'value'=>'logs']
+        ];
+    }
 
 }

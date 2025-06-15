@@ -64,6 +64,11 @@ class TeamProvider implements TeamProviderInterface
         return Crew::getByGuid($guid);
     }
 
+    public function getByID(int $id): TeamInterface|null
+    {
+        return Crew::find($id);
+    }
+
     public function invite($inviter, string $email, string $team_guid): array
     {
         $team = $this->teamService->getByGuid($team_guid);

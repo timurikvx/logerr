@@ -22,17 +22,7 @@ class Log extends Error implements ListModelInterface
 
     public static function writeFromText($text): bool
     {
-        if(empty($text)){
-            return false;
-        }
-        try{
-            $data = json_decode($text, true);
-        }catch (\Throwable $e){
-            return false;
-        }
-        $error = $data['error'];
-        $user = $data['user'];
-        return self::write($error, $user);
+        return false;
     }
 
     public static function write($data, $user = null): bool
@@ -175,5 +165,81 @@ class Log extends Error implements ListModelInterface
         return 'log';
     }
 
+    public function add(array $data, $team, $user = null): bool
+    {
+        $fields = collect($data);
+        $data = $fields->get('data');
+        $response = $fields->get('response');
+        $query = $fields->get('query');
+        $date = $fields->get('date');
+
+        $type = $this->getTypeData($data);
+        $data_string = $this->prepareData($data);
+
+        $query_type = $this->getTypeData($query);
+        $query_string = $this->prepareData($query);
+
+        $response_type = $this->getTypeData($response);
+        $response_string = $this->prepareData($response);
+
+        $guid = $fields->get('guid', '');
+        $name = $fields->get('name');
+        $hash = Str::of('error' . $name . $team->id . $date . $guid)->pipe('md5');
+
+        if (self::exist($name, $team->id, $date, $guid)) {
+            return true;
+        }
+
+        $log = new Log();
+        $log->hash = $hash;
+        $log->team = $team->id;
+        $log->name = $name;
+        $log->date = $date;
+        $log->guid = $guid;
+        $log->category = $fields->get('category', '');
+        $log->sub_category = $fields->get('sub_category', '');
+        $log->sender_guid = $fields->get('sender_guid', '');
+        $log->sender_name = $fields->get('sender_name', '');
+        $log->type = $type;
+        $log->code = $fields->get('code', 0);
+        $log->user = $fields->get('user', '');
+        $log->device = $fields->get('device', '');
+        $log->city = $fields->get('city', '');
+        $log->region = $fields->get('region', '');
+        $log->version = $fields->get('version', '');
+        $log->data = $data_string;
+        $log->duration = $fields->get('duration', 0);
+        $log->len = strlen($data_string);
+        $log->query = $query_string;
+        $log->query_type = $query_type;
+        $log->response = $response_string;
+        $log->response_type = $response_type;
+        try {
+            $log->save();
+        } catch (\Throwable $ex) {
+            return false;
+        }
+        //self::saveNames($log);
+        return true;
+    }
+
+    private function getTypeData(mixed $data): string
+    {
+        if(is_array($data)) {
+            return 'json';
+        }
+        return 'text';
+    }
+
+    private function prepareData(mixed $data): string
+    {
+        if(is_array($data)) {
+            return json_encode($data);
+        }
+        if(empty($data)){
+            return '';
+        }
+        return $data;
+    }
 
 }

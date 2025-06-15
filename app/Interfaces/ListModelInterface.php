@@ -16,4 +16,6 @@ interface ListModelInterface
 
     function getFilters(): array;
 
+    function add(array $data, $team, $user = null): bool;
+
 }

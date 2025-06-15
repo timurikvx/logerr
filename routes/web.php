@@ -54,7 +54,7 @@ Route::middleware(['auth'])->group(function(){
 
     //Route::get('/notifications', [NotificationController::class, 'notifications']);
     Route::get('/notifications/telegram', [NotificationController::class, 'telegram']);
-    Route::get('/notifications/{item}', [NotificationController::class, 'notificationOption']);
+    Route::get('/notifications/{item}', [UserNotificationController::class, 'item']);
 
     ///////////////////////////////// POST //////////////////////////////////////
 
@@ -123,12 +123,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/teams', [TeamController::class, 'teams'])->name('teams');
     Route::get('/teams/{team}', [TeamController::class, 'team'])->name('team');
 
-    Route::post('/filter/search', [FilterController::class, 'search']);
-    Route::post('/filters/get', [FilterController::class, 'filters']);
-
     Route::get('/notifications', [UserNotificationController::class, 'notifications']);
-
-
 
     //POST
     Route::post('/team/create', [TeamController::class, 'create']);
@@ -161,6 +156,9 @@ Route::middleware(['auth'])->group(function(){
 
     Route::post('/error/team/change', [NewErrorController::class, 'changeTeam']);
     Route::post('/log/team/change', [NewLogsController::class, 'changeTeam']);
+
+    Route::post('/filter/search', [FilterController::class, 'search']);
+    Route::post('/filters/get', [FilterController::class, 'filters']);
 
     Route::post('/notifications/get', [NotificationController::class, 'get']);
     Route::post('/notifications/confirm', [NotificationController::class, 'confirm']);

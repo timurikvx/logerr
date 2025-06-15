@@ -20,4 +20,8 @@ interface UserNotificationProviderInterface
 
     function list(TeamInterface $team, string $type): Collection;
 
+    function getProvider(string $type): ListModelInterface;
+
+    function types(): array;
+
 }

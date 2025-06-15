@@ -8,7 +8,9 @@ use App\Interfaces\FilterProviderInterface;
 use App\Interfaces\ListSettingsInterface;
 use App\Interfaces\ListSettingsServiceInterface;
 use App\Interfaces\ListProviderInterface;
+use App\Interfaces\ListWriterProviderInterface;
 use App\Interfaces\LogerrCacheInterface;
+use App\Interfaces\QueueProviderInterface;
 use App\Interfaces\TeamProviderInterface;
 use App\Interfaces\TeamServiceInterface;
 use App\Interfaces\UserProviderInterface;
@@ -25,7 +27,9 @@ use App\Services\FilterProvider;
 use App\Services\ListOptions\ListSettingsService;
 use App\Services\ListProvider;
 use App\Services\ListSettings;
+use App\Services\ListWriterProvider;
 use App\Services\NotificationProvider;
+use App\Services\QueueProvider;
 use App\Services\TeamProvider;
 use App\Services\Teams\TeamService;
 use App\Services\TelegramChatProvider;
@@ -67,6 +71,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(NotificationInterface::class, NotificationProvider::class);
         $this->app->bind(TelegramChatProviderInterface::class, TelegramChatProvider::class);
         $this->app->bind(UserNotificationProviderInterface::class, UserNotificationProvider::class);
-
+        $this->app->bind(ListWriterProviderInterface::class, ListWriterProvider::class);
+        $this->app->bind(QueueProviderInterface::class, QueueProvider::class);
     }
 }

@@ -41,7 +41,7 @@ class NotificationOptionResource extends JsonResource
             'minutes'=>$this->minutes,
             'count'=>$this->count,
             'every'=>$this->every,
-            'disabled'=>$this->disabled,
+            'disabled'=>$this->disable,
             'fields'=>$fields->toArray()
         ];
     }

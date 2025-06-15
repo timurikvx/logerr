@@ -1,7 +1,7 @@
 <template>
-    <Layout title="Оповещение" class="">
+    <Layout title="Оповещение">
         <div class="m-4 flex flex-col grow main-back p-4">
-            <CreateNotification :edit="true" v-model:notification="notification" v-model:fields="fields" :columns="columns" :chats="chats"></CreateNotification>
+            <CreateNotification :edit="true" v-model:notification="notification" v-model:fields="fields" :types="types" :columns="columns" :chats="chats"></CreateNotification>
         </div>
     </Layout>
 </template>
@@ -15,7 +15,8 @@
     const props = defineProps({
         chats: Array,
         option: Object,
-        columns: Array
+        columns: Array,
+        types: Array
     });
 
     onMounted(()=>{
