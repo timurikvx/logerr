@@ -24,12 +24,6 @@ interface TeamProviderInterface
 
     function rename(&$team, $name): void;
 
-    function invite($inviter, string $email, string $team_guid): array;
-
-    function changeRole(TeamInterface $team, UserInterface $user, $role): bool;
-
-    function exclude(UserInterface $user, TeamInterface $team): Enumerable;
-
     function listWithout(Enumerable $teams): Enumerable;
 
 }

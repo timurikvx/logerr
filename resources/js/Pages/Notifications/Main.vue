@@ -20,7 +20,7 @@
                                 <div class="p-2 counts text-center">Минут</div>
                                 <div class="p-2 counts text-center">Частота</div>
                             </div>
-                            <a v-for="option in props.options" class="options-grid line" target="_blank" :href="'notifications/' + option.guid">
+                            <a v-for="option in options" class="options-grid line" target="_blank" :href="'notifications/' + option.guid">
                                 <div class="p-2">{{ option.name }}</div>
                                 <div class="p-2">{{ option.type.name }}</div>
                                 <div class="p-2">{{ option.chat.name }}</div>
@@ -30,7 +30,7 @@
                             </a>
                         </div>
                     </div>
-                    <CreateNotification :chats="chats" :types="types" v-else></CreateNotification>
+                    <CreateNotification :chats="chats" :types="types" @options="updateOptions" v-else></CreateNotification>
                 </div>
                 <div class="flex flex-col grow overflow-hidden" v-if="tab === 'chats'">
                     <div class="flex mb-4">
@@ -59,7 +59,7 @@
 <script setup>
 
     import Layout from "@/Layouts/Layout.vue";
-    import {ref, defineProps, onMounted} from 'vue'
+    import {ref, defineProps, onMounted, computed} from 'vue'
     import {modalStore} from "@/Store/Modal.js";
     import TelegramChatEdit from "@/Components/TelegramChatEdit.vue";
     import Question from "@/Components/Question.vue";
@@ -86,9 +86,11 @@
         valur: null
     });
     let create = ref(true);
+    let options = ref([]);
 
     onMounted(()=>{
         chats.value = props.chats;
+        options.value = props.options;
     })
 
     function createChat(){
@@ -133,6 +135,10 @@
 
     function copied(list){
         chats.value = list;
+    }
+
+    function updateOptions(list){
+        options.value = list;
     }
 
 </script>

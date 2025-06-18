@@ -14,14 +14,12 @@ class ApiLogController extends Controller
 {
     private ListWriterProviderInterface $listWriterProvider;
     private QueueProviderInterface $queueProvider;
-    private TeamProviderInterface $teamProvider;
 
-    public function __construct(ListWriterProviderInterface $listWriterProvider, QueueProviderInterface $queueProvider, TeamProviderInterface $teamProvider)
+    public function __construct(ListWriterProviderInterface $listWriterProvider, QueueProviderInterface $queueProvider)
     {
         parent::__construct();
         $this->listWriterProvider = $listWriterProvider;
         $this->queueProvider = $queueProvider;
-        $this->teamProvider = $teamProvider;
     }
 
     public function add(Request $request): mixed

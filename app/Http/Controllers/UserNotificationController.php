@@ -84,9 +84,11 @@ class UserNotificationController extends Controller
         ];
     }
 
-    public function columns(Request $request)
+    public function columns(Request $request): array
     {
-
+        $type = $request->get('columns');
+        $provider = $this->userNotificationProvider->getProvider($type);
+        return ['columns'=>$provider->availableColumns()];
     }
 
     public function item(Request $request, $guid): Response
@@ -105,5 +107,9 @@ class UserNotificationController extends Controller
         return Inertia::render('Notifications/Item', $data);
     }
 
+    public function telegram(Request $request)
+    {
+
+    }
 
 }

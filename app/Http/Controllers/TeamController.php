@@ -6,11 +6,14 @@ use App\Actions\PageOptions;
 use App\Actions\Report;
 use App\Http\Resources\Crew\CrewItemResource;
 use App\Http\Resources\Crew\CrewMembersResource;
+use App\Interfaces\NotificationProviderInterface;
 use App\Interfaces\TeamProviderInterface;
+use App\Interfaces\Teams\TeamMembersInterface;
 use App\Interfaces\UserProviderInterface;
 use App\Models\Crew;
 use App\Models\Notification;
 use App\Models\User;
+use App\Services\DTO\NotificationDTO;
 use App\Services\Teams\TeamValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,12 +27,20 @@ class TeamController extends Controller
 
     private TeamProviderInterface $teamProvider;
     private UserProviderInterface $userProvider;
+    private NotificationProviderInterface $notificationProvider;
 
-    public function __construct(TeamProviderInterface $teamProvider, UserProviderInterface $userProvider)
+    public function __construct(
+        TeamProviderInterface $teamProvider,
+        UserProviderInterface $userProvider,
+        NotificationProviderInterface $notificationProvider,
+        TeamMembersInterface $teamMembers
+    )
     {
         parent::__construct();
         $this->teamProvider = $teamProvider;
         $this->userProvider = $userProvider;
+        $this->notificationProvider = $notificationProvider;
+        $this->teamMembers = $teamMembers;
     }
 
     public function teams(Request $request): Response
@@ -44,12 +55,12 @@ class TeamController extends Controller
     public function team(Request $request, string $guid): Response
     {
         $data = PageOptions::get();
-        $team = $this->teamProvider->current();
+        $team = $this->teamProvider->get($guid);
         $members = $this->teamProvider->members($team);
 
-        $data->put('title', 'Команда '.$team->name);
+        $data->put('title', 'Команда '.$team->getName());
         $data->put('team', (new CrewItemResource($team))->toArray($request));
-        $data->put('roles', Crew::roles());
+        $data->put('roles', $this->teamMembers->roles());
         $data->put('members', CrewMembersResource::collection($members)->toArray($request));
         $data->put('user', Auth::id());
         $data->put('title', 'Выбор команды ошибок');
@@ -123,7 +134,7 @@ class TeamController extends Controller
 
         $user = $this->userProvider->getByEmail($email);
         $team = $this->teamProvider->get($team_guid);
-        $type = 'invite_to_team';
+        $type = $this->teamMembers->inviteEvent();
 
         $validator = new TeamValidator();
         $errors = $validator->validateInvite($team, $iam, $user, $type);
@@ -131,8 +142,10 @@ class TeamController extends Controller
             return ['errors'=>$errors];
         }
 
-        $text = 'Вы приглашены в команду '.$team->name.' вступите или проигнорируйте уведомление!';
-        Notification::create($type, $user->getID(), 'Приглашение в команду '.$team->name, $text, $team->toArray());
+        $text = $this->teamMembers->getTextInvite($team);
+        $title = $this->teamMembers->getTitleInvite($team);
+        $notification = new NotificationDTO($type, $user->getID(), $title, $text, $team->getID());
+        $this->notificationProvider->create($notification);
         return ['result'=>true];
     }
 
@@ -145,7 +158,7 @@ class TeamController extends Controller
         $team = $this->teamProvider->get($team_guid);
         $user = $this->userProvider->getByEmail($email);
 
-        $result = $this->teamProvider->changeRole($team, $user, $role);
+        $result = $this->teamMembers->changeRole($team, $user, $role);
         return ['result'=>$result];
     }
 
@@ -156,7 +169,18 @@ class TeamController extends Controller
 
         $team = $this->teamProvider->get($team_guid);
         $user = $this->userProvider->getByEmail($email);
-        $members = $this->teamProvider->exclude($user, $team);
+        $result = $this->teamMembers->exclude($user, $team);
+        if($result){
+            $dto = new NotificationDTO(
+                $this->teamMembers->excludeEvent(),
+                $user->getID(),
+                $this->teamMembers->getTitleExclude($team),
+                $this->teamMembers->getTextExclude($team),
+                []
+            );
+            $this->notificationProvider->create($dto);
+        }
+        $members = $this->teamProvider->members($team);
         return [
             'members'=>CrewMembersResource::collection($members)->toArray($request)
         ];

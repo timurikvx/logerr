@@ -42,18 +42,14 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     //Route::get('/errors', [ErrorController::class, 'getList'])->name('errors');
-
     //Route::get('/errors/teams/select', [ErrorController::class, 'selectTeam'])->name('selectTeamError');
-
     //Route::get('/teams', [CrewController::class, 'teams'])->name('teams');
     //Route::get('/errors/teams/select', [CrewController::class, 'selectTeam'])->name('selectTeamLog');
-
     //Route::get('/teams/{team}', [CrewController::class, 'team']);
-
     //Route::get('/logs', [LogController::class, 'getList'])->name('logs');
-
     //Route::get('/notifications', [NotificationController::class, 'notifications']);
-    Route::get('/notifications/telegram', [NotificationController::class, 'telegram']);
+
+    Route::get('/notifications/telegram', [UserNotificationController::class, 'telegram']);
     Route::get('/notifications/{item}', [UserNotificationController::class, 'item']);
 
     ///////////////////////////////// POST //////////////////////////////////////
@@ -74,8 +70,9 @@ Route::middleware(['auth'])->group(function(){
 //    Route::post('/notifications/get', [NotificationController::class, 'get']);
 //    Route::post('/notifications/confirm', [NotificationController::class, 'confirm']);
 //    Route::post('/notifications/end', [NotificationController::class, 'end']);
-    Route::post('/notifications/columns', [NotificationController::class, 'columns']);
-    Route::post('/notifications/save', [NotificationController::class, 'save']);
+
+//    Route::post('/notifications/columns', [NotificationController::class, 'columns']);
+//    Route::post('/notifications/save', [NotificationController::class, 'save']);
 
     //Common
     //Route::post('/filters/get', [DashboardController::class, 'filters']);
@@ -161,9 +158,13 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/filters/get', [FilterController::class, 'filters']);
 
     Route::post('/notifications/get', [NotificationController::class, 'get']);
-    Route::post('/notifications/confirm', [NotificationController::class, 'confirm']);
-    Route::post('/notifications/end', [NotificationController::class, 'end']);
+    Route::post('/notifications/handle', [NotificationController::class, 'handle']);
+    Route::post('/notifications/miss', [NotificationController::class, 'miss']);
+    Route::post('/notifications/complete', [NotificationController::class, 'complete']);
 
+
+    Route::post('/notifications/save', [UserNotificationController::class, 'save']);
+    Route::post('/notifications/columns', [UserNotificationController::class, 'columns']);
     Route::post('/notifications/save', [UserNotificationController::class, 'save']);
 
 });

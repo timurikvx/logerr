@@ -3,7 +3,7 @@
         <div class="p-2 flex flex-col grow">
             <div class="text-2xl px-1 font-bold mb-4">Уведомления</div>
             <div class="flex list flex-col grow" v-if="notifications.list.length > 0">
-                <div class="item" v-for="item in notifications.list" @click="select($event, item)">
+                <div class="item mb-2" v-for="item in notifications.list" @click="select($event, item)">
                     <div class="mb-2 font-bold">{{ item.title }}</div>
                     <div class="truncate">{{ item.content }}</div>
                 </div>
@@ -16,9 +16,13 @@
     <Modal :title="item.title" class="notification-item" v-model:visible="show">
         <div class="">{{ item.content }}</div>
         <div v-if="item.confirm" class="flex mt-4">
-            <button class="button red" @click="close">Закрыть</button>
+            <button class="button red" @click="cancel">Отклонить</button>
             <div class="grow"></div>
-            <button class="button green" @click="confirm">Подтвердить</button>
+            <button class="button green" @click="handle">Подтвердить</button>
+        </div>
+        <div v-else class="flex mt-4">
+            <button class="button" @click="complete">Закрыть</button>
+            <div class="grow"></div>
         </div>
     </Modal>
 </template>
@@ -63,14 +67,27 @@
         show.value = true;
     }
 
-    function close(){
+    function cancel(){
         show.value = false;
-        item.value = {};
+        axios.post('/notifications/miss', item.value).then(function (response){
+            if(response.data.list){
+                notifications.list = response.data.list;
+            }
+        });
     }
 
-    function confirm(){
+    function complete(){
         show.value = false;
-        axios.post('/notifications/confirm', item.value).then(function (response){
+        axios.post('/notifications/complete', item.value).then(function (response){
+            if(response.data.list){
+                notifications.list = response.data.list;
+            }
+        });
+    }
+
+    function handle(){
+        show.value = false;
+        axios.post('/notifications/handle', item.value).then(function (response){
             if(response.data.list){
                 notifications.list = response.data.list;
             }

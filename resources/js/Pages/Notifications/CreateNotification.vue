@@ -55,7 +55,8 @@
         </div>
     </div>
     <div class="flex mt-2">
-        <button class="button" @click="modal.newNotification = false">Закрыть</button>
+        <button v-if="!props.edit" class="button" @click="modal.newNotification = false">Закрыть</button>
+        <a v-else class="button" href="/notifications">К списку</a>
         <div class="grow"></div>
         <button class="button green" @click="save()">Сохранить</button>
     </div>
@@ -91,12 +92,8 @@
             type: Array
         }
     })
-    const emits = defineEmits(['update:notification', 'update:fields']);
+    const emits = defineEmits(['update:notification', 'update:fields', 'options']);
     const modal = modalStore();
-    // const types = [
-    //     {'name':'Ошибки', 'value': 'errors'},
-    //     {'name':'Логи', 'value': 'logs'},
-    // ]
 
     let choice = ref(false);
     let list = ref([]);
@@ -164,7 +161,7 @@
     }
 
     function getColumns(){
-        axios.post('/notifications/columns', {type: notification.value.type?.guid}).then(function (response){
+        axios.post('/notifications/columns', {type: notification.value.type?.value}).then(function (response){
             columns.value = response.data.columns;
         });
     }
@@ -175,7 +172,10 @@
             fields: fields.value
         };
         axios.post('/notifications/save', data).then(function (response){
-
+            if(response.data.options){
+                emits('options', response.data.options);
+                modal.newNotification = false;
+            }
         });
     }
 

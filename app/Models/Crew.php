@@ -87,9 +87,6 @@ class Crew extends Model implements TeamInterface
         return $list;
     }
 
-    /*
-     *  @return TeamInterface
-     */
     public static function getByGuid($guid): TeamInterface|null
     {
         $user = Auth::id();
@@ -119,14 +116,14 @@ class Crew extends Model implements TeamInterface
         return $crew;
     }
 
-    public static function addToTeam($user_id, $team_id, $role = null): void
+    public static function addToTeam($user_id, $team_id, $role = null): bool
     {
         $role = ($role === null)? 'user': $role;
         $member = new CrewMembers();
         $member->user = $user_id;
         $member->crew = $team_id;
         $member->roles = json_encode([$role]);
-        $member->save();
+        return $member->save();
     }
 
     public static function roles(): array

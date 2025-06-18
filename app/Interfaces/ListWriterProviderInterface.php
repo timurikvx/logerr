@@ -19,4 +19,6 @@ interface ListWriterProviderInterface
 
     function getGuid(): string;
 
+    function updateGuid(): void;
+
 }

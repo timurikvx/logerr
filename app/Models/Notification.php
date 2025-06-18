@@ -2,15 +2,71 @@
 
 namespace App\Models;
 
+use App\Interfaces\Models\NotificationInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 
-class Notification extends Model
+class Notification extends Model implements NotificationInterface
 {
     use HasFactory;
+
+    public function getGuid(): string
+    {
+        return $this->guid;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getData()
+    {
+        return json_decode($this->data, true);
+    }
+
+    public function getTo()
+    {
+        return $this->user;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function getFrom()
+    {
+        return $this->from;
+    }
+
+    public function getCompleted(): bool
+    {
+        return $this->completed;
+    }
+
+    public function setCompleted(bool $value): void
+    {
+        $this->completed = $value;
+    }
+
+    public function getText()
+    {
+        return $this->content;
+    }
+
+    public function getMissed(): bool
+    {
+        return $this->missed;
+    }
+
+    public function setMissed(bool $value): void
+    {
+        $this->missed = $value;
+    }
 
     public static function create($type, $user, $title, $content, $data = null, $url = ''): void
     {
@@ -50,10 +106,14 @@ class Notification extends Model
         return $query->get();
     }
 
-    public static function getByGuid($guid): mixed
+    public static function getByGuid($guid): NotificationInterface|null
     {
         $user = Auth::id();
-        return self::query()->where('user', '=', $user)->where('guid', '=', $guid)->first();
+        $notification = self::query()->where('user', '=', $user)->where('guid', '=', $guid)->first();
+        if($notification instanceof NotificationInterface){
+            return $notification;
+        }
+        return null;
     }
 
 }

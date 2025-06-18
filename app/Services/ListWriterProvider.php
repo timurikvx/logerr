@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\ListModelInterface;
 use App\Interfaces\ListWriterProviderInterface;
+use App\Interfaces\QueueProviderInterface;
 use App\Interfaces\TeamProviderInterface;
 use App\Models\Error;
 use Illuminate\Support\Facades\Auth;
@@ -18,9 +19,8 @@ class ListWriterProvider implements ListWriterProviderInterface
 
     public function __construct(TeamProviderInterface $teamProvider)
     {
-        //$this->provider = new Error();
         $this->teamProvider = $teamProvider;
-        $this->guid = Uuid::uuid4()->toString();
+        $this->updateGuid();
     }
 
     public function setProvider(ListModelInterface $provider): void
@@ -65,6 +65,11 @@ class ListWriterProvider implements ListWriterProviderInterface
     public function getGuid(): string
     {
         return $this->guid;
+    }
+
+    public function updateGuid(): void
+    {
+        $this->guid = Uuid::uuid4()->toString();
     }
 
     public function validateRules(): array

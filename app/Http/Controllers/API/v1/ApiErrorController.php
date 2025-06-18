@@ -2,26 +2,19 @@
 
 namespace App\Http\Controllers\API\v1;
 
-use App\Actions\RabbitMQ\LogerrRabbit;
 use App\Http\Controllers\Controller;
 use App\Interfaces\ListWriterProviderInterface;
 use App\Interfaces\QueueProviderInterface;
 use App\Interfaces\TeamProviderInterface;
 use App\Models\Error;
-use App\Models\Log;
-use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Validator;
-use Ramsey\Uuid\Uuid;
 
 class ApiErrorController extends Controller
 {
     private ListWriterProviderInterface $listWriterProvider;
     private QueueProviderInterface $queueProvider;
 
-    public function __construct(ListWriterProviderInterface $listWriterProvider, QueueProviderInterface $queueProvider, TeamProviderInterface $teamProvider)
+    public function __construct(ListWriterProviderInterface $listWriterProvider, QueueProviderInterface $queueProvider)
     {
         parent::__construct();
         $this->listWriterProvider = $listWriterProvider;

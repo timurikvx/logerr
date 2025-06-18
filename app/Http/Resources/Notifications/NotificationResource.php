@@ -14,7 +14,7 @@ class NotificationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $confirm = ($this->type === 'invite_to_team');
+        $confirm = ($this->type === 'InviteToTeam');
         return [
             'guid'=>$this->guid,
             'title'=>$this->title,
